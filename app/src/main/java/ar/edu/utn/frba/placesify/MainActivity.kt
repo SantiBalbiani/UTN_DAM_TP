@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import ar.edu.utn.frba.placesify.ui.theme.PlacesifyTheme
 import ar.edu.utn.frba.placesify.ui.theme.login.ui.LoginScreen
+import ar.edu.utn.frba.placesify.ui.theme.login.ui.LoginViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,7 +24,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    LoginScreen();
+                    LoginScreen(LoginViewModel());
                 }
             }
         }
