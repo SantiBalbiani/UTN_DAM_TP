@@ -19,18 +19,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import ar.edu.utn.frba.placesify.R
+import ar.edu.utn.frba.placesify.data.LoginViewModel
 import kotlinx.coroutines.launch
 
 @Composable
-fun  LoginScreen(viewModel: LoginViewModel){
+fun  LoginScreen(viewModel: LoginViewModel, navController: NavController? = null){
     Box(
         Modifier
             .fillMaxSize()

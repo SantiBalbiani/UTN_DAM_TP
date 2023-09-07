@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.placesify.ui.theme.login.ui
+package ar.edu.utn.frba.placesify.data
 
 import android.util.Patterns
 import androidx.lifecycle.LiveData
@@ -8,16 +8,16 @@ import kotlinx.coroutines.delay
 
 class LoginViewModel : ViewModel(){
 
+    // Declaro las Suscripciones a los LiveData
     private val _email = MutableLiveData<String>()
-    val email : LiveData<String> = _email
-
     private val _password = MutableLiveData<String>()
-    val password : LiveData<String> = _password
-
     private val _loginEnable = MutableLiveData<Boolean>()
-    val loginEnable : LiveData<Boolean> = _loginEnable
-
     private val _isLoading = MutableLiveData<Boolean>()
+
+    // Declaro los LiveData
+    val email : LiveData<String> = _email
+    val password : LiveData<String> = _password
+    val loginEnable : LiveData<Boolean> = _loginEnable
     val isLoading : LiveData<Boolean> = _isLoading
 
     // Valido si los datos son validos
