@@ -6,9 +6,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonElevation
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButtonElevation
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -40,15 +44,30 @@ fun Login(modifier: Modifier) {
         EmailField()
         Spacer(modifier = Modifier.padding(16.dp))
         PasswordField()
+        Spacer(modifier = Modifier.padding(16.dp))
+        LoginButton()
+    }
+}
+
+@Composable
+fun LoginButton() {
+    Button(onClick = {}, modifier = Modifier.fillMaxWidth().height(48.dp)) {
+        Text(text = "Acceder")
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PasswordField() {
-    TextField(value = "", onValueChange = {}, modifier = Modifier.fillMaxWidth(), placeholder = { Text(
-        text = "Contraseña"
-    )}, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password), singleLine = true, maxLines = 1, colors = TextFieldDefaults.textFieldColors(textColor = Color(R.color.black))
+    TextField(
+        value = "",
+        onValueChange = {},
+        modifier = Modifier.fillMaxWidth(),
+        placeholder = { Text(text = "Contraseña")},
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+        singleLine = true,
+        maxLines = 1,
+        colors = TextFieldDefaults.textFieldColors(textColor = Color(R.color.black))
     )
 }
 
@@ -56,10 +75,16 @@ fun PasswordField() {
 @Composable
 //@Preview(showBackground = true, showSystemUi = true)
 fun EmailField() {
-    TextField(value = "", onValueChange = {}, modifier = Modifier.fillMaxWidth(), placeholder = { Text(
-        text = "Email"
-    )}, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email), singleLine = true, maxLines = 1, colors = TextFieldDefaults.textFieldColors(textColor = Color(R.color.black))
-        )
+    TextField(
+        value = "",
+        onValueChange = {},
+        modifier = Modifier.fillMaxWidth(),
+        placeholder = { Text(text = "Email")},
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+        singleLine = true,
+        maxLines = 1,
+        colors = TextFieldDefaults.textFieldColors(textColor = Color(R.color.black))
+    )
 }
 
 @Composable
