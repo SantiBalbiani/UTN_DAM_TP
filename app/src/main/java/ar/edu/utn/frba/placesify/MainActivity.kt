@@ -19,13 +19,17 @@ import ar.edu.utn.frba.placesify.viewmodel.HomeViewModel
 import ar.edu.utn.frba.placesify.view.theme.PlacesifyTheme
 import ar.edu.utn.frba.placesify.view.HomeScreen
 import ar.edu.utn.frba.placesify.view.LoginScreen
+import ar.edu.utn.frba.placesify.view.MyListsScreen
 import ar.edu.utn.frba.placesify.view.NewPlacesScreen
+import ar.edu.utn.frba.placesify.view.ProfileScreen
 import ar.edu.utn.frba.placesify.view.RegisterScreen
 import ar.edu.utn.frba.placesify.viewmodel.DetailListViewModel
 import ar.edu.utn.frba.placesify.viewmodel.DetailPlacesViewModel
 import ar.edu.utn.frba.placesify.viewmodel.DiscoverPlacesViewModel
 import ar.edu.utn.frba.placesify.viewmodel.LoginViewModel
+import ar.edu.utn.frba.placesify.viewmodel.MyListsViewModel
 import ar.edu.utn.frba.placesify.viewmodel.NewPlacesViewModel
+import ar.edu.utn.frba.placesify.viewmodel.ProfileViewModel
 import ar.edu.utn.frba.placesify.viewmodel.RegisterViewModel
 
 class MainActivity : ComponentActivity() {
@@ -57,5 +61,7 @@ private fun App() {
         composable("new_places") { NewPlacesScreen(NewPlacesViewModel(), navController = navController); }
         composable("detail_places") { DetailPlacesScreen(DetailPlacesViewModel(), navController = navController); }
         composable("detail_list") { DetailListScreen(DetailListViewModel(), navController = navController); }
+        composable("profile") { ProfileScreen(ProfileViewModel(), navController = navController); }
+        composable("my_lists") { MyListsScreen(MyListsViewModel(), navController = navController); }
     }
 }

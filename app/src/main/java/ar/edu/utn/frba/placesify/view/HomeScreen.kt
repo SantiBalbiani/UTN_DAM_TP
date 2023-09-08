@@ -21,12 +21,15 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
@@ -62,7 +65,12 @@ fun  HomeScreen(viewModel: HomeViewModel, navController: NavController? = null){
 fun Home(modifier: Modifier, viewModel: HomeViewModel, navController: NavController?) {
 
     Scaffold(
-        topBar = { BarraNavegacionSuperior("Placesify") }
+        topBar = { BarraNavegacionSuperior("Placesify", navController) },
+        floatingActionButton = {
+            FloatingActionButton(onClick = { navController?.navigate("new_places")}) {
+                    Icon(Icons.Default.Add, contentDescription = "Add")
+            }
+        }
     ) {innerPadding ->
         Column(modifier = modifier.padding(innerPadding), verticalArrangement = Arrangement.spacedBy(16.dp)) {
             Button(
@@ -72,13 +80,6 @@ fun Home(modifier: Modifier, viewModel: HomeViewModel, navController: NavControl
             ) {
                 Text(text = "Descubrir Lugares")
             }
-            Button(
-                onClick = { navController?.navigate("new_places")}, modifier = Modifier
-                    .fillMaxWidth()
-                    .height(40.dp)
-            ) {
-                Text(text = "Crear Lista")
-            }
             Text(text = "Listas destacadas", fontSize = 30.sp, fontWeight = FontWeight.Bold)
             ItemLista("Pizzerias", navController)
             ItemLista("Heladerias", navController)
@@ -87,6 +88,7 @@ fun Home(modifier: Modifier, viewModel: HomeViewModel, navController: NavControl
             ItemLista("Salas de escape", navController)
             ItemLista("Paint Ball", navController)
             ItemLista("Trial para Correr", navController)
+            ItemLista("Cines", navController)
         }
     }
 }
@@ -101,13 +103,17 @@ fun ItemLista(nombreLista: String, navController: NavController?){
         ),
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth().height(height = 50.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(height = 50.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(imageVector = Icons.Outlined.Place, contentDescription = "", modifier = Modifier.padding(horizontal = 5.dp))
             Text(nombreLista, modifier = Modifier.width(width = 200.dp))
-            Text("CABA", modifier = Modifier.width(width = 70.dp).padding(horizontal = 5.dp))
+            Text("CABA", modifier = Modifier
+                .width(width = 70.dp)
+                .padding(horizontal = 5.dp))
         }
     }
 }
