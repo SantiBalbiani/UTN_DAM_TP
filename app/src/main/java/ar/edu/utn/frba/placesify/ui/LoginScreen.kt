@@ -1,13 +1,15 @@
-package ar.edu.utn.frba.placesify.ui.theme.login.ui
+package ar.edu.utn.frba.placesify.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -20,28 +22,33 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import ar.edu.utn.frba.placesify.R
 import ar.edu.utn.frba.placesify.data.LoginViewModel
 import kotlinx.coroutines.launch
 
 @Composable
-fun  LoginScreen(viewModel: LoginViewModel, navController: NavController? = null){
+fun  LoginScreen(viewModel: LoginViewModel, navController: NavController){
     Box(
         Modifier
             .fillMaxSize()
             .padding(16.dp)){
-        Login(Modifier.align(Alignment.Center), viewModel)
+        Login(Modifier.align(Alignment.Center), viewModel, navController)
     }
 }
 
 @Composable
-fun Login(modifier: Modifier, viewModel: LoginViewModel) {
+fun Login(modifier: Modifier, viewModel: LoginViewModel, navController: NavController?) {
 
     // Declaro los viewData
     val email: String by viewModel.email.observeAsState(initial = "")
@@ -56,7 +63,7 @@ fun Login(modifier: Modifier, viewModel: LoginViewModel) {
         }
     }else{
         Column(modifier = modifier) {
-            EncabezadoImagen(Modifier.align(Alignment.CenterHorizontally))
+            EncabezadoImagen(Modifier.align(Alignment.CenterHorizontally), "Placesify")
             Spacer(modifier = Modifier.padding(16.dp))
             EmailField(email) { viewModel.onLoginChanged(it, password) }
             Spacer(modifier = Modifier.padding(16.dp))
@@ -65,13 +72,20 @@ fun Login(modifier: Modifier, viewModel: LoginViewModel) {
             LoginButton(loginEnable) {
                 coroutineScope.launch {
                     viewModel.onLoginSelected()}
-                }
+            }
+            Spacer(modifier = Modifier.padding(16.dp))
+            ClickableText(
+                modifier = Modifier.align(CenterHorizontally),
+                style = TextStyle(Color.Blue),
+                text = AnnotatedString("Crear cuenta nueva"),
+                onClick = { navController?.navigate("register") }
+            )
         }
     }
 }
 
 @Composable
-fun LoginButton(loginEnable: Boolean, onLoginSelected: () -> Unit) {
+fun LoginButton( loginEnable: Boolean, onLoginSelected: () -> Unit) {
     Button(onClick = {onLoginSelected()}, modifier = Modifier
         .fillMaxWidth()
         .height(48.dp)) {
@@ -112,6 +126,11 @@ fun EmailField(email:String, onTextFieldChanged:(String) -> Unit ) {
 }
 
 @Composable
-fun EncabezadoImagen(modifier: Modifier) {
-    Image(painter = painterResource(id = R.drawable.ico_placesify), contentDescription = "Imagen Encabezado", modifier = modifier)
+fun EncabezadoImagen(modifier: Modifier, texto: String) {
+    Row() {
+        Image(painter = painterResource(id = R.drawable.ico_placesify), contentDescription = "Imagen Encabezado", modifier = modifier)
+        Text(text = texto, fontSize = 30.sp,fontWeight = FontWeight.Bold, modifier = Modifier
+            .fillMaxWidth()
+            .padding(12.dp))
+    }
 }

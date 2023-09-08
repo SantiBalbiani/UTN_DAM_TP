@@ -2,12 +2,12 @@ package ar.edu.utn.frba.placesify.ui
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -23,8 +23,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import ar.edu.utn.frba.placesify.R
 import ar.edu.utn.frba.placesify.data.RegisterViewModel
-import ar.edu.utn.frba.placesify.ui.theme.login.ui.LoginButton
-import kotlinx.coroutines.launch
 
 @Composable
 fun  RegisterScreen(viewModel: RegisterViewModel, navController: NavController? = null){
@@ -39,7 +37,11 @@ fun  RegisterScreen(viewModel: RegisterViewModel, navController: NavController? 
 @Composable
 fun Register(modifier: Modifier, viewModel: RegisterViewModel) {
     Column(modifier = modifier) {
-        Text(text = "Registro", modifier = Modifier.fillMaxWidth().padding(12.dp).size(20.dp))
+
+        Row() {
+            EncabezadoImagen(modifier, "Registro")
+        }
+
         Spacer(modifier = Modifier.padding(8.dp))
         CampoText("Apellido")
         Spacer(modifier = Modifier.padding(8.dp))

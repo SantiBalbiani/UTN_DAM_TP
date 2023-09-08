@@ -14,7 +14,7 @@ import androidx.navigation.compose.rememberNavController
 import ar.edu.utn.frba.placesify.data.HomeViewModel
 import ar.edu.utn.frba.placesify.ui.theme.PlacesifyTheme
 import ar.edu.utn.frba.placesify.ui.HomeScreen
-import ar.edu.utn.frba.placesify.ui.theme.login.ui.LoginScreen
+import ar.edu.utn.frba.placesify.ui.LoginScreen
 import ar.edu.utn.frba.placesify.ui.RegisterScreen
 import ar.edu.utn.frba.placesify.data.LoginViewModel
 import ar.edu.utn.frba.placesify.data.RegisterViewModel
@@ -38,7 +38,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 private fun App() {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = "register") {
+    NavHost(navController = navController, startDestination = "login") {
         composable("login") {
             LoginScreen(
                 LoginViewModel(),
