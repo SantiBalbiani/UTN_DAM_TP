@@ -96,7 +96,7 @@ fun Home(modifier: Modifier, viewModel: HomeViewModel, navController: NavControl
 @Composable
 fun ItemLista(nombreLista: String, navController: NavController?){
     OutlinedCard(
-        onClick = { navController?.navigate("discover_places") },
+        onClick = { navController?.navigate("detail_list") },
         border = BorderStroke(1.dp, Color.Black),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface,
