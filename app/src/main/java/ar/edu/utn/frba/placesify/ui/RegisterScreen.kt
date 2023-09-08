@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -31,19 +32,21 @@ fun  RegisterScreen(viewModel: RegisterViewModel, navController: NavController? 
         Modifier
             .fillMaxSize()
             .padding(16.dp)){
-        Register(Modifier.align(Alignment.Center), viewModel)
+        Register(Modifier.align(Alignment.TopStart), viewModel)
     }
 }
 
 @Composable
 fun Register(modifier: Modifier, viewModel: RegisterViewModel) {
     Column(modifier = modifier) {
+        Text(text = "Registro", modifier = Modifier.fillMaxWidth().padding(12.dp).size(20.dp))
+        Spacer(modifier = Modifier.padding(8.dp))
         CampoText("Apellido")
-        Spacer(modifier = Modifier.padding(16.dp))
+        Spacer(modifier = Modifier.padding(8.dp))
         CampoText("Nombre")
-        Spacer(modifier = Modifier.padding(16.dp))
+        Spacer(modifier = Modifier.padding(8.dp))
         CampoText("Email")
-        Spacer(modifier = Modifier.padding(16.dp))
+        Spacer(modifier = Modifier.padding(8.dp))
         RegisterButton()
     }
 }
