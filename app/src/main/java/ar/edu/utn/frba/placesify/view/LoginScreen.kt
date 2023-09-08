@@ -15,6 +15,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -74,13 +75,15 @@ fun Login(modifier: Modifier, viewModel: LoginViewModel, navController: NavContr
                     viewModel.onLoginSelected()}
             }
             Spacer(modifier = Modifier.padding(16.dp))
-            ClickableText(
-                modifier = Modifier.align(CenterHorizontally),
-                style = TextStyle(Color.Blue),
-                text = AnnotatedString("Crear cuenta nueva"),
-                onClick = { navController?.navigate("register") }
-            )
+            TextButton(modifier = Modifier.align(CenterHorizontally), onClick = { navController?.navigate("register") }) {
+                Text(text = "Crear cuenta nueva")
+                
+            }
         }
+    }
+
+    if(loginEnable){
+        navController?.navigate("home")
     }
 }
 
@@ -127,8 +130,8 @@ fun EmailField(email:String, onTextFieldChanged:(String) -> Unit ) {
 
 @Composable
 fun EncabezadoImagen(modifier: Modifier, texto: String) {
-    Row() {
-        Image(painter = painterResource(id = R.drawable.ico_placesify), contentDescription = "Imagen Encabezado", modifier = modifier)
+    Row(modifier = modifier) {
+        Image(painter = painterResource(id = R.drawable.ico_placesify), contentDescription = "Imagen Encabezado")
         Text(text = texto, fontSize = 30.sp,fontWeight = FontWeight.Bold, modifier = Modifier
             .fillMaxWidth()
             .padding(12.dp))

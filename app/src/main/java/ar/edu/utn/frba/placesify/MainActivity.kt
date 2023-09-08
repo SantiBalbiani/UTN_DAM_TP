@@ -51,7 +51,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 private fun App() {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = "home") {
+    NavHost(navController = navController, startDestination = "login") {
 
         // Armo las Rutas de Navegación
         composable("login") {LoginScreen( LoginViewModel(), navController = navController); }
