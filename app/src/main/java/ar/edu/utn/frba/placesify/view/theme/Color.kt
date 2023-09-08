@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.placesify.ui.theme
+package ar.edu.utn.frba.placesify.view.theme
 
 import androidx.compose.ui.graphics.Color
 

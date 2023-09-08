@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.placesify.ui
+package ar.edu.utn.frba.placesify.view
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -34,7 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import ar.edu.utn.frba.placesify.R
-import ar.edu.utn.frba.placesify.data.LoginViewModel
+import ar.edu.utn.frba.placesify.viewmodel.LoginViewModel
 import kotlinx.coroutines.launch
 
 @Composable
@@ -63,7 +63,7 @@ fun Login(modifier: Modifier, viewModel: LoginViewModel, navController: NavContr
         }
     }else{
         Column(modifier = modifier) {
-            EncabezadoImagen(Modifier.align(Alignment.CenterHorizontally), "Placesify")
+            EncabezadoImagen(Modifier.align(CenterHorizontally), "Placesify")
             Spacer(modifier = Modifier.padding(16.dp))
             EmailField(email) { viewModel.onLoginChanged(it, password) }
             Spacer(modifier = Modifier.padding(16.dp))

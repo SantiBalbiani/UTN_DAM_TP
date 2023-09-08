@@ -11,13 +11,13 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import ar.edu.utn.frba.placesify.data.HomeViewModel
-import ar.edu.utn.frba.placesify.ui.theme.PlacesifyTheme
-import ar.edu.utn.frba.placesify.ui.HomeScreen
-import ar.edu.utn.frba.placesify.ui.LoginScreen
-import ar.edu.utn.frba.placesify.ui.RegisterScreen
-import ar.edu.utn.frba.placesify.data.LoginViewModel
-import ar.edu.utn.frba.placesify.data.RegisterViewModel
+import ar.edu.utn.frba.placesify.viewmodel.HomeViewModel
+import ar.edu.utn.frba.placesify.view.theme.PlacesifyTheme
+import ar.edu.utn.frba.placesify.view.HomeScreen
+import ar.edu.utn.frba.placesify.view.LoginScreen
+import ar.edu.utn.frba.placesify.view.RegisterScreen
+import ar.edu.utn.frba.placesify.viewmodel.LoginViewModel
+import ar.edu.utn.frba.placesify.viewmodel.RegisterViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,24 +38,11 @@ class MainActivity : ComponentActivity() {
 @Composable
 private fun App() {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = "login") {
-        composable("login") {
-            LoginScreen(
-                LoginViewModel(),
-                navController = navController
-            );
-        }
-        composable("home") {
-            HomeScreen(
-                HomeViewModel(),
-                navController = navController
-            );
-        }
-        composable("register") {
-            RegisterScreen(
-                RegisterViewModel(),
-                navController = navController
-            );
-        }
+    NavHost(navController = navController, startDestination = "home") {
+
+        // Armo las Rutas
+        composable("login") {LoginScreen( LoginViewModel(), navController = navController); }
+        composable("home") { HomeScreen(HomeViewModel(), navController = navController); }
+        composable("register") { RegisterScreen(RegisterViewModel(), navController = navController); }
     }
 }

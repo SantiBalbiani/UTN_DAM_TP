@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.placesify.ui
+package ar.edu.utn.frba.placesify.view
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,7 +22,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import ar.edu.utn.frba.placesify.R
-import ar.edu.utn.frba.placesify.data.RegisterViewModel
+import ar.edu.utn.frba.placesify.viewmodel.RegisterViewModel
 
 @Composable
 fun  RegisterScreen(viewModel: RegisterViewModel, navController: NavController? = null){

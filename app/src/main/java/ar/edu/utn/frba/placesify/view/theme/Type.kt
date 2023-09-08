@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.placesify.ui.theme
+package ar.edu.utn.frba.placesify.view.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

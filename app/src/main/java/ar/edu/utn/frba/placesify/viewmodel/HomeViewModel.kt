@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.placesify.data
+package ar.edu.utn.frba.placesify.viewmodel
 
 import android.util.Patterns
 import androidx.lifecycle.LiveData
