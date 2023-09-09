@@ -19,27 +19,36 @@ import ar.edu.utn.frba.placesify.viewmodel.DiscoverPlacesViewModel
 import ar.edu.utn.frba.placesify.viewmodel.HomeViewModel
 
 @Composable
-fun  DiscoverPlacesScreen(viewModel: DiscoverPlacesViewModel, navController: NavController? = null){
+fun DiscoverPlacesScreen(viewModel: DiscoverPlacesViewModel, navController: NavController? = null) {
     Box(
         Modifier
             .fillMaxSize()
-            .padding(0.dp)){
+            .padding(0.dp)
+    ) {
         DetailList(
             Modifier
                 .align(Alignment.TopStart)
-                .padding(16.dp), viewModel, navController)
+                .padding(16.dp), viewModel, navController
+        )
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun DetailList(modifier: Modifier, viewModel: DiscoverPlacesViewModel, navController: NavController?) {
+fun DetailList(
+    modifier: Modifier,
+    viewModel: DiscoverPlacesViewModel,
+    navController: NavController?
+) {
 
     Scaffold(
         topBar = { BarraNavegacionSuperior("Descubrir Listas", navController) }
-    ) {innerPadding ->
-        Column(modifier = modifier.padding(innerPadding), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+    ) { innerPadding ->
+        Column(
+            modifier = modifier.padding(innerPadding),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
             Text(text = "Pendiente...")
         }
     }

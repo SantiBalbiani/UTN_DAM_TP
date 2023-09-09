@@ -18,15 +18,17 @@ import ar.edu.utn.frba.placesify.viewmodel.DiscoverPlacesViewModel
 import ar.edu.utn.frba.placesify.viewmodel.NewPlacesViewModel
 
 @Composable
-fun  NewPlacesScreen(viewModel: NewPlacesViewModel, navController: NavController? = null){
+fun NewPlacesScreen(viewModel: NewPlacesViewModel, navController: NavController? = null) {
     Box(
         Modifier
             .fillMaxSize()
-            .padding(0.dp)){
+            .padding(0.dp)
+    ) {
         DetailList(
             Modifier
                 .align(Alignment.TopStart)
-                .padding(16.dp), viewModel, navController)
+                .padding(16.dp), viewModel, navController
+        )
     }
 }
 
@@ -37,8 +39,11 @@ fun DetailList(modifier: Modifier, viewModel: NewPlacesViewModel, navController:
 
     Scaffold(
         topBar = { BarraNavegacionSuperior("Nueva Lista", navController) }
-    ) {innerPadding ->
-        Column(modifier = modifier.padding(innerPadding), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+    ) { innerPadding ->
+        Column(
+            modifier = modifier.padding(innerPadding),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
             Text(text = "Pendiente...")
         }
     }

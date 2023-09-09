@@ -39,11 +39,12 @@ import ar.edu.utn.frba.placesify.viewmodel.LoginViewModel
 import kotlinx.coroutines.launch
 
 @Composable
-fun  LoginScreen(viewModel: LoginViewModel, navController: NavController){
+fun LoginScreen(viewModel: LoginViewModel, navController: NavController) {
     Box(
         Modifier
             .fillMaxSize()
-            .padding(16.dp)){
+            .padding(16.dp)
+    ) {
         Login(Modifier.align(Alignment.Center), viewModel, navController)
     }
 }
@@ -58,11 +59,11 @@ fun Login(modifier: Modifier, viewModel: LoginViewModel, navController: NavContr
     val isLoadding: Boolean by viewModel.isLoading.observeAsState(initial = false)
     val coroutineScope = rememberCoroutineScope()
 
-    if(isLoadding){
-        Box(Modifier.fillMaxSize()){
+    if (isLoadding) {
+        Box(Modifier.fillMaxSize()) {
             CircularProgressIndicator(Modifier.align(Alignment.Center))
         }
-    }else{
+    } else {
         Column(modifier = modifier) {
             EncabezadoImagen(Modifier.align(CenterHorizontally), "Placesify")
             Spacer(modifier = Modifier.padding(16.dp))
@@ -72,68 +73,78 @@ fun Login(modifier: Modifier, viewModel: LoginViewModel, navController: NavContr
             Spacer(modifier = Modifier.padding(16.dp))
             LoginButton(loginEnable) {
                 coroutineScope.launch {
-                    viewModel.onLoginSelected()}
+                    viewModel.onLoginSelected()
+                }
             }
             Spacer(modifier = Modifier.padding(16.dp))
-            TextButton(modifier = Modifier.align(CenterHorizontally), onClick = { navController?.navigate("register") }) {
+            TextButton(
+                modifier = Modifier.align(CenterHorizontally),
+                onClick = { navController?.navigate("register") }) {
                 Text(text = "Crear cuenta nueva")
-                
+
             }
         }
     }
 
-    if(loginEnable){
+    if (loginEnable) {
         navController?.navigate("home")
     }
 }
 
 @Composable
-fun LoginButton( loginEnable: Boolean, onLoginSelected: () -> Unit) {
-    Button(onClick = {onLoginSelected()}, modifier = Modifier
-        .fillMaxWidth()
-        .height(48.dp)) {
+fun LoginButton(loginEnable: Boolean, onLoginSelected: () -> Unit) {
+    Button(
+        onClick = { onLoginSelected() }, modifier = Modifier
+            .fillMaxWidth()
+            .height(48.dp)
+    ) {
         Text(text = "Acceder")
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PasswordField(password:String, onTextFieldChanged:(String) -> Unit ) {
+fun PasswordField(password: String, onTextFieldChanged: (String) -> Unit) {
     TextField(
         value = password,
-        onValueChange = {onTextFieldChanged(it)},
+        onValueChange = { onTextFieldChanged(it) },
         modifier = Modifier.fillMaxWidth(),
-        placeholder = { Text(text = "Contraseña")},
+        placeholder = { Text(text = "Contraseña") },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
         singleLine = true,
         maxLines = 1,
-        colors = TextFieldDefaults.textFieldColors(textColor = Color(R.color.black))
+        //colors = TextFieldDefaults.textFieldColors(textColor = Color(R.color.black))
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 //@Preview(showBackground = true, showSystemUi = true)
-fun EmailField(email:String, onTextFieldChanged:(String) -> Unit ) {
+fun EmailField(email: String, onTextFieldChanged: (String) -> Unit) {
 
     TextField(
         value = email,
-        onValueChange = { onTextFieldChanged(it)},
+        onValueChange = { onTextFieldChanged(it) },
         modifier = Modifier.fillMaxWidth(),
-        placeholder = { Text(text = "Email")},
+        placeholder = { Text(text = "Email") },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
         singleLine = true,
         maxLines = 1,
-        colors = TextFieldDefaults.textFieldColors(textColor = Color(R.color.black))
+        //colors = TextFieldDefaults.textFieldColors(textColor = Color(R.color.black))
     )
 }
 
 @Composable
 fun EncabezadoImagen(modifier: Modifier, texto: String) {
     Row(modifier = modifier) {
-        Image(painter = painterResource(id = R.drawable.ico_placesify), contentDescription = "Imagen Encabezado")
-        Text(text = texto, fontSize = 30.sp,fontWeight = FontWeight.Bold, modifier = Modifier
-            .fillMaxWidth()
-            .padding(12.dp))
+        Image(
+            painter = painterResource(id = R.drawable.ico_placesify),
+            contentDescription = "Imagen Encabezado"
+        )
+        Text(
+            text = texto, fontSize = 30.sp, fontWeight = FontWeight.Bold, modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp)
+        )
     }
 }

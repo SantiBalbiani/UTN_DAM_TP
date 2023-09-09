@@ -1,57 +1,49 @@
 package ar.edu.utn.frba.placesify.view
 
-import android.content.Context
-import android.widget.Toast
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
+import android.app.Activity
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import ar.edu.utn.frba.placesify.R
-import ar.edu.utn.frba.placesify.viewmodel.RegisterViewModel
-
+import androidx.navigation.NavDirections
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BarraNavegacionSuperior(title: String, navController: NavController?){
-
-    val context = LocalContext.current
+fun BarraNavegacionSuperior(title: String, navController: NavController?, isHome: Boolean = false) {
     var menuExpanded by remember { mutableStateOf(false) }
     var logout by remember { mutableStateOf(false) }
+    var showSearch by remember { mutableStateOf(false) }
+    val activity = (LocalContext.current as? Activity)
 
     TopAppBar(
         colors = TopAppBarDefaults.mediumTopAppBarColors(
@@ -61,14 +53,24 @@ fun BarraNavegacionSuperior(title: String, navController: NavController?){
         title = {
             Text(title, color = Color.Black)
         },
+        navigationIcon = {
+            if(!isHome){
+                IconButton(onClick = { navController?.navigateUp() }) {
+                    Icon(
+                        imageVector = Icons.Filled.ArrowBack,
+                        contentDescription = "Localized description"
+                    )
+                }
+            }
+        },
         actions = {
-            IconButton(onClick = {}) {
+            IconButton(onClick = { showSearch = true }) {
                 Icon(
                     imageVector = Icons.Filled.Search,
                     contentDescription = "Buscar"
                 )
             }
-            IconButton(onClick =  { menuExpanded = !menuExpanded }) {
+            IconButton(onClick = { menuExpanded = !menuExpanded }) {
                 Icon(
                     imageVector = Icons.Filled.AccountCircle,
                     contentDescription = "Perfil"
@@ -85,7 +87,7 @@ fun BarraNavegacionSuperior(title: String, navController: NavController?){
                 )
                 DropdownMenuItem(
                     text = { Text("Mis Listas") },
-                    onClick = { navController?.navigate("my_lists")  }
+                    onClick = { navController?.navigate("my_lists") }
                 )
                 DropdownMenuItem(
                     text = { Text("Salir") },
@@ -95,7 +97,7 @@ fun BarraNavegacionSuperior(title: String, navController: NavController?){
         },
     )
 
-    if(logout){
+    if (logout) {
         AlertDialog(
             title = {
                 Text(text = "Salir")
@@ -108,9 +110,7 @@ fun BarraNavegacionSuperior(title: String, navController: NavController?){
             },
             confirmButton = {
                 TextButton(
-                    onClick = {
-
-                    }
+                    onClick = { activity?.finish() }
                 ) {
                     Text("Salir")
                 }
@@ -127,4 +127,23 @@ fun BarraNavegacionSuperior(title: String, navController: NavController?){
         )
     }
 
+    if (showSearch) {
+        ModalBottomSheet(
+            onDismissRequest = { showSearch = false },
+            modifier = Modifier.height(height = 200.dp)
+        ) {
+            TextField(
+                value = "",
+                onValueChange = {},
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                placeholder = { Text(text = "Buscador") },
+                singleLine = true,
+                maxLines = 1,
+            )
+        }
+    }
+
 }
+

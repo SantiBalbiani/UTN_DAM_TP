@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import kotlinx.coroutines.delay
 
-class LoginViewModel : ViewModel(){
+class LoginViewModel : ViewModel() {
 
     // Declaro las Suscripciones a los LiveData
     private val _email = MutableLiveData<String>()
@@ -16,12 +16,12 @@ class LoginViewModel : ViewModel(){
     private val _isLoading = MutableLiveData<Boolean>()
 
     // Declaro los LiveData
-    val email : LiveData<String> = _email
-    val password : LiveData<String> = _password
-    val loginEnable : LiveData<Boolean> = _loginEnable
-    val isLoading : LiveData<Boolean> = _isLoading
+    val email: LiveData<String> = _email
+    val password: LiveData<String> = _password
+    val loginEnable: LiveData<Boolean> = _loginEnable
+    val isLoading: LiveData<Boolean> = _isLoading
 
-    // Valido si los datos son validos
+    // Valido los datos
     fun onLoginChanged(email: String, password: String) {
         _email.value = email
         _password.value = password
@@ -29,7 +29,10 @@ class LoginViewModel : ViewModel(){
         // Condicion de validacion del Login
         _loginEnable.value = isValidEmail(email)
     }
-    private fun isValidEmail(email: String): Boolean = Patterns.EMAIL_ADDRESS.matcher(email).matches()
+
+    private fun isValidEmail(email: String): Boolean =
+        Patterns.EMAIL_ADDRESS.matcher(email).matches()
+
     suspend fun onLoginSelected() {
         _isLoading.value = true
         delay(500)

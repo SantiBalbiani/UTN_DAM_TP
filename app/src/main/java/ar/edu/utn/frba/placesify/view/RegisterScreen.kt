@@ -64,7 +64,7 @@ fun CampoText(text: String) {
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
         singleLine = true,
         maxLines = 1,
-        colors = TextFieldDefaults.textFieldColors(textColor = Color(R.color.black))
+        //colors = TextFieldDefaults.textFieldColors(textColor = Color(R.color.black))
     )
 }
 

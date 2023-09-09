@@ -31,10 +31,16 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -48,59 +54,70 @@ import androidx.navigation.NavController
 import ar.edu.utn.frba.placesify.viewmodel.HomeViewModel
 
 @Composable
-fun  HomeScreen(viewModel: HomeViewModel, navController: NavController? = null){
+fun HomeScreen(viewModel: HomeViewModel, navController: NavController? = null) {
     Box(
         Modifier
             .fillMaxSize()
-            .padding(0.dp)){
+            .padding(0.dp)
+    ) {
         Home(
             Modifier
                 .align(Alignment.TopStart)
-                .padding(16.dp), viewModel, navController)
+                .padding(16.dp), viewModel, navController
+        )
     }
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun Home(modifier: Modifier, viewModel: HomeViewModel, navController: NavController?) {
 
     Scaffold(
-        topBar = { BarraNavegacionSuperior("Placesify", navController) },
+        topBar = { BarraNavegacionSuperior("Placesify", navController, isHome = true) },
         floatingActionButton = {
-            FloatingActionButton(onClick = { navController?.navigate("new_places")}) {
-                    Icon(Icons.Default.Add, contentDescription = "Add")
+            FloatingActionButton(onClick = { navController?.navigate("new_places") }) {
+                Icon(Icons.Default.Add, contentDescription = "Add")
             }
         }
-    ) {innerPadding ->
-        Column(modifier = modifier.padding(innerPadding), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-            Button(
-                onClick = { navController?.navigate("discover_places")}, modifier = Modifier
-                    .fillMaxWidth()
-                    .height(40.dp)
-            ) {
-                Text(text = "Descubrir Lugares")
+    ) { innerPadding ->
+        LazyColumn(
+            modifier = modifier.padding(innerPadding),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            item {
+                Button(
+                    onClick = { navController?.navigate("discover_places") }, modifier = Modifier
+                        .fillMaxWidth()
+                        .height(40.dp)
+                ) {
+                    Text(text = "Descubrir Lugares")
+                }
+                Spacer(modifier = Modifier.padding(8.dp))
+                Text(text = "Listas destacadas", fontSize = 30.sp, fontWeight = FontWeight.Bold)
+                ItemLista("Pizzerias", navController)
+                ItemLista("Heladerias", navController)
+                ItemLista("Café de Autor", navController)
+                ItemLista("Cervezas artesanales", navController)
+                ItemLista("Salas de escape", navController)
+                ItemLista("Paint Ball", navController)
+                ItemLista("Trial para Correr", navController)
+                ItemLista("Cines", navController)
             }
-            Text(text = "Listas destacadas", fontSize = 30.sp, fontWeight = FontWeight.Bold)
-            ItemLista("Pizzerias", navController)
-            ItemLista("Heladerias", navController)
-            ItemLista("Café de Autor", navController)
-            ItemLista("Cervezas artesanales", navController)
-            ItemLista("Salas de escape", navController)
-            ItemLista("Paint Ball", navController)
-            ItemLista("Trial para Correr", navController)
-            ItemLista("Cines", navController)
         }
     }
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ItemLista(nombreLista: String, navController: NavController?){
+fun ItemLista(nombreLista: String, navController: NavController?) {
     OutlinedCard(
         onClick = { navController?.navigate("detail_list") },
         border = BorderStroke(1.dp, Color.Black),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface,
         ),
+        modifier = Modifier.padding(vertical = 5.dp)
     ) {
         Row(
             modifier = Modifier
@@ -109,11 +126,17 @@ fun ItemLista(nombreLista: String, navController: NavController?){
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Image(imageVector = Icons.Outlined.Place, contentDescription = "", modifier = Modifier.padding(horizontal = 5.dp))
+            Image(
+                imageVector = Icons.Outlined.Place,
+                contentDescription = "",
+                modifier = Modifier.padding(horizontal = 5.dp)
+            )
             Text(nombreLista, modifier = Modifier.width(width = 200.dp))
-            Text("CABA", modifier = Modifier
-                .width(width = 70.dp)
-                .padding(horizontal = 5.dp))
+            Text(
+                "CABA", modifier = Modifier
+                    .width(width = 70.dp)
+                    .padding(horizontal = 5.dp)
+            )
         }
     }
 }

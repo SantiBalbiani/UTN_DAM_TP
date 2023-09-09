@@ -20,15 +20,17 @@ import ar.edu.utn.frba.placesify.viewmodel.NewPlacesViewModel
 import ar.edu.utn.frba.placesify.viewmodel.ProfileViewModel
 
 @Composable
-fun  ProfileScreen(viewModel: ProfileViewModel, navController: NavController? = null){
+fun ProfileScreen(viewModel: ProfileViewModel, navController: NavController? = null) {
     Box(
         Modifier
             .fillMaxSize()
-            .padding(0.dp)){
+            .padding(0.dp)
+    ) {
         DetailList(
             Modifier
                 .align(Alignment.TopStart)
-                .padding(16.dp), viewModel, navController)
+                .padding(16.dp), viewModel, navController
+        )
     }
 }
 
@@ -39,8 +41,11 @@ fun DetailList(modifier: Modifier, viewModel: ProfileViewModel, navController: N
 
     Scaffold(
         topBar = { BarraNavegacionSuperior("Mi Perfil", navController) }
-    ) {innerPadding ->
-        Column(modifier = modifier.padding(innerPadding), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+    ) { innerPadding ->
+        Column(
+            modifier = modifier.padding(innerPadding),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
             Text(text = "Pendiente...")
         }
     }
