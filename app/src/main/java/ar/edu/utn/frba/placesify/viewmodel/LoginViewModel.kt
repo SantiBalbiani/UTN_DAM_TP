@@ -35,8 +35,6 @@ class LoginViewModel : ViewModel() {
 
     suspend fun onLoginSelected() {
         _isLoading.value = true
-        delay(500)
-        //_isLoading.value = false
         _loginEnable.value = true
     }
 
