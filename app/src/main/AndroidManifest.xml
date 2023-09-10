@@ -12,6 +12,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Placesify"
         tools:targetApi="31">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAYk7lFAb_tZjVD1zcDlipBE-LyA4PqSI" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true"

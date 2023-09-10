@@ -60,7 +60,7 @@ fun CampoText(text: String) {
         value = "",
         onValueChange = {},
         modifier = Modifier.fillMaxWidth(),
-        placeholder = { Text(text = text) },
+        label = { Text(text = text) },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
         singleLine = true,
         maxLines = 1,

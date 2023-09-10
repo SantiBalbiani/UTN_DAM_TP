@@ -1,6 +1,7 @@
 package ar.edu.utn.frba.placesify.view
 
 import android.app.Activity
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -10,6 +11,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -54,7 +56,7 @@ fun BarraNavegacionSuperior(title: String, navController: NavController?, isHome
             Text(title, color = Color.Black)
         },
         navigationIcon = {
-            if(!isHome){
+            if (!isHome) {
                 IconButton(onClick = { navController?.navigateUp() }) {
                     Icon(
                         imageVector = Icons.Filled.ArrowBack,
@@ -138,7 +140,14 @@ fun BarraNavegacionSuperior(title: String, navController: NavController?, isHome
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
-                placeholder = { Text(text = "Buscador") },
+                label = { Text(text = "Buscar") },
+                trailingIcon = {
+                    Image(
+                        imageVector = Icons.Outlined.Search,
+                        contentDescription = "",
+                        modifier = Modifier.padding(horizontal = 5.dp)
+                    )
+                },
                 singleLine = true,
                 maxLines = 1,
             )
