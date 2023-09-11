@@ -2,6 +2,9 @@ package ar.edu.utn.frba.placesify.view
 
 import android.app.Activity
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -11,6 +14,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.Clear
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DropdownMenu
@@ -23,6 +27,8 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldColors
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -45,6 +51,7 @@ fun BarraNavegacionSuperior(title: String, navController: NavController?, isHome
     var menuExpanded by remember { mutableStateOf(false) }
     var logout by remember { mutableStateOf(false) }
     var showSearch by remember { mutableStateOf(false) }
+    var searchActiva by remember { mutableStateOf(false) }
     val activity = (LocalContext.current as? Activity)
 
     TopAppBar(
@@ -53,7 +60,39 @@ fun BarraNavegacionSuperior(title: String, navController: NavController?, isHome
             titleContentColor = MaterialTheme.colorScheme.primary,
         ),
         title = {
-            Text(title, color = Color.Black)
+            Column {
+                if (showSearch) {
+                    TextField(
+                        value = "",
+                        onValueChange = {},
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(50.dp)
+                            .padding(0.dp),
+                        colors = TextFieldDefaults.textFieldColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
+                        placeholder = { Text(text = "Buscar") },
+                        singleLine = true,
+                        maxLines = 1,
+                        trailingIcon = {
+                            Row {
+                                IconButton(
+                                    onClick = {},
+                                    content = {
+                                        Image(
+                                            imageVector = Icons.Outlined.Clear,
+                                            contentDescription = "",
+                                            modifier = Modifier.padding(horizontal = 5.dp)
+                                        )
+                                    }
+                                )
+                            }
+                        }
+                    )
+                }else{
+                    Text(title, color = Color.Black)
+                }
+
+            }
         },
         navigationIcon = {
             if (!isHome) {
@@ -66,7 +105,7 @@ fun BarraNavegacionSuperior(title: String, navController: NavController?, isHome
             }
         },
         actions = {
-            IconButton(onClick = { showSearch = true }) {
+            IconButton(onClick = { showSearch = !showSearch }) {
                 Icon(
                     imageVector = Icons.Filled.Search,
                     contentDescription = "Buscar"
@@ -128,7 +167,7 @@ fun BarraNavegacionSuperior(title: String, navController: NavController?, isHome
             }
         )
     }
-
+/*
     if (showSearch) {
         ModalBottomSheet(
             onDismissRequest = { showSearch = false },
@@ -153,6 +192,6 @@ fun BarraNavegacionSuperior(title: String, navController: NavController?, isHome
             )
         }
     }
-
+*/
 }
 
