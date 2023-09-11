@@ -8,10 +8,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import ar.edu.utn.frba.placesify.view.DetailListScreen
 import ar.edu.utn.frba.placesify.view.DetailPlacesScreen
 import ar.edu.utn.frba.placesify.view.DiscoverPlacesScreen
@@ -48,19 +49,50 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
 @Composable
 private fun App() {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = "login") {
 
         // Armo las Rutas de Navegación
-        composable("login") {LoginScreen( LoginViewModel(), navController = navController); }
+        composable("login") { LoginScreen(LoginViewModel(), navController = navController); }
         composable("home") { HomeScreen(HomeViewModel(), navController = navController); }
-        composable("register") { RegisterScreen(RegisterViewModel(), navController = navController); }
-        composable("discover_places") { DiscoverPlacesScreen(DiscoverPlacesViewModel(), navController = navController); }
-        composable("new_places") { NewPlacesScreen(NewPlacesViewModel(), navController = navController); }
-        composable("detail_places") { DetailPlacesScreen(DetailPlacesViewModel(), navController = navController); }
-        composable("detail_list") { DetailListScreen(DetailListViewModel(), navController = navController); }
+        composable("register") {
+            RegisterScreen(
+                RegisterViewModel(),
+                navController = navController
+            );
+        }
+        composable("discover_places") {
+            DiscoverPlacesScreen(
+                DiscoverPlacesViewModel(),
+                navController = navController
+            );
+        }
+        composable("new_places") {
+            NewPlacesScreen(
+                NewPlacesViewModel(),
+                navController = navController
+            );
+        }
+        composable("detail_places") {
+            DetailPlacesScreen(
+                DetailPlacesViewModel(),
+                navController = navController
+            );
+        }
+        composable(
+            "detail_list/{id_list}/{name_list}",
+            arguments = listOf(navArgument("id_list") { type = NavType.IntType })
+        ) {
+            DetailListScreen(
+                DetailListViewModel(),
+                navController = navController,
+                it.arguments?.getInt("id_list") ?: 0,
+                it.arguments?.getString("name_list") ?: ""
+            );
+        }
         composable("profile") { ProfileScreen(ProfileViewModel(), navController = navController); }
         composable("my_lists") { MyListsScreen(MyListsViewModel(), navController = navController); }
     }

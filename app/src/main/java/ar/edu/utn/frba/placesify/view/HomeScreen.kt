@@ -99,9 +99,9 @@ fun Home(modifier: Modifier, viewModel: HomeViewModel, navController: NavControl
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ItemLista(nombreLista: String, navController: NavController?) {
+fun ItemLista(id_lista: Int, name_lista: String, navController: NavController?) {
     OutlinedCard(
-        onClick = { navController?.navigate("detail_list") },
+        onClick = { navController?.navigate("detail_list/${id_lista}/${name_lista}") },
         border = BorderStroke(1.dp, Color.Black),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface,
@@ -120,7 +120,7 @@ fun ItemLista(nombreLista: String, navController: NavController?) {
                 contentDescription = "",
                 modifier = Modifier.padding(horizontal = 5.dp)
             )
-            Text(nombreLista, modifier = Modifier.width(width = 200.dp))
+            Text(name_lista, modifier = Modifier.width(width = 200.dp))
             Text(
                 "CABA", modifier = Modifier
                     .width(width = 70.dp)
@@ -133,6 +133,6 @@ fun ItemLista(nombreLista: String, navController: NavController?) {
 @Composable
 fun MostrarListasDestacadas(navController: NavController?, listasDestacadas: List<Listas>?) {
     listasDestacadas?.forEach { lista ->
-        ItemLista(lista.name, navController)
+        ItemLista(lista.id, lista.name, navController)
     }
 }

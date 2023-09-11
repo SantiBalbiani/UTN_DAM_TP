@@ -15,15 +15,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
-import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
@@ -40,11 +37,14 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import ar.edu.utn.frba.placesify.R
 import ar.edu.utn.frba.placesify.viewmodel.DetailListViewModel
-import ar.edu.utn.frba.placesify.viewmodel.DiscoverPlacesViewModel
-import ar.edu.utn.frba.placesify.viewmodel.HomeViewModel
 
 @Composable
-fun DetailListScreen(viewModel: DetailListViewModel, navController: NavController? = null) {
+fun DetailListScreen(
+    viewModel: DetailListViewModel,
+    navController: NavController? = null,
+    id_list: Int,
+    name_list: String
+) {
     Box(
         Modifier
             .fillMaxSize()
@@ -53,7 +53,7 @@ fun DetailListScreen(viewModel: DetailListViewModel, navController: NavControlle
         DetailList(
             Modifier
                 .align(Alignment.TopStart)
-                .padding(16.dp), viewModel, navController
+                .padding(16.dp), viewModel, navController, id_list, name_list
         )
     }
 }
@@ -61,10 +61,20 @@ fun DetailListScreen(viewModel: DetailListViewModel, navController: NavControlle
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun DetailList(modifier: Modifier, viewModel: DetailListViewModel, navController: NavController?) {
+fun DetailList(
+    modifier: Modifier,
+    viewModel: DetailListViewModel,
+    navController: NavController?,
+    id_list: Int?,
+    name_list: String?
+) {
 
     Scaffold(
-        topBar = { BarraNavegacionSuperior("Detalle Lista", navController) }
+        topBar = {
+            if (name_list != null) {
+                BarraNavegacionSuperior(name_list, navController)
+            }
+        }
     ) { innerPadding ->
         LazyColumn(
             modifier = modifier.padding(innerPadding),
@@ -76,8 +86,14 @@ fun DetailList(modifier: Modifier, viewModel: DetailListViewModel, navController
                         painter = painterResource(id = R.drawable.ico_placesify),
                         contentDescription = "Imagen"
                     )
-                    Column (modifier = Modifier.padding(horizontal = 10.dp)){
-                        Text(text = "Nombre de la Lista", fontSize = 30.sp, fontWeight = FontWeight.Bold)
+                    Column(modifier = Modifier.padding(horizontal = 10.dp)) {
+                        if (name_list != null) {
+                            Text(
+                                text = name_list,
+                                fontSize = 30.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
                         AssistChip(
                             onClick = { },
                             enabled = false,

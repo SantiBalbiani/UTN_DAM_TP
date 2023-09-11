@@ -28,8 +28,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import ar.edu.utn.frba.placesify.R
 import ar.edu.utn.frba.placesify.viewmodel.DetailPlacesViewModel
-import ar.edu.utn.frba.placesify.viewmodel.DiscoverPlacesViewModel
-import ar.edu.utn.frba.placesify.viewmodel.NewPlacesViewModel
 
 @Composable
 fun DetailPlacesScreen(viewModel: DetailPlacesViewModel, navController: NavController? = null) {
@@ -86,12 +84,12 @@ fun DetailPlaces(
 
                 Text(text = "Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. Lorem Ipsum ha sido el texto de relleno estándar de las industrias desde el año 1500, cuando un impresor (N. del T. persona que se dedica a la imprenta) desconocido usó una galería de textos y los mezcló de tal manera que logró hacer un libro de textos especimen. No sólo sobrevivió 500 años, sino que tambien ingresó como texto de relleno en documentos electrónicos, quedando esencialmente igual al original. Fue popularizado en los 60s con la creación de las hojas \"Letraset\", las cuales contenian pasajes de Lorem ")
                 Text(text = "Listas", fontSize = 30.sp, fontWeight = FontWeight.Bold)
-                ItemLista("Pizzerias", navController)
-                ItemLista("Heladerias", navController)
-                ItemLista("Café de Autor", navController)
-                ItemLista("Cervezas artesanales", navController)
-                ItemLista("Salas de escape", navController)
-                ItemLista("Paint Ball", navController)
+                ItemLista(1,"Pizzerias", navController)
+                ItemLista(2,"Heladerias", navController)
+                ItemLista(2,"Café de Autor", navController)
+                ItemLista(2,"Cervezas artesanales", navController)
+                ItemLista(2,"Salas de escape", navController)
+                ItemLista(2,"Paint Ball", navController)
             }
 
         }

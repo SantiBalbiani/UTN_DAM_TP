@@ -4,17 +4,13 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material.icons.outlined.Search
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -26,10 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import ar.edu.utn.frba.placesify.viewmodel.DetailListViewModel
 import ar.edu.utn.frba.placesify.viewmodel.DiscoverPlacesViewModel
-import ar.edu.utn.frba.placesify.viewmodel.HomeViewModel
-import com.google.maps.android.compose.GoogleMap
 
 @Composable
 fun DiscoverPlacesScreen(viewModel: DiscoverPlacesViewModel, navController: NavController? = null) {
@@ -81,14 +74,14 @@ fun DiscoverPlaces(
                 )
                 Spacer(modifier = Modifier.padding(8.dp))
                 Text(text = "Listas encontradas", fontSize = 30.sp, fontWeight = FontWeight.Bold)
-                ItemLista("Pizzerias", navController)
-                ItemLista("Heladerias", navController)
-                ItemLista("Café de Autor", navController)
-                ItemLista("Cervezas artesanales", navController)
-                ItemLista("Salas de escape", navController)
-                ItemLista("Paint Ball", navController)
-                ItemLista("Trial para Correr", navController)
-                ItemLista("Cines", navController)
+                ItemLista(2, "Pizzerias", navController)
+                ItemLista(2, "Heladerias", navController)
+                ItemLista(2, "Café de Autor", navController)
+                ItemLista(2, "Cervezas artesanales", navController)
+                ItemLista(2, "Salas de escape", navController)
+                ItemLista(2, "Paint Ball", navController)
+                ItemLista(2, "Trial para Correr", navController)
+                ItemLista(2, "Cines", navController)
             }
         }
     }
