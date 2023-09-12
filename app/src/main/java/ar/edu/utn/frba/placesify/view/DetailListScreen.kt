@@ -1,6 +1,8 @@
 package ar.edu.utn.frba.placesify.view
 
 import android.annotation.SuppressLint
+import android.content.Intent
+import android.content.res.Resources
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -15,10 +17,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -30,12 +35,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import ar.edu.utn.frba.placesify.R
+import ar.edu.utn.frba.placesify.view.componentes.SharePlainText
 import ar.edu.utn.frba.placesify.viewmodel.DetailListViewModel
 
 @Composable
@@ -68,6 +79,12 @@ fun DetailList(
     id_list: Int?,
     name_list: String?
 ) {
+    // Defino el Contexto Actual
+    val context = LocalContext.current
+
+    // Genero el Intent de Share
+    val intent =
+        name_list?.let { SharePlainText(subject = it, extraText = "Lista compartida por Placesfy") }
 
     Scaffold(
         topBar = {
@@ -90,27 +107,52 @@ fun DetailList(
                         if (name_list != null) {
                             Text(
                                 text = name_list,
-                                fontSize = 30.sp,
+                                fontSize = dimensionResource(id = R.dimen.font_size_titulo).value.sp,
                                 fontWeight = FontWeight.Bold
                             )
                         }
-                        AssistChip(
-                            onClick = { },
-                            enabled = false,
-                            label = { Text("4.5") },
-                            leadingIcon = {
-                                Icon(
-                                    Icons.Filled.Star,
-                                    contentDescription = "Start",
-                                    Modifier.size(AssistChipDefaults.IconSize)
-                                )
-                            }
-                        )
+                        Row {
+                            AssistChip(
+                                onClick = { },
+                                enabled = false,
+                                label = { Text("4.5") },
+                                leadingIcon = {
+                                    Icon(
+                                        Icons.Filled.Star,
+                                        contentDescription = "Start",
+                                        Modifier.size(AssistChipDefaults.IconSize)
+                                    )
+                                }
+                            )
+
+                            AssistChip(
+                                onClick = {
+                                    ContextCompat.startActivity(
+                                        context,
+                                        Intent.createChooser(intent, null),
+                                        null
+                                    )
+                                },
+                                label = { Text("Compartir") },
+                                leadingIcon = {
+                                    Icon(
+                                        Icons.Filled.Share,
+                                        contentDescription = "Start",
+                                        Modifier.size(AssistChipDefaults.IconSize)
+                                    )
+                                },
+                                modifier = Modifier.padding(horizontal = 10.dp)
+                            )
+                        }
                     }
                 }
 
                 Text(text = "Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. Lorem Ipsum ha sido el texto de relleno estándar de las industrias desde el año 1500, cuando un impresor (N. del T. persona que se dedica a la imprenta) desconocido usó una galería de textos y los mezcló de tal manera que logró hacer un libro de textos especimen. No sólo sobrevivió 500 años, sino que tambien ingresó como texto de relleno en documentos electrónicos, quedando esencialmente igual al original. Fue popularizado en los 60s con la creación de las hojas \"Letraset\", las cuales contenian pasajes de Lorem ")
-                Text(text = "Lugares", fontSize = 30.sp, fontWeight = FontWeight.Bold)
+                Text(
+                    text = "Lugares",
+                    fontSize = dimensionResource(id = R.dimen.font_size_titulo).value.sp,
+                    fontWeight = FontWeight.Bold
+                )
                 ItemLugares("Pizzerias", navController)
                 ItemLugares("Heladerias", navController)
                 ItemLugares("Café de Autor", navController)

@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Placesify</string>
+    <dimen name="font_size_normal">16.dp</dimen>
+    <dimen name="font_size_titulo">30.dp</dimen>
 </resources>

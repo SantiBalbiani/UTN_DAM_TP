@@ -21,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -65,8 +66,12 @@ fun DetailPlaces(
                         painter = painterResource(id = R.drawable.ico_placesify),
                         contentDescription = "Imagen"
                     )
-                    Column (modifier = Modifier.padding(horizontal = 10.dp)){
-                        Text(text = "Nombre del Lugar", fontSize = 30.sp, fontWeight = FontWeight.Bold)
+                    Column(modifier = Modifier.padding(horizontal = 10.dp)) {
+                        Text(
+                            text = "Nombre del Lugar",
+                            fontSize = dimensionResource(id = R.dimen.font_size_titulo).value.sp,
+                            fontWeight = FontWeight.Bold
+                        )
                         AssistChip(
                             onClick = { },
                             enabled = false,
@@ -83,13 +88,17 @@ fun DetailPlaces(
                 }
 
                 Text(text = "Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. Lorem Ipsum ha sido el texto de relleno estándar de las industrias desde el año 1500, cuando un impresor (N. del T. persona que se dedica a la imprenta) desconocido usó una galería de textos y los mezcló de tal manera que logró hacer un libro de textos especimen. No sólo sobrevivió 500 años, sino que tambien ingresó como texto de relleno en documentos electrónicos, quedando esencialmente igual al original. Fue popularizado en los 60s con la creación de las hojas \"Letraset\", las cuales contenian pasajes de Lorem ")
-                Text(text = "Listas", fontSize = 30.sp, fontWeight = FontWeight.Bold)
-                ItemLista(1,"Pizzerias", navController)
-                ItemLista(2,"Heladerias", navController)
-                ItemLista(2,"Café de Autor", navController)
-                ItemLista(2,"Cervezas artesanales", navController)
-                ItemLista(2,"Salas de escape", navController)
-                ItemLista(2,"Paint Ball", navController)
+                Text(
+                    text = "Listas",
+                    fontSize = dimensionResource(id = R.dimen.font_size_titulo).value.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                ItemLista(1, "Pizzerias", navController)
+                ItemLista(2, "Heladerias", navController)
+                ItemLista(2, "Café de Autor", navController)
+                ItemLista(2, "Cervezas artesanales", navController)
+                ItemLista(2, "Salas de escape", navController)
+                ItemLista(2, "Paint Ball", navController)
             }
 
         }

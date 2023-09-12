@@ -18,10 +18,12 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import ar.edu.utn.frba.placesify.R
 import ar.edu.utn.frba.placesify.viewmodel.DiscoverPlacesViewModel
 
 @Composable
@@ -73,7 +75,11 @@ fun DiscoverPlaces(
                     }
                 )
                 Spacer(modifier = Modifier.padding(8.dp))
-                Text(text = "Listas encontradas", fontSize = 30.sp, fontWeight = FontWeight.Bold)
+                Text(
+                    text = "Listas encontradas",
+                    fontSize = dimensionResource(id = R.dimen.font_size_titulo).value.sp,
+                    fontWeight = FontWeight.Bold
+                )
                 ItemLista(2, "Pizzerias", navController)
                 ItemLista(2, "Heladerias", navController)
                 ItemLista(2, "Café de Autor", navController)
