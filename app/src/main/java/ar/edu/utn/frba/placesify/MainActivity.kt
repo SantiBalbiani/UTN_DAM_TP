@@ -13,6 +13,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import ar.edu.utn.frba.placesify.api.ListService
 import ar.edu.utn.frba.placesify.view.DetailListScreen
 import ar.edu.utn.frba.placesify.view.DetailPlacesScreen
 import ar.edu.utn.frba.placesify.view.DiscoverPlacesScreen
@@ -57,7 +58,7 @@ private fun App() {
 
         // Armo las Rutas de Navegación
         composable("login") { LoginScreen(LoginViewModel(), navController = navController); }
-        composable("home") { HomeScreen(HomeViewModel(), navController = navController); }
+        composable("home") { HomeScreen(HomeViewModel(ListService.instance), navController = navController); }
         composable("register") {
             RegisterScreen(
                 RegisterViewModel(),
