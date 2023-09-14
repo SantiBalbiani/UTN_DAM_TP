@@ -1,11 +1,22 @@
 package ar.edu.utn.frba.placesify.viewmodel
 
+import android.app.Activity
+import android.content.Intent
+import android.util.Log
 import android.util.Patterns
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
+import ar.edu.utn.frba.placesify.api.SignInResult
+import ar.edu.utn.frba.placesify.api.SignInState
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 
 class LoginViewModel : ViewModel() {
 
@@ -14,12 +25,17 @@ class LoginViewModel : ViewModel() {
     private val _password = MutableLiveData<String>()
     private val _loginEnable = MutableLiveData<Boolean>()
     private val _isLoading = MutableLiveData<Boolean>()
+    private val _state = MutableStateFlow(SignInState()) // Para Google SignIn
+    private val _isSignInSuccessful = MutableLiveData<Boolean>()
 
-    // Declaro los LiveData
+    // Declaro los LiveData / State
     val email: LiveData<String> = _email
     val password: LiveData<String> = _password
     val loginEnable: LiveData<Boolean> = _loginEnable
     val isLoading: LiveData<Boolean> = _isLoading
+    val state = _state.asStateFlow() // Para Google SignIn
+    val isSignInSuccessful: LiveData<Boolean> = _isSignInSuccessful
+
 
     // Valido los datos
     fun onLoginChanged(email: String, password: String) {
@@ -38,4 +54,22 @@ class LoginViewModel : ViewModel() {
         _loginEnable.value = true
     }
 
+    // Para Google SignIn
+    fun onSignInResult(result: SignInResult) {
+
+        Log.d("en onSignInResult: ${result.data}", "GOOGLE SIGN IN")
+
+        _isSignInSuccessful.value = true
+
+        _state.update {
+            it.copy(
+                isSignInSuccessful = result.data != null,
+                signInError = result.errorMessage
+            )
+        }
+    }
+
+    fun resetState() {
+        _state.update { SignInState() }
+    }
 }

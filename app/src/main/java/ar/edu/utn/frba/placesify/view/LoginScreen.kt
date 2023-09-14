@@ -1,7 +1,12 @@
 package ar.edu.utn.frba.placesify.view
 
+import android.content.Intent
+import android.widget.Toast
+import androidx.activity.compose.ManagedActivityResultLauncher
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.*
@@ -11,57 +16,84 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.CenterHorizontally
-import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.navigation.NavController
 import ar.edu.utn.frba.placesify.R
+import ar.edu.utn.frba.placesify.api.GoogleAuthUiClient
+import ar.edu.utn.frba.placesify.api.SignInState
 import ar.edu.utn.frba.placesify.viewmodel.LoginViewModel
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.google.firebase.auth.AuthResult
+import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 @Composable
-fun LoginScreen(viewModel: LoginViewModel, navController: NavController) {
+fun LoginScreen(
+    state: SignInState,
+    onSignInClick: () -> Unit,
+    viewModel: LoginViewModel,
+    navController: NavController
+) {
+
+    val context = LocalContext.current
+    LaunchedEffect(key1 = state.signInError) {
+        state.signInError?.let { error ->
+            Toast.makeText(
+                context,
+                error,
+                Toast.LENGTH_LONG
+            ).show()
+        }
+    }
+
     Box(
         Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Login(Modifier.align(Alignment.Center), viewModel, navController)
+        Login(Modifier.align(Alignment.Center), onSignInClick, viewModel, navController)
     }
 }
 
 @Composable
-fun Login(modifier: Modifier, viewModel: LoginViewModel, navController: NavController?) {
+fun Login(
+    modifier: Modifier,
+    onSignInClick: () -> Unit,
+    viewModel: LoginViewModel,
+    navController: NavController?
+) {
 
     // Declaro los viewData
     val email: String by viewModel.email.observeAsState(initial = "")
@@ -69,11 +101,27 @@ fun Login(modifier: Modifier, viewModel: LoginViewModel, navController: NavContr
     val loginEnable: Boolean by viewModel.loginEnable.observeAsState(initial = false)
     val isLoadding: Boolean by viewModel.isLoading.observeAsState(initial = false)
     val coroutineScope = rememberCoroutineScope()
+    var userFirebase by remember { mutableStateOf(Firebase.auth.currentUser) }
 
-    if (isLoadding) {
+    val launcher = rememberFirebaseAuthLauncher(
+        onAuthComplete = { result ->
+            userFirebase = result.user
+        },
+        onAuthError = {
+            userFirebase = null
+        }
+    )
+
+    val token = stringResource(R.string.default_web_client_id)
+    val context = LocalContext.current
+
+    if (userFirebase !== null) {
+/*
         Box(Modifier.fillMaxSize()) {
             CircularProgressIndicator(Modifier.align(Alignment.Center))
         }
+ */
+        navController?.navigate("home")
     } else {
         Column(
             modifier = modifier,
@@ -89,11 +137,25 @@ fun Login(modifier: Modifier, viewModel: LoginViewModel, navController: NavContr
                         PasswordField(password) { viewModel.onLoginChanged(email, it) }
             */
             Spacer(modifier = Modifier.padding(16.dp))
-            LoginButton(loginEnable) {
-                coroutineScope.launch {
-                    viewModel.onLoginSelected()
+            LoginButton(
+             onSignInClick
+/*
+                {
+                    val gso =
+                        GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                            .requestIdToken(token)
+                            .requestEmail()
+                            .build()
+
+                    val googleSignInClient = GoogleSignIn.getClient(context, gso)
+                    launcher.launch(googleSignInClient.signInIntent)
+
+
                 }
-            }
+*/
+
+            )
+
 
             /*
                         Spacer(modifier = Modifier.padding(16.dp))
@@ -106,15 +168,13 @@ fun Login(modifier: Modifier, viewModel: LoginViewModel, navController: NavContr
         }
     }
 
-    if (loginEnable) {
-        navController?.navigate("home")
-    }
+
 }
 
 @Composable
-fun LoginButton(loginEnable: Boolean, onLoginSelected: () -> Unit) {
+fun LoginButton(onSignInClick: () -> Unit) {
     Button(
-        onClick = { onLoginSelected() }, modifier = Modifier
+        onClick = { onSignInClick() }, modifier = Modifier
             .fillMaxWidth()
             .height(48.dp)
     ) {
@@ -176,5 +236,26 @@ fun EncabezadoImagen(modifier: Modifier, texto: String) {
                 .fillMaxWidth()
                 .padding(12.dp)
         )
+    }
+}
+
+@Composable
+fun rememberFirebaseAuthLauncher(
+    onAuthComplete: (AuthResult) -> Unit,
+    onAuthError: (ApiException) -> Unit
+): ManagedActivityResultLauncher<Intent, ActivityResult> {
+    val scope = rememberCoroutineScope()
+    return rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+        try {
+            val account = task.getResult(ApiException::class.java)!!
+            val credential = GoogleAuthProvider.getCredential(account.idToken!!, null)
+            scope.launch {
+                val authResult = Firebase.auth.signInWithCredential(credential).await()
+                onAuthComplete(authResult)
+            }
+        } catch (e: ApiException) {
+            onAuthError(e)
+        }
     }
 }

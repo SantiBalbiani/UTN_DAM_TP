@@ -44,6 +44,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -151,7 +153,9 @@ fun BarraNavegacionSuperior(title: String, navController: NavController?, isHome
             },
             confirmButton = {
                 TextButton(
-                    onClick = { activity?.finish() }
+                    onClick = {
+                        Firebase.auth.signOut()
+                        activity?.finish() }
                 ) {
                     Text("Salir")
                 }

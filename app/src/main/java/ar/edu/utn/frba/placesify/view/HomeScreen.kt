@@ -61,7 +61,7 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController? = null) {
 fun Home(modifier: Modifier, viewModel: HomeViewModel, navController: NavController?) {
 
     // Declaro los viewData
-    val listasDestacadas: List<Listas>? by viewModel.listasDestacadas.observeAsState(initial = listOf())
+    val listasDestacadas: List<Listas>? by viewModel.listasDestacadas.observeAsState(initial = null)
     val listasDestacadasActualizada: Boolean by viewModel.listasDestacadasActualizada.observeAsState(
         initial = false
     )
@@ -98,7 +98,7 @@ fun Home(modifier: Modifier, viewModel: HomeViewModel, navController: NavControl
 
                 // Actualizo el Listado
                 if (!listasDestacadasActualizada) {
-                    viewModel.onHomeChange()
+                    //viewModel.onHomeChange()
                 }
             }
         }
@@ -107,7 +107,7 @@ fun Home(modifier: Modifier, viewModel: HomeViewModel, navController: NavControl
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ItemLista(id_lista: Int, name_lista: String, navController: NavController?) {
+fun ItemLista(id_lista: String, name_lista: String, navController: NavController?) {
     OutlinedCard(
         onClick = { navController?.navigate("detail_list/${id_lista}/${name_lista}") },
         border = BorderStroke(1.dp, Color.Black),

@@ -80,14 +80,14 @@ fun DiscoverPlaces(
                     fontSize = dimensionResource(id = R.dimen.font_size_titulo).value.sp,
                     fontWeight = FontWeight.Bold
                 )
-                ItemLista(2, "Pizzerias", navController)
-                ItemLista(2, "Heladerias", navController)
-                ItemLista(2, "Café de Autor", navController)
-                ItemLista(2, "Cervezas artesanales", navController)
-                ItemLista(2, "Salas de escape", navController)
-                ItemLista(2, "Paint Ball", navController)
-                ItemLista(2, "Trial para Correr", navController)
-                ItemLista(2, "Cines", navController)
+                ItemLista("2", "Pizzerias", navController)
+                ItemLista("2", "Heladerias", navController)
+                ItemLista("2", "Café de Autor", navController)
+                ItemLista("2", "Cervezas artesanales", navController)
+                ItemLista("2", "Salas de escape", navController)
+                ItemLista("2", "Paint Ball", navController)
+                ItemLista("2", "Trial para Correr", navController)
+                ItemLista("2", "Cines", navController)
             }
         }
     }
