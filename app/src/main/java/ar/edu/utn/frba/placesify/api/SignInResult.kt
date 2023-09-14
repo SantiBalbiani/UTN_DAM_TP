@@ -4,12 +4,13 @@ data class SignInResult(
     val data: UserData?,
     val errorMessage: String?
 )
+
 data class UserData(
     val userId: String,
     val username: String?,
     val profilePictureUrl: String?
 )
 data class SignInState(
-    var isSignInSuccessful: Boolean = false,
-    var signInError: String? = null
+    val isSignInSuccessful: Boolean = false,
+    val signInError: String? = null
 )

@@ -26,7 +26,6 @@ class LoginViewModel : ViewModel() {
     private val _loginEnable = MutableLiveData<Boolean>()
     private val _isLoading = MutableLiveData<Boolean>()
     private val _state = MutableStateFlow(SignInState()) // Para Google SignIn
-    private val _isSignInSuccessful = MutableLiveData<Boolean>()
 
     // Declaro los LiveData / State
     val email: LiveData<String> = _email
@@ -34,8 +33,6 @@ class LoginViewModel : ViewModel() {
     val loginEnable: LiveData<Boolean> = _loginEnable
     val isLoading: LiveData<Boolean> = _isLoading
     val state = _state.asStateFlow() // Para Google SignIn
-    val isSignInSuccessful: LiveData<Boolean> = _isSignInSuccessful
-
 
     // Valido los datos
     fun onLoginChanged(email: String, password: String) {
@@ -56,17 +53,10 @@ class LoginViewModel : ViewModel() {
 
     // Para Google SignIn
     fun onSignInResult(result: SignInResult) {
-
-        Log.d("en onSignInResult: ${result.data}", "GOOGLE SIGN IN")
-
-        _isSignInSuccessful.value = true
-
-        _state.update {
-            it.copy(
-                isSignInSuccessful = result.data != null,
-                signInError = result.errorMessage
-            )
-        }
+        _state.update { it.copy(
+            isSignInSuccessful = result.data != null,
+            signInError = result.errorMessage
+        ) }
     }
 
     fun resetState() {

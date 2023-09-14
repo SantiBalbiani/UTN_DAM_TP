@@ -1,7 +1,6 @@
 package ar.edu.utn.frba.placesify
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -12,14 +11,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -47,8 +43,6 @@ import ar.edu.utn.frba.placesify.viewmodel.NewPlacesViewModel
 import ar.edu.utn.frba.placesify.viewmodel.ProfileViewModel
 import ar.edu.utn.frba.placesify.viewmodel.RegisterViewModel
 import com.google.android.gms.auth.api.identity.Identity
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -75,53 +69,43 @@ class MainActivity : ComponentActivity() {
                         // Armo las Rutas de Navegación
                         composable("login") {
 
-                            val state by LoginViewModel().state.collectAsState()
+                            val viewModel = viewModel<LoginViewModel>()
+                            val state by viewModel.state.collectAsStateWithLifecycle()
 
-                            val isSignInSuccessful: Boolean by LoginViewModel().isSignInSuccessful.observeAsState(
-                                initial = false
-                            )
+                            // Si ya estoy logueado...
+/*
+                            LaunchedEffect(key1 = Unit) {
+                                if (googleAuthUiClient.getSignedInUser() != null) {
+                                    navController.navigate("home")
+                                }
+                            }
+*/
 
-
-// Si ya estoy logueado...
-                            /*
-                                                        LaunchedEffect(key1 = Unit) {
-                                                            if (googleAuthUiClient.getSignedInUSer() != null) {
-                                                                navController.navigate("profile")
-                                                            }
-                                                        }
-                            */
                             val launcher = rememberLauncherForActivityResult(
                                 contract = ActivityResultContracts.StartIntentSenderForResult(),
                                 onResult = { result ->
-
-                                    Log.i(
-                                        result.toString(),
-                                        "GOOGLE SIGN IN2"
-                                    )
-
                                     if (result.resultCode == RESULT_OK) {
                                         lifecycleScope.launch {
                                             val signInResult = googleAuthUiClient.signInWithIntent(
                                                 intent = result.data ?: return@launch
                                             )
-                                            LoginViewModel().onSignInResult(signInResult)
+                                            viewModel.onSignInResult(signInResult)
                                         }
                                     }
                                 }
                             )
 
-                            LaunchedEffect(key1 = isSignInSuccessful) {
-
-                                Log.d(isSignInSuccessful.toString(), "GOOGLE SIGN IN1")
-
-                                if (isSignInSuccessful) {
+                            LaunchedEffect(key1 = state.isSignInSuccessful) {
+                                if (state.isSignInSuccessful) {
                                     Toast.makeText(
                                         applicationContext,
-                                        "Sign in successful",
+                                        "Sign in satisfactorio...",
                                         Toast.LENGTH_LONG
                                     ).show()
 
-                                    navController?.navigate("home")
+                                    // Direcciono al Home
+                                    navController.navigate("home")
+                                    viewModel.resetState()
                                 }
                             }
 
@@ -133,7 +117,6 @@ class MainActivity : ComponentActivity() {
                                         launcher.launch(
                                             IntentSenderRequest.Builder(
                                                 signInIntentSender ?: return@launch
-
                                             ).build()
                                         )
                                     }

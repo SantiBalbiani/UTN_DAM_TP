@@ -1,6 +1,7 @@
 package ar.edu.utn.frba.placesify.view
 
 import android.content.Intent
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -24,9 +25,11 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -49,6 +52,7 @@ import ar.edu.utn.frba.placesify.R
 import ar.edu.utn.frba.placesify.api.GoogleAuthUiClient
 import ar.edu.utn.frba.placesify.api.SignInState
 import ar.edu.utn.frba.placesify.viewmodel.LoginViewModel
+import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
@@ -66,7 +70,6 @@ fun LoginScreen(
     viewModel: LoginViewModel,
     navController: NavController
 ) {
-
     val context = LocalContext.current
     LaunchedEffect(key1 = state.signInError) {
         state.signInError?.let { error ->
@@ -94,33 +97,16 @@ fun Login(
     viewModel: LoginViewModel,
     navController: NavController?
 ) {
-
     // Declaro los viewData
     val email: String by viewModel.email.observeAsState(initial = "")
     val password: String by viewModel.password.observeAsState(initial = "")
     val loginEnable: Boolean by viewModel.loginEnable.observeAsState(initial = false)
-    val isLoadding: Boolean by viewModel.isLoading.observeAsState(initial = false)
-    val coroutineScope = rememberCoroutineScope()
-    var userFirebase by remember { mutableStateOf(Firebase.auth.currentUser) }
 
-    val launcher = rememberFirebaseAuthLauncher(
-        onAuthComplete = { result ->
-            userFirebase = result.user
-        },
-        onAuthError = {
-            userFirebase = null
-        }
-    )
-
-    val token = stringResource(R.string.default_web_client_id)
-    val context = LocalContext.current
-
-    if (userFirebase !== null) {
-/*
-        Box(Modifier.fillMaxSize()) {
-            CircularProgressIndicator(Modifier.align(Alignment.Center))
-        }
- */
+    // Si el usuario ya está logueado con Firebase
+    if (Firebase.auth.currentUser !== null) {
+        Log.d(Firebase.auth.currentUser?.displayName, "Firebase")
+        Log.d(Firebase.auth.currentUser?.email, "Firebase")
+        Log.d(Firebase.auth.currentUser?.photoUrl.toString(), "Firebase")
         navController?.navigate("home")
     } else {
         Column(
@@ -137,38 +123,9 @@ fun Login(
                         PasswordField(password) { viewModel.onLoginChanged(email, it) }
             */
             Spacer(modifier = Modifier.padding(16.dp))
-            LoginButton(
-             onSignInClick
-/*
-                {
-                    val gso =
-                        GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                            .requestIdToken(token)
-                            .requestEmail()
-                            .build()
-
-                    val googleSignInClient = GoogleSignIn.getClient(context, gso)
-                    launcher.launch(googleSignInClient.signInIntent)
-
-
-                }
-*/
-
-            )
-
-
-            /*
-                        Spacer(modifier = Modifier.padding(16.dp))
-                        TextButton(modifier = Modifier.align(CenterHorizontally),
-                            onClick = { navController?.navigate("register") }) {
-                            Text(text = "Crear cuenta nueva", fontSize = dimensionResource(id = R.dimen.font_size_normal).value.sp)
-
-                        }
-              */
+            LoginButton(onSignInClick)
         }
     }
-
-
 }
 
 @Composable
@@ -236,26 +193,5 @@ fun EncabezadoImagen(modifier: Modifier, texto: String) {
                 .fillMaxWidth()
                 .padding(12.dp)
         )
-    }
-}
-
-@Composable
-fun rememberFirebaseAuthLauncher(
-    onAuthComplete: (AuthResult) -> Unit,
-    onAuthError: (ApiException) -> Unit
-): ManagedActivityResultLauncher<Intent, ActivityResult> {
-    val scope = rememberCoroutineScope()
-    return rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
-        try {
-            val account = task.getResult(ApiException::class.java)!!
-            val credential = GoogleAuthProvider.getCredential(account.idToken!!, null)
-            scope.launch {
-                val authResult = Firebase.auth.signInWithCredential(credential).await()
-                onAuthComplete(authResult)
-            }
-        } catch (e: ApiException) {
-            onAuthError(e)
-        }
     }
 }
