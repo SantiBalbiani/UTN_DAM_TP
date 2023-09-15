@@ -10,6 +10,7 @@ data class Listas(
     val name: String,
     @field:Json(name = "description") // Usado por Retrofit
     val description: String,
+    val review: Int,
     val lstPlaces: List<Lugares>?
 )
 

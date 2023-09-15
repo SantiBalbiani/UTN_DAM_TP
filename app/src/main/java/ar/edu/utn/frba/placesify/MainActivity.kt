@@ -7,6 +7,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -99,7 +100,7 @@ class MainActivity : ComponentActivity() {
                                 if (state.isSignInSuccessful) {
                                     Toast.makeText(
                                         applicationContext,
-                                        "Sign in satisfactorio...",
+                                        "Acceso exitoso...",
                                         Toast.LENGTH_LONG
                                     ).show()
 

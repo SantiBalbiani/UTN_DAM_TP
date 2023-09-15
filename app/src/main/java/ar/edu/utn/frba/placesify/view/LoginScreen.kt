@@ -8,6 +8,8 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.*
@@ -17,6 +19,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
@@ -24,6 +27,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -38,6 +42,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
@@ -84,7 +89,7 @@ fun LoginScreen(
     Box(
         Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .background(MaterialTheme.colorScheme.inversePrimary),
     ) {
         Login(Modifier.align(Alignment.Center), onSignInClick, viewModel, navController)
     }
@@ -104,24 +109,16 @@ fun Login(
 
     // Si el usuario ya está logueado con Firebase
     if (Firebase.auth.currentUser !== null) {
-        Log.d(Firebase.auth.currentUser?.displayName, "Firebase")
-        Log.d(Firebase.auth.currentUser?.email, "Firebase")
-        Log.d(Firebase.auth.currentUser?.photoUrl.toString(), "Firebase")
         navController?.navigate("home")
     } else {
         Column(
-            modifier = modifier,
+            modifier = modifier.padding(30.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             EncabezadoImagen(
                 modifier, stringResource(id = R.string.app_name)
             )
-            /*
-                        Spacer(modifier = Modifier.padding(16.dp))
-                        EmailField(email) { viewModel.onLoginChanged(it, password) }
-                        Spacer(modifier = Modifier.padding(16.dp))
-                        PasswordField(password) { viewModel.onLoginChanged(email, it) }
-            */
+
             Spacer(modifier = Modifier.padding(16.dp))
             LoginButton(onSignInClick)
         }
@@ -180,7 +177,9 @@ fun EmailField(email: String, onTextFieldChanged: (String) -> Unit) {
 
 @Composable
 fun EncabezadoImagen(modifier: Modifier, texto: String) {
-    Row(modifier = modifier) {
+    Row(
+        horizontalArrangement = Arrangement.Center
+    ) {
         Image(
             painter = painterResource(id = R.drawable.ico_placesify),
             contentDescription = "Imagen Encabezado"
@@ -190,7 +189,6 @@ fun EncabezadoImagen(modifier: Modifier, texto: String) {
             fontSize = 30.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier
-                .fillMaxWidth()
                 .padding(12.dp)
         )
     }

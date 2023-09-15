@@ -1,26 +1,26 @@
 package ar.edu.utn.frba.placesify.viewmodel
 
 import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ar.edu.utn.frba.placesify.api.ApiService
 import ar.edu.utn.frba.placesify.model.Listas
 import kotlinx.coroutines.launch
 
-class DetailListViewModel(private val listService: ApiService) : ViewModel() {
+class DetailListViewModel(
+//    savedStateHandle: SavedStateHandle,
+    private val listService: ApiService,
+) : ViewModel() {
+//    private val idLista = checkNotNull(savedStateHandle.get<String>("id_list"))
 
     // Declaro las Suscripciones a los LiveData
-    var idLista: String = ""
     private val _detalleLista = MutableLiveData<Listas>()
-
-    // Declaro los LiveData
-    val detalleLista: LiveData<Listas> = _detalleLista
 
     init {
         // Obtengo las Listas Destacadas
-        getLista(idLista)
+        //getLista(idLista)
     }
 
     private fun getLista(idLista: String) {

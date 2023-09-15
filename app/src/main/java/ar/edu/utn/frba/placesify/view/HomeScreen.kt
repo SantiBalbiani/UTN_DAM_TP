@@ -12,11 +12,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Place
+import androidx.compose.material3.AssistChip
+import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -45,6 +49,7 @@ import ar.edu.utn.frba.placesify.R
 import ar.edu.utn.frba.placesify.model.Listas
 import ar.edu.utn.frba.placesify.view.componentes.ShowLoading
 import ar.edu.utn.frba.placesify.viewmodel.HomeViewModel
+import kotlin.random.Random
 
 @Composable
 fun HomeScreen(viewModel: HomeViewModel, navController: NavController? = null) {
@@ -135,10 +140,18 @@ fun ItemLista(id_lista: String, name_lista: String, navController: NavController
                 modifier = Modifier.padding(horizontal = 5.dp)
             )
             Text(name_lista, modifier = Modifier.width(width = 200.dp))
-            Text(
-                "CABA", modifier = Modifier
-                    .width(width = 70.dp)
-                    .padding(horizontal = 5.dp)
+            AssistChip(
+                onClick = { },
+                enabled = false,
+                border = null,
+                label = { Text(text = Random.nextInt(0, 5).toString()) },
+                leadingIcon = {
+                    Icon(
+                        Icons.Filled.Star,
+                        contentDescription = "Start",
+                        Modifier.size(AssistChipDefaults.IconSize)
+                    )
+                }
             )
         }
         Divider()

@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -134,28 +135,31 @@ fun BarraNavegacionSuperior(title: String, navController: NavController?, isHome
             DropdownMenu(
                 expanded = menuExpanded,
                 onDismissRequest = { menuExpanded = false },
-
+                Modifier
+                    .background(MaterialTheme.colorScheme.onPrimary),
                 ) {
                 DropdownMenuItem(
                     text = { (Firebase.auth.currentUser?.displayName?.let { Text(text = it) }) },
                     colors = MenuDefaults.itemColors(Color.White),
                     onClick = {},
-                    modifier = Modifier
-                        .background(
-                            Color.DarkGray
-                        )
+                    modifier = Modifier.background(MaterialTheme.colorScheme.secondary)
                 )
                 Divider()
-/*
-                DropdownMenuItem(
-                    text = { Text("Mi Perfil") },
-                    onClick = { navController?.navigate("profile") }
-                )
- */
+                /*
+                                DropdownMenuItem(
+                                    text = { Text("Mi Perfil") },
+                                    onClick = { navController?.navigate("profile") }
+                                )
+                 */
                 DropdownMenuItem(
                     text = { Text("Mis Listas") },
                     onClick = { navController?.navigate("my_lists") }
                 )
+                DropdownMenuItem(
+                    text = { Text("Favoritas") },
+                    onClick = { navController?.navigate("my_lists") }
+                )
+                Divider()
                 DropdownMenuItem(
                     text = { Text("Salir") },
                     onClick = { logout = true }

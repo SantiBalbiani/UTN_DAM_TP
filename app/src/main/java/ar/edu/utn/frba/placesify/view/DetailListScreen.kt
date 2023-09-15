@@ -18,11 +18,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ChipBorder
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -118,6 +120,7 @@ fun DetailList(
                             AssistChip(
                                 onClick = { },
                                 enabled = false,
+                                border = null,
                                 label = { Text("4.5") },
                                 leadingIcon = {
                                     Icon(
@@ -129,6 +132,20 @@ fun DetailList(
                             )
 
                             AssistChip(
+                                onClick = { },
+                                enabled = true,
+                                border = null,
+                                label = {
+                                    Icon(
+                                        Icons.Outlined.FavoriteBorder,
+                                        contentDescription = "Favorite",
+                                        Modifier.size(AssistChipDefaults.IconSize)
+                                    )
+                                },
+                                modifier = Modifier.padding(horizontal = 5.dp)
+                            )
+
+                            AssistChip(
                                 onClick = {
                                     ContextCompat.startActivity(
                                         context,
@@ -136,6 +153,7 @@ fun DetailList(
                                         null
                                     )
                                 },
+                                border = null,
                                 label = { Text("Compartir") },
                                 leadingIcon = {
                                     Icon(
@@ -144,7 +162,7 @@ fun DetailList(
                                         Modifier.size(AssistChipDefaults.IconSize)
                                     )
                                 },
-                                modifier = Modifier.padding(horizontal = 10.dp)
+                                modifier = Modifier.padding(horizontal = 5.dp)
                             )
                         }
                     }
