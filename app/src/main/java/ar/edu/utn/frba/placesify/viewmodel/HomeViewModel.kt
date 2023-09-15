@@ -22,69 +22,25 @@ class HomeViewModel(private val listService: ApiService) : ViewModel() {
     val listasDestacadasActualizada: LiveData<Boolean> = _listasDestacadasActualizada
 
     init {
-        // Lanzo la Coroutine en el thread de IO
-        viewModelScope.launch(Dispatchers.IO) {
+        // Obtengo las Listas Destacadas
+        getListasDestacadas()
+    }
+
+    private fun getListasDestacadas() {
+        // Lanzo la Coroutine en el thread de MAIN
+        viewModelScope.launch() {
             try {
                 val response = listService.getListas()
-                Log.d(response.toString(), "API_CALL 1")
-                Log.d("Size Items= ${response.items.size.toString()}", "API_CALL 1")
-
-                // Cargo la lista Destacadas
-                var myArrayList = ArrayList<Listas>()
 
                 if (response.items.isNotEmpty()) {
-                    Log.d("Items con datos", "API_CALL 1")
-                    response.items.forEach {
-                        Log.d("Cargo Item ${it.name}", "API_CALL 1")
-                        myArrayList.add(it)
-                    }
-
-                    _listasDestacadas.value = myArrayList
+                    // Cargo la lista Destacadas
+                    _listasDestacadas.value = response.items
                     _listasDestacadasActualizada.value = true
-                    Log.d("Carga de _listasDestacadas onInit= ${_listasDestacadas.value.toString()}", "API_CALL 1")
-                }else{
-                    Log.d("Items Vacios", "API_CALL 1")
                 }
-                // TODO resolver la carga dinamica de las listas provenientes de la API
-
 
             } catch (e: Exception) {
                 Log.d("CATCH API ${e.toString()}", "API_CALL 2")
             }
         }
-    }
-
-    // Genero Set de Datos de Prueba
-    private val lugar1 = Lugares(id = 1, name = "Lugar 1", description = "Descripcion Lugar 1")
-    private val lugar2 = Lugares(id = 2, name = "Lugar 2", description = "Descripcion Lugar 2")
-    private val lista1 = Listas(
-        id = "1",
-        name = "Lista 1",
-        description = "Descripcion Lista",
-        lstPlaces = listOf(lugar1, lugar2)
-    )
-    private val lista2 = Listas(
-        id = "2",
-        name = "Lista 2",
-        description = "Descripcion Lista",
-        lstPlaces = listOf(lugar1, lugar2)
-    )
-    private val lista3 = Listas(
-        id = "3",
-        name = "Lista 3",
-        description = "Descripcion Lista",
-        lstPlaces = listOf(lugar1, lugar2)
-    )
-    private var lista4 = Listas(
-        id = "4",
-        name = "Lista 4",
-        description = "Descripcion Lista",
-        lstPlaces = listOf(lugar1, lugar2)
-    )
-
-
-    fun onHomeChange() {
-        //_listasDestacadas.value = listOf(lista1, lista2, lista3, lista4)
-        //_listasDestacadasActualizada.value = true
     }
 }

@@ -9,6 +9,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.POST
+import retrofit2.http.Path
 
 interface ApiService {
     companion object {
@@ -16,13 +17,20 @@ interface ApiService {
             .baseUrl("https://crudapi.co.uk/api/v1/")
             .addConverterFactory(MoshiConverterFactory.create())
             .client(OkHttpClient.Builder().addInterceptor { chain ->
-                val request = chain.request().newBuilder().addHeader("Authorization", "Bearer s6A42K8fhYhBeQ7QZD-yhfj6zVAQpWkYPws_ucD_aGKkbJxc9A").build()
+                val request = chain.request().newBuilder().addHeader(
+                    "Authorization",
+                    "Bearer s6A42K8fhYhBeQ7QZD-yhfj6zVAQpWkYPws_ucD_aGKkbJxc9A"
+                ).build()
                 chain.proceed(request)
             }.build())
             .build().create(ApiService::class.java)
     }
+
     @GET("listas")
     suspend fun getListas(): ApiResponse
+
+    @GET("listas/{id}")
+    suspend fun getLista(@Path("id") id: String): ApiResponse
 
     @POST("lista")
     suspend fun addLista(@Body lista: Listas): Listas

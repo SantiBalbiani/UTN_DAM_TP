@@ -2,7 +2,6 @@ package ar.edu.utn.frba.placesify.view
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.content.res.Resources
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -22,9 +21,9 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -32,20 +31,21 @@ import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import ar.edu.utn.frba.placesify.R
+import ar.edu.utn.frba.placesify.model.Listas
 import ar.edu.utn.frba.placesify.view.componentes.SharePlainText
 import ar.edu.utn.frba.placesify.viewmodel.DetailListViewModel
 
@@ -53,7 +53,7 @@ import ar.edu.utn.frba.placesify.viewmodel.DetailListViewModel
 fun DetailListScreen(
     viewModel: DetailListViewModel,
     navController: NavController? = null,
-    id_list: Int,
+    id_list: String,
     name_list: String
 ) {
     Box(
@@ -76,15 +76,18 @@ fun DetailList(
     modifier: Modifier,
     viewModel: DetailListViewModel,
     navController: NavController?,
-    id_list: Int?,
+    id_list: String,
     name_list: String?
 ) {
     // Defino el Contexto Actual
     val context = LocalContext.current
 
+//    val idLista: String by viewModel.idLista.observeAsState()
+//    val detalleLista: Listas by viewModel.detalleLista.observeAsState(initial = null)
+
     // Genero el Intent de Share
     val intent =
-        name_list?.let { SharePlainText(subject = it, extraText = "Lista compartida por Placesfy") }
+        name_list?.let { SharePlainText(subject = it, extraText = "Lista compartida por Placesify") }
 
     Scaffold(
         topBar = {
@@ -169,9 +172,8 @@ fun DetailList(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ItemLugares(nombreLugar: String, navController: NavController?) {
-    OutlinedCard(
+    Card(
         onClick = { navController?.navigate("detail_places") },
-        border = BorderStroke(1.dp, Color.Black),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface,
         ),
@@ -196,5 +198,6 @@ fun ItemLugares(nombreLugar: String, navController: NavController?) {
                     .padding(horizontal = 5.dp)
             )
         }
+        Divider()
     }
 }

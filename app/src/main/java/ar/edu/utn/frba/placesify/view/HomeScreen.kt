@@ -1,6 +1,7 @@
 package ar.edu.utn.frba.placesify.view
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -17,10 +18,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
@@ -38,6 +43,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import ar.edu.utn.frba.placesify.R
 import ar.edu.utn.frba.placesify.model.Listas
+import ar.edu.utn.frba.placesify.view.componentes.ShowLoading
 import ar.edu.utn.frba.placesify.viewmodel.HomeViewModel
 
 @Composable
@@ -96,9 +102,9 @@ fun Home(modifier: Modifier, viewModel: HomeViewModel, navController: NavControl
                 // Muestro las Listas Destacadas
                 MostrarListasDestacadas(navController, listasDestacadas)
 
-                // Actualizo el Listado
+                // Muestreo Loading
                 if (!listasDestacadasActualizada) {
-                    //viewModel.onHomeChange()
+                    ShowLoading("Actualizando...")
                 }
             }
         }
@@ -108,9 +114,9 @@ fun Home(modifier: Modifier, viewModel: HomeViewModel, navController: NavControl
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ItemLista(id_lista: String, name_lista: String, navController: NavController?) {
-    OutlinedCard(
+
+    Card(
         onClick = { navController?.navigate("detail_list/${id_lista}/${name_lista}") },
-        border = BorderStroke(1.dp, Color.Black),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface,
         ),
@@ -135,6 +141,7 @@ fun ItemLista(id_lista: String, name_lista: String, navController: NavController
                     .padding(horizontal = 5.dp)
             )
         }
+        Divider()
     }
 }
 

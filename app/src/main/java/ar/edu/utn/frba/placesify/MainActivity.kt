@@ -73,13 +73,13 @@ class MainActivity : ComponentActivity() {
                             val state by viewModel.state.collectAsStateWithLifecycle()
 
                             // Si ya estoy logueado...
-/*
-                            LaunchedEffect(key1 = Unit) {
-                                if (googleAuthUiClient.getSignedInUser() != null) {
-                                    navController.navigate("home")
-                                }
-                            }
-*/
+                            /*
+                                                        LaunchedEffect(key1 = Unit) {
+                                                            if (googleAuthUiClient.getSignedInUser() != null) {
+                                                                navController.navigate("home")
+                                                            }
+                                                        }
+                            */
 
                             val launcher = rememberLauncherForActivityResult(
                                 contract = ActivityResultContracts.StartIntentSenderForResult(),
@@ -123,60 +123,60 @@ class MainActivity : ComponentActivity() {
                                 },
                                 LoginViewModel(),
                                 navController = navController
-                            );
+                            )
                         }
                         composable("home") {
                             HomeScreen(
                                 HomeViewModel(ApiService.instance),
                                 navController = navController
-                            );
+                            )
                         }
                         composable("register") {
                             RegisterScreen(
                                 RegisterViewModel(),
                                 navController = navController
-                            );
+                            )
                         }
                         composable("discover_places") {
                             DiscoverPlacesScreen(
                                 DiscoverPlacesViewModel(),
                                 navController = navController
-                            );
+                            )
                         }
                         composable("new_places") {
                             NewPlacesScreen(
                                 NewPlacesViewModel(),
                                 navController = navController
-                            );
+                            )
                         }
                         composable("detail_places") {
                             DetailPlacesScreen(
                                 DetailPlacesViewModel(),
                                 navController = navController
-                            );
+                            )
                         }
                         composable(
                             "detail_list/{id_list}/{name_list}",
-                            arguments = listOf(navArgument("id_list") { type = NavType.IntType })
+                            arguments = listOf(navArgument("id_list") { type = NavType.StringType })
                         ) {
                             DetailListScreen(
-                                DetailListViewModel(),
+                                DetailListViewModel(ApiService.instance),
                                 navController = navController,
-                                it.arguments?.getInt("id_list") ?: 0,
+                                it.arguments?.getString("id_list") ?: "",
                                 it.arguments?.getString("name_list") ?: ""
-                            );
+                            )
                         }
                         composable("profile") {
                             ProfileScreen(
                                 ProfileViewModel(),
                                 navController = navController
-                            );
+                            )
                         }
                         composable("my_lists") {
                             MyListsScreen(
                                 MyListsViewModel(),
                                 navController = navController
-                            );
+                            )
                         }
                     }
                 }
