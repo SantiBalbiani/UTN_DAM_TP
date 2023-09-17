@@ -104,7 +104,6 @@ fun Home(modifier: Modifier, viewModel: HomeViewModel, navController: NavControl
                         fontWeight = FontWeight.Bold
                     )
 
-
                     // Muestro las Listas Destacadas
                     MostrarListasDestacadas(navController, listasDestacadas)
                 }

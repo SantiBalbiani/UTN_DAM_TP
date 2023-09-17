@@ -7,6 +7,7 @@ import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -24,6 +25,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -128,19 +130,23 @@ fun Login(
 @Composable
 fun LoginButton(onSignInClick: () -> Unit) {
     Button(
-        onClick = { onSignInClick() }, modifier = Modifier
+        onClick = { onSignInClick() }, shape = RoundedCornerShape(6.dp),
+        colors = ButtonDefaults.buttonColors(containerColor = Color.White),
+        border = BorderStroke(width = 1.dp, color = MaterialTheme.colorScheme.primary),
+        modifier = Modifier
             .fillMaxWidth()
-            .height(48.dp)
+            .padding(start = 16.dp, end = 16.dp)
     ) {
         Row {
-            Icon(
-                Icons.Default.AccountCircle,
-                contentDescription = "Login",
-                Modifier.padding(horizontal = 5.dp)
+            Image(
+                painter = painterResource(id = R.drawable.ico_google),
+                contentDescription = "google_ico"
             )
             Text(
                 text = "Acceder con Google",
                 fontSize = dimensionResource(id = R.dimen.font_size_normal).value.sp,
+                color = Color.Black,
+                modifier = Modifier.padding(6.dp)
             )
         }
     }
