@@ -1,7 +1,6 @@
 package ar.edu.utn.frba.placesify.view
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,8 +28,6 @@ import ar.edu.utn.frba.placesify.model.Listas
 import ar.edu.utn.frba.placesify.model.Usuarios
 import ar.edu.utn.frba.placesify.view.componentes.ShowLoading
 import ar.edu.utn.frba.placesify.viewmodel.FavoritiesViewModel
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 
 @Composable
 fun FavoritiesScreen(

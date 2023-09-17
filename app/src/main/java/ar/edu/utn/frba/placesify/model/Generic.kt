@@ -6,7 +6,9 @@ data class Lugares(
     val id: Int = 0,
     val name: String = "",
     val description: String = "",
-    val latitue: Double = 0.0,
+    @field:Json(name = "latitud") // Usado por Retrofit
+    val latitud: Double = 0.0,
+    @field:Json(name = "longitud") // Usado por Retrofit
     val longitud: Double = 0.0
 )
 

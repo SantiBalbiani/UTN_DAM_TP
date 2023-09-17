@@ -27,21 +27,19 @@ import ar.edu.utn.frba.placesify.view.DetailListScreen
 import ar.edu.utn.frba.placesify.view.DetailPlacesScreen
 import ar.edu.utn.frba.placesify.view.DiscoverPlacesScreen
 import ar.edu.utn.frba.placesify.view.FavoritiesScreen
-import ar.edu.utn.frba.placesify.viewmodel.HomeViewModel
-import ar.edu.utn.frba.placesify.view.theme.PlacesifyTheme
 import ar.edu.utn.frba.placesify.view.HomeScreen
 import ar.edu.utn.frba.placesify.view.LoginScreen
 import ar.edu.utn.frba.placesify.view.MyListsScreen
 import ar.edu.utn.frba.placesify.view.NewPlacesScreen
-import ar.edu.utn.frba.placesify.view.RegisterScreen
+import ar.edu.utn.frba.placesify.view.theme.PlacesifyTheme
 import ar.edu.utn.frba.placesify.viewmodel.DetailListViewModel
 import ar.edu.utn.frba.placesify.viewmodel.DetailPlacesViewModel
 import ar.edu.utn.frba.placesify.viewmodel.DiscoverPlacesViewModel
 import ar.edu.utn.frba.placesify.viewmodel.FavoritiesViewModel
+import ar.edu.utn.frba.placesify.viewmodel.HomeViewModel
 import ar.edu.utn.frba.placesify.viewmodel.LoginViewModel
 import ar.edu.utn.frba.placesify.viewmodel.MyListsViewModel
 import ar.edu.utn.frba.placesify.viewmodel.NewPlacesViewModel
-import ar.edu.utn.frba.placesify.viewmodel.RegisterViewModel
 import com.google.android.gms.auth.api.identity.Identity
 import kotlinx.coroutines.launch
 
@@ -154,7 +152,10 @@ class MainActivity : ComponentActivity() {
                             arguments = listOf(navArgument("id_list") { type = NavType.StringType })
                         ) {
                             DetailListScreen(
-                                DetailListViewModel(ApiService.instance),
+                                DetailListViewModel(
+                                    ApiService.instance,
+                                    it.arguments?.getString("id_list")
+                                ),
                                 navController = navController,
                                 it.arguments?.getString("id_list") ?: "",
                                 it.arguments?.getString("name_list") ?: ""

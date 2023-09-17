@@ -30,7 +30,7 @@ interface ApiService {
     suspend fun getListas(): ApiListResponse
 
     @GET("listas/{id}")
-    suspend fun getLista(@Path("id") id: String): ApiListResponse
+    suspend fun getLista(@Path("id") id: String): Listas
 
     @POST("lista")
     suspend fun addLista(@Body lista: Listas): Listas

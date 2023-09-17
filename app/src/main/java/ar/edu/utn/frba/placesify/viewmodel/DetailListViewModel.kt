@@ -1,8 +1,8 @@
 package ar.edu.utn.frba.placesify.viewmodel
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ar.edu.utn.frba.placesify.api.ApiService
@@ -10,17 +10,22 @@ import ar.edu.utn.frba.placesify.model.Listas
 import kotlinx.coroutines.launch
 
 class DetailListViewModel(
-//    savedStateHandle: SavedStateHandle,
     private val listService: ApiService,
+    private val id_list: String?
 ) : ViewModel() {
-//    private val idLista = checkNotNull(savedStateHandle.get<String>("id_list"))
-
     // Declaro las Suscripciones a los LiveData
     private val _detalleLista = MutableLiveData<Listas>()
+    private val _detalleListaActualizada = MutableLiveData<Boolean>()
+
+    // Declaro los LiveData
+    val detalleLista: LiveData<Listas> = _detalleLista
+    val detalleListaActualizada: LiveData<Boolean> = _detalleListaActualizada
 
     init {
         // Obtengo las Listas Destacadas
-        //getLista(idLista)
+        if (id_list != null) {
+            getLista(id_list)
+        }
     }
 
     private fun getLista(idLista: String) {
@@ -28,10 +33,8 @@ class DetailListViewModel(
         viewModelScope.launch() {
             try {
                 val response = listService.getLista(idLista)
-
-                if (response.items.isNotEmpty()) {
-                    _detalleLista.value = response.items.first()
-                }
+                _detalleLista.value = response
+                _detalleListaActualizada.value = true
 
             } catch (e: Exception) {
                 Log.d("CATCH API ${e.toString()}", "API_CALL 2")
