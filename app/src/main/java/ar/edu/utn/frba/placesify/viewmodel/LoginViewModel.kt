@@ -1,19 +1,11 @@
 package ar.edu.utn.frba.placesify.viewmodel
 
-import android.app.Activity
-import android.content.Intent
-import android.util.Log
 import android.util.Patterns
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.navigation.NavController
 import ar.edu.utn.frba.placesify.api.SignInResult
 import ar.edu.utn.frba.placesify.api.SignInState
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update

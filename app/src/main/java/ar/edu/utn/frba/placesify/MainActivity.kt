@@ -119,7 +119,6 @@ class MainActivity : ComponentActivity() {
                                         )
                                     }
                                 },
-                                LoginViewModel(),
                                 navController = navController
                             )
                         }

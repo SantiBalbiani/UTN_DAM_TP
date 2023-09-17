@@ -18,9 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import ar.edu.utn.frba.placesify.api.UserData
 import ar.edu.utn.frba.placesify.viewmodel.ProfileViewModel
-import kotlinx.coroutines.Job
 
 @Composable
 fun ProfileScreen(

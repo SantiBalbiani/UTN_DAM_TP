@@ -14,7 +14,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import ar.edu.utn.frba.placesify.viewmodel.DiscoverPlacesViewModel
 import ar.edu.utn.frba.placesify.viewmodel.NewPlacesViewModel
 
 @Composable
