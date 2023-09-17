@@ -1,13 +1,13 @@
 package ar.edu.utn.frba.placesify.api
 
-import ar.edu.utn.frba.placesify.model.ApiResponse
+import ar.edu.utn.frba.placesify.model.ApiListResponse
+import ar.edu.utn.frba.placesify.model.ApiUserResponse
 import ar.edu.utn.frba.placesify.model.Listas
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.GET
-import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.Path
 
@@ -27,11 +27,15 @@ interface ApiService {
     }
 
     @GET("listas")
-    suspend fun getListas(): ApiResponse
+    suspend fun getListas(): ApiListResponse
 
     @GET("listas/{id}")
-    suspend fun getLista(@Path("id") id: String): ApiResponse
+    suspend fun getLista(@Path("id") id: String): ApiListResponse
 
     @POST("lista")
     suspend fun addLista(@Body lista: Listas): Listas
+
+    @GET("usuarios")
+    suspend fun getUsuarios(): ApiUserResponse
+
 }

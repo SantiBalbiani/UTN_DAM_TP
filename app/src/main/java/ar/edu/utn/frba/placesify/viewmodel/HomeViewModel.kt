@@ -7,8 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ar.edu.utn.frba.placesify.api.ApiService
 import ar.edu.utn.frba.placesify.model.Listas
-import ar.edu.utn.frba.placesify.model.Lugares
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class HomeViewModel(private val listService: ApiService) : ViewModel() {

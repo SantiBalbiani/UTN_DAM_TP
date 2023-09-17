@@ -14,6 +14,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.Clear
 import androidx.compose.material3.AlertDialog
@@ -93,7 +94,6 @@ fun BarraNavegacionSuperior(title: String, navController: NavController?, isHome
                 } else {
                     Text(title, color = Color.Black)
                 }
-
             }
         },
         navigationIcon = {
@@ -111,6 +111,12 @@ fun BarraNavegacionSuperior(title: String, navController: NavController?, isHome
                 Icon(
                     imageVector = Icons.Filled.Search,
                     contentDescription = "Buscar"
+                )
+            }
+            IconButton(onClick = { navController?.navigate("home") }) {
+                Icon(
+                    imageVector = Icons.Filled.Home,
+                    contentDescription = "Home"
                 )
             }
             IconButton(onClick = { menuExpanded = !menuExpanded }) {
@@ -137,7 +143,7 @@ fun BarraNavegacionSuperior(title: String, navController: NavController?, isHome
                 onDismissRequest = { menuExpanded = false },
                 Modifier
                     .background(MaterialTheme.colorScheme.onPrimary),
-                ) {
+            ) {
                 DropdownMenuItem(
                     text = { (Firebase.auth.currentUser?.displayName?.let { Text(text = it) }) },
                     colors = MenuDefaults.itemColors(Color.White),
@@ -156,8 +162,8 @@ fun BarraNavegacionSuperior(title: String, navController: NavController?, isHome
                     onClick = { navController?.navigate("my_lists") }
                 )
                 DropdownMenuItem(
-                    text = { Text("Favoritas") },
-                    onClick = { navController?.navigate("my_lists") }
+                    text = { Text("Favoritos") },
+                    onClick = { navController?.navigate("favorities") }
                 )
                 Divider()
                 DropdownMenuItem(

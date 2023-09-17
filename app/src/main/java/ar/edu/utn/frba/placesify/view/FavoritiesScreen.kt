@@ -1,9 +1,9 @@
 package ar.edu.utn.frba.placesify.view
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -26,19 +26,23 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import ar.edu.utn.frba.placesify.R
 import ar.edu.utn.frba.placesify.model.Listas
+import ar.edu.utn.frba.placesify.model.Usuarios
 import ar.edu.utn.frba.placesify.view.componentes.ShowLoading
-import ar.edu.utn.frba.placesify.viewmodel.MyListsViewModel
+import ar.edu.utn.frba.placesify.viewmodel.FavoritiesViewModel
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
 @Composable
-fun MyListsScreen(viewModel: MyListsViewModel, navController: NavController? = null) {
+fun FavoritiesScreen(
+    viewModel: FavoritiesViewModel,
+    navController: NavController? = null,
+) {
     Box(
         Modifier
             .fillMaxSize()
             .padding(0.dp)
     ) {
-        MyLists(
+        Favorities(
             Modifier
                 .align(Alignment.TopStart)
                 .padding(16.dp), viewModel, navController
@@ -49,16 +53,23 @@ fun MyListsScreen(viewModel: MyListsViewModel, navController: NavController? = n
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun MyLists(modifier: Modifier, viewModel: MyListsViewModel, navController: NavController?) {
+fun Favorities(modifier: Modifier, viewModel: FavoritiesViewModel, navController: NavController?) {
 
     // Declaro los viewData
-    val misListas: List<Listas>? by viewModel.misListas.observeAsState(initial = null)
-    val misListasActualizada: Boolean by viewModel.misListasActualizada.observeAsState(
+    val listasAll: List<Listas>? by viewModel.listasAll.observeAsState(initial = null)
+    val listaFavoritasUsuario: List<Usuarios>? by viewModel.listaFavoritasUsuario.observeAsState(
+        initial = null
+    )
+    val listasAllActualizada: Boolean by viewModel.listasAllActualizada.observeAsState(
+        initial = false
+    )
+    val listaFavoritasUsuarioActualizada: Boolean by viewModel.listaFavoritasUsuarioActualizada.observeAsState(
         initial = false
     )
 
+
     Scaffold(
-        topBar = { BarraNavegacionSuperior("Mis Listas", navController) },
+        topBar = { BarraNavegacionSuperior("Favoritos", navController) },
         floatingActionButton = {
             FloatingActionButton(onClick = { navController?.navigate("new_places") }) {
                 Icon(Icons.Default.Add, contentDescription = "Add")
@@ -71,17 +82,17 @@ fun MyLists(modifier: Modifier, viewModel: MyListsViewModel, navController: NavC
         ) {
             item {
                 Text(
-                    text = "Mis Listas",
+                    text = "Listas Favoritas",
                     fontSize = dimensionResource(id = R.dimen.font_size_titulo).value.sp,
                     fontWeight = FontWeight.Bold
                 )
 
                 // Muestreo Loading
-                if (!misListasActualizada) {
+                if (!listasAllActualizada || !listaFavoritasUsuarioActualizada) {
                     ShowLoading("Actualizando...")
                 }else{
                     // Muestro las Listas Destacadas
-                    MostrarMisListas(navController, misListas)
+                    MostrarListasFavoritas(navController, listasAll, listaFavoritasUsuario)
                 }
             }
         }
@@ -89,22 +100,26 @@ fun MyLists(modifier: Modifier, viewModel: MyListsViewModel, navController: NavC
 }
 
 @Composable
-fun MostrarMisListas(navController: NavController?, misListas: List<Listas>?) {
+fun MostrarListasFavoritas(
+    navController: NavController?,
+    listasAll: List<Listas>?,
+    listaFavoritasUsuario: List<Usuarios>?
+) {
+    if (listaFavoritasUsuario != null && listaFavoritasUsuario.isNotEmpty()) {
 
-    // Filtro las Listas que pertenecen al usuario logueado
-    val listaFiltrada = misListas?.sortedBy { it.name }?.filter { it.email_owner == Firebase.auth.currentUser?.email }
-
-    if (listaFiltrada != null) {
-        if (listaFiltrada.isNotEmpty()) {
-            listaFiltrada.forEach { lista ->
-                ItemLista(lista, navController)
+        val listaFiltrada =
+            listasAll?.filter { listaAll ->
+                listaFavoritasUsuario.first().favoritesLists?.contains(listaAll.id) == true
             }
-        } else {
-            Text(
-                text = "No se encontraron datos.",
-                fontSize = dimensionResource(id = R.dimen.font_size_normal).value.sp,
-            )
+
+        listaFiltrada?.forEach { lista ->
+            ItemLista(lista, navController)
         }
+    } else {
+        Text(
+            text = "No se encontraron datos.",
+            fontSize = dimensionResource(id = R.dimen.font_size_normal).value.sp,
+        )
     }
 
 }

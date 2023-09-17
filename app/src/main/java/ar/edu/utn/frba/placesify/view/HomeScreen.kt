@@ -2,7 +2,6 @@ package ar.edu.utn.frba.placesify.view
 
 import android.annotation.SuppressLint
 import android.util.Log
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,14 +23,11 @@ import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,7 +35,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -104,12 +99,12 @@ fun Home(modifier: Modifier, viewModel: HomeViewModel, navController: NavControl
                     fontWeight = FontWeight.Bold
                 )
 
-                // Muestro las Listas Destacadas
-                MostrarListasDestacadas(navController, listasDestacadas)
-
                 // Muestreo Loading
                 if (!listasDestacadasActualizada) {
                     ShowLoading("Actualizando...")
+                }else{
+                    // Muestro las Listas Destacadas
+                    MostrarListasDestacadas(navController, listasDestacadas)
                 }
             }
         }
@@ -118,10 +113,10 @@ fun Home(modifier: Modifier, viewModel: HomeViewModel, navController: NavControl
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ItemLista(id_lista: String, name_lista: String, navController: NavController?) {
+fun ItemLista(lista: Listas, navController: NavController?) {
 
     Card(
-        onClick = { navController?.navigate("detail_list/${id_lista}/${name_lista}") },
+        onClick = { navController?.navigate("detail_list/${lista.id}/${lista.name}") },
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface,
         ),
@@ -139,12 +134,12 @@ fun ItemLista(id_lista: String, name_lista: String, navController: NavController
                 contentDescription = "",
                 modifier = Modifier.padding(horizontal = 5.dp)
             )
-            Text(name_lista, modifier = Modifier.width(width = 200.dp))
+            Text(lista.name, modifier = Modifier.width(width = 200.dp))
             AssistChip(
                 onClick = { },
                 enabled = false,
                 border = null,
-                label = { Text(text = Random.nextInt(0, 5).toString()) },
+                label = { Text(text = lista.review.toString()) },
                 leadingIcon = {
                     Icon(
                         Icons.Filled.Star,
@@ -160,7 +155,7 @@ fun ItemLista(id_lista: String, name_lista: String, navController: NavController
 
 @Composable
 fun MostrarListasDestacadas(navController: NavController?, listasDestacadas: List<Listas>?) {
-    listasDestacadas?.forEach { lista ->
-        ItemLista(lista.id, lista.name, navController)
+    listasDestacadas?.sortedBy { it.name }?.forEach { lista ->
+        ItemLista(lista, navController)
     }
 }

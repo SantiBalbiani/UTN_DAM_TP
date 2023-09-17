@@ -7,7 +7,6 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -27,21 +26,21 @@ import ar.edu.utn.frba.placesify.api.GoogleAuthUiClient
 import ar.edu.utn.frba.placesify.view.DetailListScreen
 import ar.edu.utn.frba.placesify.view.DetailPlacesScreen
 import ar.edu.utn.frba.placesify.view.DiscoverPlacesScreen
+import ar.edu.utn.frba.placesify.view.FavoritiesScreen
 import ar.edu.utn.frba.placesify.viewmodel.HomeViewModel
 import ar.edu.utn.frba.placesify.view.theme.PlacesifyTheme
 import ar.edu.utn.frba.placesify.view.HomeScreen
 import ar.edu.utn.frba.placesify.view.LoginScreen
 import ar.edu.utn.frba.placesify.view.MyListsScreen
 import ar.edu.utn.frba.placesify.view.NewPlacesScreen
-import ar.edu.utn.frba.placesify.view.ProfileScreen
 import ar.edu.utn.frba.placesify.view.RegisterScreen
 import ar.edu.utn.frba.placesify.viewmodel.DetailListViewModel
 import ar.edu.utn.frba.placesify.viewmodel.DetailPlacesViewModel
 import ar.edu.utn.frba.placesify.viewmodel.DiscoverPlacesViewModel
+import ar.edu.utn.frba.placesify.viewmodel.FavoritiesViewModel
 import ar.edu.utn.frba.placesify.viewmodel.LoginViewModel
 import ar.edu.utn.frba.placesify.viewmodel.MyListsViewModel
 import ar.edu.utn.frba.placesify.viewmodel.NewPlacesViewModel
-import ar.edu.utn.frba.placesify.viewmodel.ProfileViewModel
 import ar.edu.utn.frba.placesify.viewmodel.RegisterViewModel
 import com.google.android.gms.auth.api.identity.Identity
 import kotlinx.coroutines.launch
@@ -132,12 +131,6 @@ class MainActivity : ComponentActivity() {
                                 navController = navController
                             )
                         }
-                        composable("register") {
-                            RegisterScreen(
-                                RegisterViewModel(),
-                                navController = navController
-                            )
-                        }
                         composable("discover_places") {
                             DiscoverPlacesScreen(
                                 DiscoverPlacesViewModel(),
@@ -167,15 +160,15 @@ class MainActivity : ComponentActivity() {
                                 it.arguments?.getString("name_list") ?: ""
                             )
                         }
-                        composable("profile") {
-                            ProfileScreen(
-                                ProfileViewModel(),
+                        composable("favorities") {
+                            FavoritiesScreen(
+                                FavoritiesViewModel(ApiService.instance),
                                 navController = navController
                             )
                         }
                         composable("my_lists") {
                             MyListsScreen(
-                                MyListsViewModel(),
+                                MyListsViewModel(ApiService.instance),
                                 navController = navController
                             )
                         }
