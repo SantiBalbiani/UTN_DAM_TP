@@ -65,21 +65,22 @@ fun MyLists(modifier: Modifier, viewModel: MyListsViewModel, navController: NavC
             }
         }
     ) { innerPadding ->
-        LazyColumn(
-            modifier = modifier.padding(innerPadding),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            item {
-                Text(
-                    text = "Mis Listas",
-                    fontSize = dimensionResource(id = R.dimen.font_size_titulo).value.sp,
-                    fontWeight = FontWeight.Bold
-                )
+        // Muestreo Loading
+        if (!misListasActualizada) {
+            ShowLoading("Actualizando...")
+        } else {
+            LazyColumn(
+                modifier = modifier.padding(innerPadding),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                item {
+                    Text(
+                        text = "Mis Listas",
+                        fontSize = dimensionResource(id = R.dimen.font_size_titulo).value.sp,
+                        fontWeight = FontWeight.Bold
+                    )
 
-                // Muestreo Loading
-                if (!misListasActualizada) {
-                    ShowLoading("Actualizando...")
-                }else{
+
                     // Muestro las Listas Destacadas
                     MostrarMisListas(navController, misListas)
                 }
@@ -92,7 +93,8 @@ fun MyLists(modifier: Modifier, viewModel: MyListsViewModel, navController: NavC
 fun MostrarMisListas(navController: NavController?, misListas: List<Listas>?) {
 
     // Filtro las Listas que pertenecen al usuario logueado
-    val listaFiltrada = misListas?.sortedBy { it.name }?.filter { it.email_owner == Firebase.auth.currentUser?.email }
+    val listaFiltrada = misListas?.sortedBy { it.name }
+        ?.filter { it.email_owner == Firebase.auth.currentUser?.email }
 
     if (listaFiltrada != null) {
         if (listaFiltrada.isNotEmpty()) {

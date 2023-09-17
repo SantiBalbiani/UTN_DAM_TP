@@ -156,9 +156,7 @@ class MainActivity : ComponentActivity() {
                                     ApiService.instance,
                                     it.arguments?.getString("id_list")
                                 ),
-                                navController = navController,
-                                it.arguments?.getString("id_list") ?: "",
-                                it.arguments?.getString("name_list") ?: ""
+                                navController = navController
                             )
                         }
                         composable("favorities") {

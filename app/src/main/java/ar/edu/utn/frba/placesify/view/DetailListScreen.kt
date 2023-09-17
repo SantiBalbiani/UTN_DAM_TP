@@ -19,6 +19,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material3.AssistChip
@@ -47,6 +48,7 @@ import androidx.navigation.NavController
 import ar.edu.utn.frba.placesify.R
 import ar.edu.utn.frba.placesify.model.Listas
 import ar.edu.utn.frba.placesify.model.Lugares
+import ar.edu.utn.frba.placesify.model.Usuarios
 import ar.edu.utn.frba.placesify.view.componentes.SharePlainText
 import ar.edu.utn.frba.placesify.view.componentes.ShowLoading
 import ar.edu.utn.frba.placesify.viewmodel.DetailListViewModel
@@ -54,9 +56,7 @@ import ar.edu.utn.frba.placesify.viewmodel.DetailListViewModel
 @Composable
 fun DetailListScreen(
     viewModel: DetailListViewModel,
-    navController: NavController? = null,
-    id_list: String,
-    name_list: String
+    navController: NavController? = null
 ) {
     Box(
         Modifier
@@ -66,7 +66,7 @@ fun DetailListScreen(
         DetailList(
             Modifier
                 .align(Alignment.TopStart)
-                .padding(16.dp), viewModel, navController, id_list, name_list
+                .padding(16.dp), viewModel, navController
         )
     }
 }
@@ -77,24 +77,26 @@ fun DetailListScreen(
 fun DetailList(
     modifier: Modifier,
     viewModel: DetailListViewModel,
-    navController: NavController?,
-    id_list: String,
-    name_list: String?
+    navController: NavController?
 ) {
     // Declaro los viewData
     val detalleLista: Listas? by viewModel.detalleLista.observeAsState(initial = null)
     val detalleListaActualizada: Boolean by viewModel.detalleListaActualizada.observeAsState(
         initial = false
     )
-
-    Log.d(detalleLista.toString(), "detalleLista DEBUG VIEW")
+    val listaFavoritasUsuario: List<Usuarios>? by viewModel.listaFavoritasUsuario.observeAsState(
+        initial = null
+    )
+    val listaFavoritasUsuarioActualizada: Boolean by viewModel.listaFavoritasUsuarioActualizada.observeAsState(
+        initial = false
+    )
 
     // Defino el Contexto Actual
     val context = LocalContext.current
 
     // Genero el Intent de Share
     val intent =
-        name_list?.let {
+        detalleLista?.name?.let {
             SharePlainText(
                 subject = it,
                 extraText = "Lista compartida por Placesify"
@@ -103,108 +105,120 @@ fun DetailList(
 
     Scaffold(
         topBar = {
-            if (name_list != null) {
-                BarraNavegacionSuperior(name_list, navController)
+            if (detalleLista?.name != null) {
+                BarraNavegacionSuperior(detalleLista?.name!!, navController)
             }
         }
     ) { innerPadding ->
-        LazyColumn(
-            modifier = modifier.padding(innerPadding),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            item {
-                Row {
-                    Image(
-                        painter = painterResource(id = R.drawable.ico_placesify),
-                        contentDescription = "Imagen"
-                    )
-                    Column(modifier = Modifier.padding(horizontal = 10.dp)) {
-                        if (name_list != null) {
-                            Text(
-                                text = name_list,
-                                fontSize = dimensionResource(id = R.dimen.font_size_titulo).value.sp,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-                        Row {
-                            AssistChip(
-                                onClick = { },
-                                enabled = false,
-                                border = null,
-                                label = { Text("4.5") },
-                                leadingIcon = {
-                                    Icon(
-                                        Icons.Filled.Star,
-                                        contentDescription = "Start",
-                                        Modifier.size(AssistChipDefaults.IconSize)
-                                    )
-                                }
-                            )
 
-                            AssistChip(
-                                onClick = { },
-                                enabled = true,
-                                border = null,
-                                label = {
-                                    Icon(
-                                        Icons.Outlined.FavoriteBorder,
-                                        contentDescription = "Favorite",
-                                        Modifier.size(AssistChipDefaults.IconSize)
-                                    )
-                                },
-                                modifier = Modifier.padding(horizontal = 5.dp)
-                            )
+        // Muestreo Loading mientras llegan los datos
+        if (!detalleListaActualizada || !listaFavoritasUsuarioActualizada) {
+            ShowLoading("Actualizando...")
+        } else {
 
-                            AssistChip(
-                                onClick = {
-                                    ContextCompat.startActivity(
-                                        context,
-                                        Intent.createChooser(intent, null),
-                                        null
-                                    )
-                                },
-                                border = null,
-                                label = { Text("Compartir") },
-                                leadingIcon = {
-                                    Icon(
-                                        Icons.Filled.Share,
-                                        contentDescription = "Start",
-                                        Modifier.size(AssistChipDefaults.IconSize)
-                                    )
-                                },
-                                modifier = Modifier.padding(horizontal = 5.dp)
-                            )
+            LazyColumn(
+                modifier = modifier.padding(innerPadding),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+
+
+                item {
+                    Row {
+                        Image(
+                            painter = painterResource(id = R.drawable.ico_placesify),
+                            contentDescription = "Imagen"
+                        )
+                        Column(modifier = Modifier.padding(horizontal = 10.dp)) {
+                            if (detalleLista?.name != null) {
+                                Text(
+                                    text = detalleLista?.name!!,
+                                    fontSize = dimensionResource(id = R.dimen.font_size_titulo).value.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+                            Row {
+                                AssistChip(
+                                    onClick = { },
+                                    enabled = false,
+                                    border = null,
+                                    label = { Text("4.5") },
+                                    leadingIcon = {
+                                        Icon(
+                                            Icons.Filled.Star,
+                                            contentDescription = "Start",
+                                            Modifier.size(AssistChipDefaults.IconSize)
+                                        )
+                                    }
+                                )
+
+                                AssistChip(
+                                    onClick = { },
+                                    enabled = true,
+                                    border = null,
+                                    label = {
+                                        Icon(
+                                            if (detalleLista?.let {
+                                                    esFavorita(
+                                                        id_lista = it.id,
+                                                        listaFavoritasUsuario
+                                                    )
+                                                } == true
+                                            ) {
+                                                Icons.Outlined.Favorite
+                                            } else {
+                                                Icons.Outlined.FavoriteBorder
+                                            },
+                                            contentDescription = "Favorite",
+                                            Modifier.size(AssistChipDefaults.IconSize)
+                                        )
+                                    },
+                                    modifier = Modifier.padding(horizontal = 5.dp)
+                                )
+
+                                AssistChip(
+                                    onClick = {
+                                        ContextCompat.startActivity(
+                                            context,
+                                            Intent.createChooser(intent, null),
+                                            null
+                                        )
+                                    },
+                                    border = null,
+                                    label = { Text("Compartir") },
+                                    leadingIcon = {
+                                        Icon(
+                                            Icons.Filled.Share,
+                                            contentDescription = "Start",
+                                            Modifier.size(AssistChipDefaults.IconSize)
+                                        )
+                                    },
+                                    modifier = Modifier.padding(horizontal = 5.dp)
+                                )
+                            }
                         }
                     }
-                }
 
-                // Muestreo Loading mientras llegan los datos
-                if (!detalleListaActualizada) {
-                    ShowLoading("Actualizando...")
-                } else {
                     detalleLista?.let { Text(text = it.description) }
                     Spacer(modifier = Modifier.padding(8.dp))
-                }
-
-                Text(
-                    text = "Lugares",
-                    fontSize = dimensionResource(id = R.dimen.font_size_titulo).value.sp,
-                    fontWeight = FontWeight.Bold
-                )
-
-                // Si la Lista posee Lugares, los muestro
-                if (detalleLista?.lstPlaces?.isNotEmpty() == true) {
-                    detalleLista?.lstPlaces?.forEach { lugar ->
-                        ItemLugares(lugar, navController)
-                    }
-                } else {
                     Text(
-                        text = "No se encontraron datos.",
-                        fontSize = dimensionResource(id = R.dimen.font_size_normal).value.sp,
+                        text = "Lugares",
+                        fontSize = dimensionResource(id = R.dimen.font_size_titulo).value.sp,
+                        fontWeight = FontWeight.Bold
                     )
+
+                    // Si la Lista posee Lugares, los muestro
+                    if (detalleLista?.lstPlaces?.isNotEmpty() == true) {
+                        detalleLista?.lstPlaces?.forEach { lugar ->
+                            ItemLugares(lugar, navController)
+                        }
+                    } else {
+                        Text(
+                            text = "No se encontraron datos.",
+                            fontSize = dimensionResource(id = R.dimen.font_size_normal).value.sp,
+                        )
+                    }
                 }
             }
-
         }
     }
 }
@@ -247,5 +261,17 @@ fun ItemLugares(lugar: Lugares, navController: NavController?) {
             )
         }
         Divider()
+    }
+}
+
+
+fun esFavorita(
+    id_lista: String,
+    listaFavoritasUsuario: List<Usuarios>?
+): Boolean? {
+    if (listaFavoritasUsuario != null && listaFavoritasUsuario.isNotEmpty()) {
+        return listaFavoritasUsuario.first().favoritesLists?.contains(id_lista)
+    } else {
+        return false
     }
 }

@@ -78,29 +78,33 @@ fun Home(modifier: Modifier, viewModel: HomeViewModel, navController: NavControl
             }
         }
     ) { innerPadding ->
-        LazyColumn(
-            modifier = modifier.padding(innerPadding),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            item {
-                Button(
-                    onClick = { navController?.navigate("discover_places") }, modifier = Modifier
-                        .fillMaxWidth()
-                        .height(40.dp)
-                ) {
-                    Text(text = "Descubrir Lugares")
-                }
-                Spacer(modifier = Modifier.padding(8.dp))
-                Text(
-                    text = "Listas destacadas",
-                    fontSize = dimensionResource(id = R.dimen.font_size_titulo).value.sp,
-                    fontWeight = FontWeight.Bold
-                )
 
-                // Muestreo Loading
-                if (!listasDestacadasActualizada) {
-                    ShowLoading("Actualizando...")
-                }else{
+        // Muestreo Loading
+        if (!listasDestacadasActualizada) {
+            ShowLoading("Actualizando...")
+        } else {
+
+            LazyColumn(
+                modifier = modifier.padding(innerPadding),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                item {
+                    Button(
+                        onClick = { navController?.navigate("discover_places") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(40.dp)
+                    ) {
+                        Text(text = "Descubrir Lugares")
+                    }
+                    Spacer(modifier = Modifier.padding(8.dp))
+                    Text(
+                        text = "Listas destacadas",
+                        fontSize = dimensionResource(id = R.dimen.font_size_titulo).value.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+
+
                     // Muestro las Listas Destacadas
                     MostrarListasDestacadas(navController, listasDestacadas)
                 }

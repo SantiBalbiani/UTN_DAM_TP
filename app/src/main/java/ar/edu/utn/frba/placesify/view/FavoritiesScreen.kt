@@ -73,21 +73,21 @@ fun Favorities(modifier: Modifier, viewModel: FavoritiesViewModel, navController
             }
         }
     ) { innerPadding ->
-        LazyColumn(
-            modifier = modifier.padding(innerPadding),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            item {
-                Text(
-                    text = "Listas Favoritas",
-                    fontSize = dimensionResource(id = R.dimen.font_size_titulo).value.sp,
-                    fontWeight = FontWeight.Bold
-                )
+        // Muestreo Loading
+        if (!listasAllActualizada || !listaFavoritasUsuarioActualizada) {
+            ShowLoading("Actualizando...")
+        } else {
+            LazyColumn(
+                modifier = modifier.padding(innerPadding),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                item {
+                    Text(
+                        text = "Listas Favoritas",
+                        fontSize = dimensionResource(id = R.dimen.font_size_titulo).value.sp,
+                        fontWeight = FontWeight.Bold
+                    )
 
-                // Muestreo Loading
-                if (!listasAllActualizada || !listaFavoritasUsuarioActualizada) {
-                    ShowLoading("Actualizando...")
-                }else{
                     // Muestro las Listas Destacadas
                     MostrarListasFavoritas(navController, listasAll, listaFavoritasUsuario)
                 }
