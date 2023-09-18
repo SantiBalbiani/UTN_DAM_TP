@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.placesify.api
+package ar.edu.utn.frba.placesify.model
 
 data class SignInResult(
     val data: UserData?,

@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import ar.edu.utn.frba.placesify.R
-import ar.edu.utn.frba.placesify.api.SignInState
+import ar.edu.utn.frba.placesify.model.SignInState
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 

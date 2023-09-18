@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
 import ar.edu.utn.frba.placesify.R
+import ar.edu.utn.frba.placesify.model.SignInResult
+import ar.edu.utn.frba.placesify.model.UserData
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.BeginSignInRequest.GoogleIdTokenRequestOptions
 import com.google.android.gms.auth.api.identity.SignInClient

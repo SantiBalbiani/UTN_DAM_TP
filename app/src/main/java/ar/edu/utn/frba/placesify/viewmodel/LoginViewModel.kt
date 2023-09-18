@@ -4,8 +4,8 @@ import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import ar.edu.utn.frba.placesify.api.SignInResult
-import ar.edu.utn.frba.placesify.api.SignInState
+import ar.edu.utn.frba.placesify.model.SignInResult
+import ar.edu.utn.frba.placesify.model.SignInState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update

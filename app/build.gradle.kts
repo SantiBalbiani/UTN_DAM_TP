@@ -79,14 +79,12 @@ dependencies {
     // Also add the dependency for the Google Play services library and specify its version
     implementation("com.google.android.gms:play-services-auth:20.7.0")
 
-    // Google Maps
-    implementation("com.google.maps.android:maps-compose:2.14.0")
-    implementation("com.google.android.gms:play-services-maps:18.1.0")
-
     // Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.5.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.7.1")
+    implementation("com.google.code.gson:gson:2.9.0")
     implementation("com.squareup.retrofit2:converter-moshi:2.4.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.4.0") // for cache
 
     // Coil
     implementation("io.coil-kt:coil-compose:2.4.0")

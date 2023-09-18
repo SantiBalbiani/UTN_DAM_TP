@@ -37,5 +37,4 @@ interface ApiService {
 
     @GET("usuarios")
     suspend fun getUsuarios(): ApiUserResponse
-
 }

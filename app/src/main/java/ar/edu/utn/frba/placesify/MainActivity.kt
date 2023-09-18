@@ -21,6 +21,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import ar.edu.utn.frba.placesify.api.OpenStreetmapService
 import ar.edu.utn.frba.placesify.api.ApiService
 import ar.edu.utn.frba.placesify.api.GoogleAuthUiClient
 import ar.edu.utn.frba.placesify.view.DetailListScreen
@@ -129,8 +130,9 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         composable("discover_places") {
+
                             DiscoverPlacesScreen(
-                                DiscoverPlacesViewModel(),
+                                DiscoverPlacesViewModel(OpenStreetmapService.instance),
                                 navController = navController
                             )
                         }
