@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.placesify.api
 
+import ar.edu.utn.frba.placesify.model.ApiCategoriesResponse
 import ar.edu.utn.frba.placesify.model.ApiListResponse
 import ar.edu.utn.frba.placesify.model.ApiUserResponse
 import ar.edu.utn.frba.placesify.model.Listas
@@ -21,7 +22,32 @@ interface ApiService {
                     "Authorization",
                     "Bearer s6A42K8fhYhBeQ7QZD-yhfj6zVAQpWkYPws_ucD_aGKkbJxc9A"
                 ).build()
+
+                val resp = chain.proceed(request)
+                // Deal with the response code
+                if (resp.code == 200) {
+                    try {
+                        val myJson =
+                            resp.peekBody(2048).string() // peekBody() will not close the response
+                        println(myJson)
+                    } catch (e: Exception) {
+                        println("Error parse json from intercept..............")
+                    }
+                } else {
+                    println(resp)
+                }
+                resp
+
+/*
+                val request = chain.request().newBuilder().addHeader(
+                    "Authorization",
+                    "Bearer s6A42K8fhYhBeQ7QZD-yhfj6zVAQpWkYPws_ucD_aGKkbJxc9A"
+                ).build()
                 chain.proceed(request)
+
+
+ */
+
             }.build())
             .build().create(ApiService::class.java)
     }
@@ -34,6 +60,9 @@ interface ApiService {
 
     @POST("lista")
     suspend fun addLista(@Body lista: Listas): Listas
+
+    @GET("categorias")
+    suspend fun getCategorias(): ApiCategoriesResponse
 
     @GET("usuarios")
     suspend fun getUsuarios(): ApiUserResponse

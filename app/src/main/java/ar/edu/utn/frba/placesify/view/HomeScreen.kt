@@ -40,9 +40,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import ar.edu.utn.frba.placesify.R
+import ar.edu.utn.frba.placesify.model.Categorias
 import ar.edu.utn.frba.placesify.model.Listas
 import ar.edu.utn.frba.placesify.view.componentes.ShowLoading
 import ar.edu.utn.frba.placesify.viewmodel.HomeViewModel
+import coil.compose.AsyncImage
 
 @Composable
 fun HomeScreen(viewModel: HomeViewModel, navController: NavController? = null) {
@@ -69,7 +71,10 @@ fun Home(modifier: Modifier, viewModel: HomeViewModel, navController: NavControl
     val listasDestacadasActualizada: Boolean by viewModel.listasDestacadasActualizada.observeAsState(
         initial = false
     )
-
+    val categorias: List<Categorias>? by viewModel.categorias.observeAsState(initial = null)
+    val categoriasActualizada: Boolean by viewModel.categoriasActualizada.observeAsState(
+        initial = false
+    )
     Scaffold(
         topBar = { BarraNavegacionSuperior("Placesify", navController, isHome = true) },
         floatingActionButton = {
@@ -80,7 +85,7 @@ fun Home(modifier: Modifier, viewModel: HomeViewModel, navController: NavControl
     ) { innerPadding ->
 
         // Muestreo Loading
-        if (!listasDestacadasActualizada) {
+        if (!listasDestacadasActualizada || !categoriasActualizada) {
             ShowLoading("Actualizando...")
         } else {
 
@@ -105,7 +110,7 @@ fun Home(modifier: Modifier, viewModel: HomeViewModel, navController: NavControl
                     )
 
                     // Muestro las Listas Destacadas
-                    MostrarListasDestacadas(navController, listasDestacadas)
+                    MostrarListasDestacadas(navController, listasDestacadas, categorias)
                 }
             }
         }
@@ -114,8 +119,11 @@ fun Home(modifier: Modifier, viewModel: HomeViewModel, navController: NavControl
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ItemLista(lista: Listas, navController: NavController?) {
-
+fun ItemLista(
+    lista: Listas,
+    categorias: List<Categorias> = listOf(),
+    navController: NavController?
+) {
     Card(
         onClick = { navController?.navigate("detail_list/${lista.id}/${lista.name}") },
         colors = CardDefaults.cardColors(
@@ -130,11 +138,14 @@ fun ItemLista(lista: Listas, navController: NavController?) {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Image(
-                imageVector = Icons.Outlined.Place,
+
+            AsyncImage(
+                model = categorias.first { it.id == lista.lstCategories?.last() }.icono,
                 contentDescription = "",
-                modifier = Modifier.padding(horizontal = 5.dp)
+                modifier = Modifier
+                    .padding(horizontal = 5.dp)
             )
+
             Text(lista.name, modifier = Modifier.width(width = 200.dp))
             AssistChip(
                 onClick = { },
@@ -155,8 +166,14 @@ fun ItemLista(lista: Listas, navController: NavController?) {
 }
 
 @Composable
-fun MostrarListasDestacadas(navController: NavController?, listasDestacadas: List<Listas>?) {
+fun MostrarListasDestacadas(
+    navController: NavController?,
+    listasDestacadas: List<Listas>?,
+    categorias: List<Categorias>?
+) {
     listasDestacadas?.sortedBy { it.name }?.forEach { lista ->
-        ItemLista(lista, navController)
+        if (categorias != null) {
+            ItemLista(lista, categorias, navController)
+        }
     }
 }

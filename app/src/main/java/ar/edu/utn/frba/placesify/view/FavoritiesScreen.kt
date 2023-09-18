@@ -110,7 +110,7 @@ fun MostrarListasFavoritas(
             }
 
         listaFiltrada?.forEach { lista ->
-            ItemLista(lista, navController)
+            ItemLista(lista = lista,  navController = navController)
         }
     } else {
         Text(

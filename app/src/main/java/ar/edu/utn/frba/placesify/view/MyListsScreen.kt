@@ -98,7 +98,7 @@ fun MostrarMisListas(navController: NavController?, misListas: List<Listas>?) {
     if (listaFiltrada != null) {
         if (listaFiltrada.isNotEmpty()) {
             listaFiltrada.forEach { lista ->
-                ItemLista(lista, navController)
+                ItemLista(lista = lista,  navController = navController)
             }
         } else {
             Text(

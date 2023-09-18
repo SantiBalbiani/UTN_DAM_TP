@@ -20,6 +20,7 @@ interface OpenStreetmapService {
             .baseUrl("https://nominatim.openstreetmap.org")
             .addConverterFactory(GsonConverterFactory.create(gson))
             .client(OkHttpClient.Builder().addInterceptor { chain ->
+
                 val resp = chain.proceed(chain.request())
                 // Deal with the response code
                 if (resp.code == 200) {
@@ -40,9 +41,14 @@ interface OpenStreetmapService {
     }
 
     @GET("search?")
-    @Headers("Content-Type: application/json")
+    @Headers(
+        "Accept: application/json",
+        "Accept-Language: es-ES"
+    )
     suspend fun getLugares(
         @Query("q") q: String,
-        @Query("format") format: String = "json"
+        @Query("format") format: String = "jsonv2",
+        @Query("limit") limit: String = "50",
+        @Query("countrycodes") countrycodes: String = "AR"
     ): List<OpenStreetmapResponse>
 }
