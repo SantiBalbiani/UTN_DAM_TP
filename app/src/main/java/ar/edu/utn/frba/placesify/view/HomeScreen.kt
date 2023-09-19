@@ -13,10 +13,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.getValue
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Button
@@ -38,6 +44,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import ar.edu.utn.frba.placesify.R
 import ar.edu.utn.frba.placesify.model.Categorias
@@ -61,7 +68,7 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController? = null) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun Home(modifier: Modifier, viewModel: HomeViewModel, navController: NavController?) {
@@ -75,6 +82,12 @@ fun Home(modifier: Modifier, viewModel: HomeViewModel, navController: NavControl
     val categoriasActualizada: Boolean by viewModel.categoriasActualizada.observeAsState(
         initial = false
     )
+
+    val isRefreshing: Boolean by viewModel.isRefreshing.observeAsState(
+        initial = false
+    )
+    val pullRefreshState = rememberPullRefreshState(isRefreshing, { viewModel.refresh() })
+
     Scaffold(
         topBar = { BarraNavegacionSuperior("Placesify", navController, isHome = true) },
         floatingActionButton = {
@@ -90,7 +103,9 @@ fun Home(modifier: Modifier, viewModel: HomeViewModel, navController: NavControl
         } else {
 
             LazyColumn(
-                modifier = modifier.padding(innerPadding),
+                modifier = modifier
+                    .padding(innerPadding)
+                    .pullRefresh(pullRefreshState),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 item {
@@ -113,6 +128,11 @@ fun Home(modifier: Modifier, viewModel: HomeViewModel, navController: NavControl
                     MostrarListasDestacadas(navController, listasDestacadas, categorias)
                 }
             }
+
+            PullRefreshIndicator(
+                refreshing = isRefreshing,
+                state = pullRefreshState,
+            )
         }
     }
 }

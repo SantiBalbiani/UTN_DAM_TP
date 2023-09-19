@@ -8,6 +8,9 @@ import androidx.lifecycle.viewModelScope
 import ar.edu.utn.frba.placesify.api.ApiService
 import ar.edu.utn.frba.placesify.model.Categorias
 import ar.edu.utn.frba.placesify.model.Listas
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class HomeViewModel(private val listService: ApiService) : ViewModel() {
@@ -24,12 +27,11 @@ class HomeViewModel(private val listService: ApiService) : ViewModel() {
     val categorias: LiveData<List<Categorias>> = _categorias
     val categoriasActualizada: LiveData<Boolean> = _categoriasActualizada
 
-    init {
-        // Obtengo las Listas Destacadas
-        getListasDestacadas()
+    private val _isRefreshing = MutableLiveData<Boolean>()
+    val isRefreshing: LiveData<Boolean> = _isRefreshing
 
-        // Obtengo las Categorias
-        getCategorias()
+    init {
+        refresh()
     }
 
     private fun getListasDestacadas() {
@@ -47,9 +49,9 @@ class HomeViewModel(private val listService: ApiService) : ViewModel() {
             } catch (e: Exception) {
                 Log.d("CATCH API ${e.toString()}", "API_CALL 2")
             }
+            _isRefreshing.value = false
         }
     }
-
 
     private fun getCategorias() {
         // Lanzo la Coroutine en el thread de MAIN
@@ -67,5 +69,13 @@ class HomeViewModel(private val listService: ApiService) : ViewModel() {
                 Log.d("CATCH API ${e.toString()}", "API_CALL 2")
             }
         }
+    }
+
+    fun refresh() {
+        // Obtengo las Listas Destacadas
+        getListasDestacadas()
+
+        // Obtengo las Categorias
+        getCategorias()
     }
 }
