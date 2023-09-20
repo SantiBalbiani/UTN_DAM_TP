@@ -132,7 +132,7 @@ class MainActivity : ComponentActivity() {
                         composable("discover_places") {
 
                             DiscoverPlacesScreen(
-                                DiscoverPlacesViewModel(OpenStreetmapService.instance),
+                                DiscoverPlacesViewModel(OpenStreetmapService.instance, ApiService.instance),
                                 navController = navController
                             )
                         }
