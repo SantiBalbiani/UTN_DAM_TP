@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import ar.edu.utn.frba.placesify.api.ApiService
+import ar.edu.utn.frba.placesify.api.BackendService
 import ar.edu.utn.frba.placesify.model.Listas
 import ar.edu.utn.frba.placesify.model.Usuarios
 import com.google.firebase.auth.ktx.auth
@@ -13,7 +13,7 @@ import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 
 class DetailListViewModel(
-    private val listService: ApiService,
+    private val listService: BackendService,
     private val id_list: String?
 ) : ViewModel() {
     // Declaro las Suscripciones a los LiveData

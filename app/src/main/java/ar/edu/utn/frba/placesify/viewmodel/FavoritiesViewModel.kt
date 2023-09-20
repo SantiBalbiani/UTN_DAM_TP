@@ -5,14 +5,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import ar.edu.utn.frba.placesify.api.ApiService
+import ar.edu.utn.frba.placesify.api.BackendService
 import ar.edu.utn.frba.placesify.model.Listas
 import ar.edu.utn.frba.placesify.model.Usuarios
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 
-class FavoritiesViewModel(private val listService: ApiService) : ViewModel() {
+class FavoritiesViewModel(private val listService: BackendService) : ViewModel() {
 
     // Declaro las Suscripciones a los LiveData
     private val _listasAll = MutableLiveData<List<Listas>>()

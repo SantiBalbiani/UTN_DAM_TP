@@ -12,7 +12,7 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
 
-interface ApiService {
+interface BackendService {
     companion object {
         val instance = Retrofit.Builder()
             .baseUrl("https://crudapi.co.uk/api/v1/")
@@ -37,19 +37,8 @@ interface ApiService {
                     println(resp)
                 }
                 resp
-
-/*
-                val request = chain.request().newBuilder().addHeader(
-                    "Authorization",
-                    "Bearer s6A42K8fhYhBeQ7QZD-yhfj6zVAQpWkYPws_ucD_aGKkbJxc9A"
-                ).build()
-                chain.proceed(request)
-
-
- */
-
             }.build())
-            .build().create(ApiService::class.java)
+            .build().create(BackendService::class.java)
     }
 
     @GET("listas")

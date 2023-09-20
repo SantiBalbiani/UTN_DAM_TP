@@ -5,11 +5,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import ar.edu.utn.frba.placesify.api.ApiService
+import ar.edu.utn.frba.placesify.api.BackendService
 import ar.edu.utn.frba.placesify.model.Listas
 import kotlinx.coroutines.launch
 
-class MyListsViewModel(private val listService: ApiService) : ViewModel(){
+class MyListsViewModel(private val listService: BackendService) : ViewModel(){
 
     // Declaro las Suscripciones a los LiveData
     private val _misListas = MutableLiveData<List<Listas>>()

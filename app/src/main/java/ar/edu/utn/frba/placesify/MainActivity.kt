@@ -22,7 +22,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import ar.edu.utn.frba.placesify.api.OpenStreetmapService
-import ar.edu.utn.frba.placesify.api.ApiService
+import ar.edu.utn.frba.placesify.api.BackendService
 import ar.edu.utn.frba.placesify.api.GoogleAuthUiClient
 import ar.edu.utn.frba.placesify.view.DetailListScreen
 import ar.edu.utn.frba.placesify.view.DetailPlacesScreen
@@ -125,20 +125,20 @@ class MainActivity : ComponentActivity() {
                         }
                         composable("home") {
                             HomeScreen(
-                                HomeViewModel(ApiService.instance),
+                                HomeViewModel(BackendService.instance),
                                 navController = navController
                             )
                         }
                         composable("discover_places") {
 
                             DiscoverPlacesScreen(
-                                DiscoverPlacesViewModel(OpenStreetmapService.instance, ApiService.instance),
+                                DiscoverPlacesViewModel(BackendService.instance),
                                 navController = navController
                             )
                         }
                         composable("new_places") {
                             NewPlacesScreen(
-                                NewPlacesViewModel(),
+                                NewPlacesViewModel(OpenStreetmapService.instance, ),
                                 navController = navController
                             )
                         }
@@ -154,7 +154,7 @@ class MainActivity : ComponentActivity() {
                         ) {
                             DetailListScreen(
                                 DetailListViewModel(
-                                    ApiService.instance,
+                                    BackendService.instance,
                                     it.arguments?.getString("id_list")
                                 ),
                                 navController = navController
@@ -162,13 +162,13 @@ class MainActivity : ComponentActivity() {
                         }
                         composable("favorities") {
                             FavoritiesScreen(
-                                FavoritiesViewModel(ApiService.instance),
+                                FavoritiesViewModel(BackendService.instance),
                                 navController = navController
                             )
                         }
                         composable("my_lists") {
                             MyListsScreen(
-                                MyListsViewModel(ApiService.instance),
+                                MyListsViewModel(BackendService.instance),
                                 navController = navController
                             )
                         }

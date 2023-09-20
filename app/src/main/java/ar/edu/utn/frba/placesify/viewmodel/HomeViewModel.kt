@@ -5,15 +5,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import ar.edu.utn.frba.placesify.api.ApiService
+import ar.edu.utn.frba.placesify.api.BackendService
 import ar.edu.utn.frba.placesify.model.Categorias
 import ar.edu.utn.frba.placesify.model.Listas
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class HomeViewModel(private val listService: ApiService) : ViewModel() {
+class HomeViewModel(private val listService: BackendService) : ViewModel() {
 
     // Declaro las Suscripciones a los LiveData
     private val _listasDestacadas = MutableLiveData<List<Listas>>()
@@ -72,6 +69,9 @@ class HomeViewModel(private val listService: ApiService) : ViewModel() {
     }
 
     fun refresh() {
+        // Para activar el Loading
+        _listasDestacadasActualizada.value = false
+
         // Obtengo las Listas Destacadas
         getListasDestacadas()
 
