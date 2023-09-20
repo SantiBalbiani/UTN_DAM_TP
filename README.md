@@ -1,5 +1,7 @@
 <p align="center">
-  ![Logo Placesify](https://github.com/UTN-FRBA-Mobile/Placesify/blob/main/app/src/main/res/drawable/ico_placesify.png?raw=true)
+	<picture>
+	  <img alt="hyperdx logo" src="https://github.com/UTN-FRBA-Mobile/Placesify/blob/main/app/src/main/res/drawable/ico_placesify.png?raw=true">
+	</picture>
 </p>
 
 ---
