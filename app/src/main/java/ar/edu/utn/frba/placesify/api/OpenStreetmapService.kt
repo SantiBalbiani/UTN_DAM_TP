@@ -48,7 +48,7 @@ interface OpenStreetmapService {
     suspend fun getLugares(
         @Query("q") q: String,
         @Query("format") format: String = "jsonv2",
-        @Query("limit") limit: String = "50",
+        @Query("limit") limit: String = "5",
         @Query("countrycodes") countrycodes: String = "AR"
     ): List<OpenStreetmapResponse>
 }

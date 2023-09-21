@@ -41,36 +41,36 @@ data class Usuarios(
 )
 
 data class ApiListResponse(
-    val cursor: String?,
+    val cursor: String? = "",
     val items: List<Listas>,
-    val next_page: String?
+    val next_page: String? = ""
 )
 
 data class ApiCategoriesResponse(
-    val cursor: String?,
+    val cursor: String? = "",
     val items: List<Categorias>,
-    val next_page: String?
+    val next_page: String? = ""
 )
 
 data class ApiUserResponse(
-    val cursor: String?,
+    val cursor: String? = "",
     val items: List<Usuarios>,
-    val next_page: String?
+    val next_page: String? = ""
 )
 
 data class OpenStreetmapResponse(
-    @SerializedName("place_id") var placeId: Long? = null,
-    @SerializedName("licence") var licence: String? = null,
-    @SerializedName("osm_type") var osmType: String? = null,
-    @SerializedName("osm_id") var osmId: Long? = null,
-    @SerializedName("lat") var lat: String? = null,
-    @SerializedName("lon") var lon: String? = null,
-    @SerializedName("category") var category: String? = null,
-    @SerializedName("type") var type: String? = null,
-    @SerializedName("place_rank") var placeRank: Int? = null,
-    @SerializedName("importance") var importance: Double? = null,
-    @SerializedName("addresstype") var addresstype: String? = null,
-    @SerializedName("name") var name: String? = null,
-    @SerializedName("display_name") var displayName: String? = null,
-    @SerializedName("boundingbox") var boundingbox: ArrayList<String> = arrayListOf()
+    @SerializedName("place_id") var placeId: Long? = -1,
+    @SerializedName("licence") var licence: String? = "",
+    @SerializedName("osm_type") var osmType: String? = "",
+    @SerializedName("osm_id") var osmId: Long? = -1,
+    @SerializedName("lat") var lat: String? = "",
+    @SerializedName("lon") var lon: String? = "",
+    @SerializedName("category") var category: String? = "",
+    @SerializedName("type") var type: String? = "",
+    @SerializedName("place_rank") var placeRank: Int? = -1,
+    @SerializedName("importance") var importance: Double? = -1.0,
+    @SerializedName("addresstype") var addresstype: String? = "",
+    @SerializedName("name") var name: String? = "",
+    @SerializedName("display_name") var displayName: String? = "",
+    @SerializedName("boundingbox") var boundingbox: ArrayList<String> = arrayListOf("")
 )
