@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import ar.edu.utn.frba.placesify.R
+import ar.edu.utn.frba.placesify.model.Categorias
 import ar.edu.utn.frba.placesify.model.Listas
 import ar.edu.utn.frba.placesify.view.componentes.ShowLoading
 import ar.edu.utn.frba.placesify.viewmodel.MyListsViewModel
@@ -55,7 +56,10 @@ fun MyLists(modifier: Modifier, viewModel: MyListsViewModel, navController: NavC
     val misListasActualizada: Boolean by viewModel.misListasActualizada.observeAsState(
         initial = false
     )
-
+    val categorias: List<Categorias>? by viewModel.categorias.observeAsState(initial = null)
+    val categoriasActualizada: Boolean by viewModel.categoriasActualizada.observeAsState(
+        initial = false
+    )
     Scaffold(
         topBar = { BarraNavegacionSuperior("Mis Listas", navController) },
         floatingActionButton = {
@@ -81,7 +85,7 @@ fun MyLists(modifier: Modifier, viewModel: MyListsViewModel, navController: NavC
 
 
                     // Muestro las Listas Destacadas
-                    MostrarMisListas(navController, misListas)
+                    MostrarMisListas(navController, categorias, misListas)
                 }
             }
         }
@@ -89,7 +93,12 @@ fun MyLists(modifier: Modifier, viewModel: MyListsViewModel, navController: NavC
 }
 
 @Composable
-fun MostrarMisListas(navController: NavController?, misListas: List<Listas>?) {
+fun MostrarMisListas(
+    navController: NavController?,
+    categorias: List<Categorias>?,
+    misListas: List<Listas>?
+) {
+
 
     // Filtro las Listas que pertenecen al usuario logueado
     val listaFiltrada = misListas?.sortedBy { it.name }
@@ -98,7 +107,9 @@ fun MostrarMisListas(navController: NavController?, misListas: List<Listas>?) {
     if (listaFiltrada != null) {
         if (listaFiltrada.isNotEmpty()) {
             listaFiltrada.forEach { lista ->
-                ItemLista(lista = lista,  navController = navController)
+                if (categorias != null) {
+                    ItemLista(lista = lista,  categorias = categorias,navController = navController)
+                }
             }
         } else {
             Text(

@@ -107,35 +107,6 @@ fun LoginButton(onSignInClick: () -> Unit) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun PasswordField(password: String, onTextFieldChanged: (String) -> Unit) {
-    TextField(
-        value = password,
-        onValueChange = { onTextFieldChanged(it) },
-        modifier = Modifier.fillMaxWidth(),
-        label = { Text(text = "Contraseña") },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-        singleLine = true,
-        maxLines = 1,
-        //colors = TextFieldDefaults.textFieldColors(textColor = Color(R.color.black))
-    )
-}
-
-@Composable
-fun EmailField(email: String, onTextFieldChanged: (String) -> Unit) {
-
-    TextField(
-        value = email,
-        onValueChange = { onTextFieldChanged(it) },
-        modifier = Modifier.fillMaxWidth(),
-        label = { Text(text = "Email") },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-        singleLine = true,
-        maxLines = 1,
-    )
-}
-
 @Composable
 fun EncabezadoImagen(modifier: Modifier, texto: String) {
     Row(
