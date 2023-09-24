@@ -145,6 +145,7 @@ class MainActivity : ComponentActivity() {
                         composable("detail_places") {
                             DetailPlacesScreen(
                                 DetailPlacesViewModel(),
+                                FavoritiesViewModel(BackendService.instance),
                                 navController = navController
                             )
                         }
