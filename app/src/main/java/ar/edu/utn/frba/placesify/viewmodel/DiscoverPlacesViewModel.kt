@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import ar.edu.utn.frba.placesify.api.BackendService
 import ar.edu.utn.frba.placesify.api.OpenStreetmapService
 import ar.edu.utn.frba.placesify.model.Categorias
+import ar.edu.utn.frba.placesify.model.Listas
 import kotlinx.coroutines.launch
 
 class DiscoverPlacesViewModel(private val listService: BackendService) : ViewModel() {
@@ -15,9 +16,14 @@ class DiscoverPlacesViewModel(private val listService: BackendService) : ViewMod
     private val _categorias = MutableLiveData<List<Categorias>>()
     private val _categoriasActualizada = MutableLiveData<Boolean>()
 
+    private val _selectedCategory = MutableLiveData<Categorias>()
+
     // Declaro los LiveData
     val categorias: LiveData<List<Categorias>> = _categorias
     val categoriasActualizada: LiveData<Boolean> = _categoriasActualizada
+
+    val selectedCategory: LiveData<Categorias> = _selectedCategory
+
     init {
         getCategorias()
     }

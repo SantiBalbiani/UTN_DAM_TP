@@ -27,6 +27,7 @@ import ar.edu.utn.frba.placesify.api.GoogleAuthUiClient
 import ar.edu.utn.frba.placesify.view.DetailListScreen
 import ar.edu.utn.frba.placesify.view.DetailPlacesScreen
 import ar.edu.utn.frba.placesify.view.DiscoverPlacesScreen
+import ar.edu.utn.frba.placesify.view.DiscoverCategoryScreen
 import ar.edu.utn.frba.placesify.view.FavoritiesScreen
 import ar.edu.utn.frba.placesify.view.HomeScreen
 import ar.edu.utn.frba.placesify.view.LoginScreen
@@ -36,6 +37,7 @@ import ar.edu.utn.frba.placesify.view.theme.PlacesifyTheme
 import ar.edu.utn.frba.placesify.viewmodel.DetailListViewModel
 import ar.edu.utn.frba.placesify.viewmodel.DetailPlacesViewModel
 import ar.edu.utn.frba.placesify.viewmodel.DiscoverPlacesViewModel
+import ar.edu.utn.frba.placesify.viewmodel.DiscoverCategoryViewModel
 import ar.edu.utn.frba.placesify.viewmodel.FavoritiesViewModel
 import ar.edu.utn.frba.placesify.viewmodel.HomeViewModel
 import ar.edu.utn.frba.placesify.viewmodel.LoginViewModel
@@ -145,6 +147,18 @@ class MainActivity : ComponentActivity() {
                                 DiscoverPlacesViewModel(BackendService.instance),
                                 navController = navController
                             )
+                        }
+                        composable("discover_category/{id_category}",
+                            arguments = listOf(navArgument("id_category") { type = NavType.StringType })
+                            ){
+
+                            DiscoverCategoryScreen(
+                                DiscoverCategoryViewModel(
+                                    BackendService.instance,
+                                    it.arguments?.getString("id_category")
+                                    ),
+                                navController = navController
+                                )
                         }
                         composable("new_places") {
                             NewPlacesScreen(
