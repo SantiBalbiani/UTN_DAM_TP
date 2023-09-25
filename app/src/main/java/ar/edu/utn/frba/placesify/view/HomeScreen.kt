@@ -156,7 +156,7 @@ fun ItemLista(
     navController: NavController?
 ) {
     Card(
-        onClick = { navController?.navigate("detail_list/${lista.id}/${lista.name}") },
+        onClick = { navController?.navigate("detail_list/${lista.id}") },
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface,
         ),

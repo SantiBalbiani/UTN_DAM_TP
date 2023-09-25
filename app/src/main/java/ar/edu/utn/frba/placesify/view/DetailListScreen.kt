@@ -225,9 +225,13 @@ fun DetailList(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ItemLugares(lugar: Lugares, navController: NavController?) {
+fun ItemLugares(lugar: Lugares,
+                navController: NavController?) {
+
+    val id_lugar: String = lugar.id.toString()
+
     Card(
-        onClick = { navController?.navigate("detail_places") },
+        onClick = { navController?.navigate("detail_places/${id_lugar}") },
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface,
         ),

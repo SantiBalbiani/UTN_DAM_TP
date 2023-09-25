@@ -129,8 +129,18 @@ class MainActivity : ComponentActivity() {
                                 navController = navController
                             )
                         }
+                        composable("detail_places/{id_place}",
+                            arguments = listOf(navArgument("id_place") { type = NavType.StringType })) {
+                            DetailPlacesScreen(
+                                DetailPlacesViewModel(
+                                    BackendService.instance
+                                    , it.arguments?.getString("id_place")
+                                ),
+                                FavoritiesViewModel(BackendService.instance),
+                                navController = navController
+                            )
+                        }
                         composable("discover_places") {
-
                             DiscoverPlacesScreen(
                                 DiscoverPlacesViewModel(BackendService.instance),
                                 navController = navController
@@ -142,15 +152,8 @@ class MainActivity : ComponentActivity() {
                                 navController = navController
                             )
                         }
-                        composable("detail_places") {
-                            DetailPlacesScreen(
-                                DetailPlacesViewModel(),
-                                FavoritiesViewModel(BackendService.instance),
-                                navController = navController
-                            )
-                        }
                         composable(
-                            "detail_list/{id_list}/{name_list}",
+                            "detail_list/{id_list}",
                             arguments = listOf(navArgument("id_list") { type = NavType.StringType })
                         ) {
                             DetailListScreen(
