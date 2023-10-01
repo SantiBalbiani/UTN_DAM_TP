@@ -12,7 +12,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 
-class FavoritiesViewModel(private val listService: BackendService) : ViewModel() {
+class FavoritesViewModel(private val listService: BackendService) : ViewModel() {
 
     // Declaro las Suscripciones a los LiveData
     private val _listasAll = MutableLiveData<List<Listas>>()

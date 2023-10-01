@@ -28,7 +28,7 @@ import ar.edu.utn.frba.placesify.view.DetailListScreen
 import ar.edu.utn.frba.placesify.view.DetailPlacesScreen
 import ar.edu.utn.frba.placesify.view.DiscoverPlacesScreen
 import ar.edu.utn.frba.placesify.view.DiscoverCategoryScreen
-import ar.edu.utn.frba.placesify.view.FavoritiesScreen
+import ar.edu.utn.frba.placesify.view.FavoritesScreen
 import ar.edu.utn.frba.placesify.view.HomeScreen
 import ar.edu.utn.frba.placesify.view.LoginScreen
 import ar.edu.utn.frba.placesify.view.MyListsScreen
@@ -38,7 +38,7 @@ import ar.edu.utn.frba.placesify.viewmodel.DetailListViewModel
 import ar.edu.utn.frba.placesify.viewmodel.DetailPlacesViewModel
 import ar.edu.utn.frba.placesify.viewmodel.DiscoverPlacesViewModel
 import ar.edu.utn.frba.placesify.viewmodel.DiscoverCategoryViewModel
-import ar.edu.utn.frba.placesify.viewmodel.FavoritiesViewModel
+import ar.edu.utn.frba.placesify.viewmodel.FavoritesViewModel
 import ar.edu.utn.frba.placesify.viewmodel.HomeViewModel
 import ar.edu.utn.frba.placesify.viewmodel.LoginViewModel
 import ar.edu.utn.frba.placesify.viewmodel.MyListsViewModel
@@ -138,7 +138,7 @@ class MainActivity : ComponentActivity() {
                                     BackendService.instance
                                     , it.arguments?.getString("id_place")
                                 ),
-                                FavoritiesViewModel(BackendService.instance),
+                                FavoritesViewModel(BackendService.instance),
                                 navController = navController
                             )
                         }
@@ -178,9 +178,9 @@ class MainActivity : ComponentActivity() {
                                 navController = navController
                             )
                         }
-                        composable("favorities") {
-                            FavoritiesScreen(
-                                FavoritiesViewModel(BackendService.instance),
+                        composable("favorites") {
+                            FavoritesScreen(
+                                FavoritesViewModel(BackendService.instance),
                                 navController = navController
                             )
                         }
