@@ -27,11 +27,11 @@ import ar.edu.utn.frba.placesify.R
 import ar.edu.utn.frba.placesify.model.Listas
 import ar.edu.utn.frba.placesify.model.Usuarios
 import ar.edu.utn.frba.placesify.view.componentes.ShowLoading
-import ar.edu.utn.frba.placesify.viewmodel.FavoritiesViewModel
+import ar.edu.utn.frba.placesify.viewmodel.FavoritesViewModel
 
 @Composable
-fun FavoritiesScreen(
-    viewModel: FavoritiesViewModel,
+fun FavoritesScreen(
+    viewModel: FavoritesViewModel,
     navController: NavController? = null,
 ) {
     Box(
@@ -50,7 +50,7 @@ fun FavoritiesScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun Favorities(modifier: Modifier, viewModel: FavoritiesViewModel, navController: NavController?) {
+fun Favorities(modifier: Modifier, viewModel: FavoritesViewModel, navController: NavController?) {
 
     // Declaro los viewData
     val listasAll: List<Listas>? by viewModel.listasAll.observeAsState(initial = null)
