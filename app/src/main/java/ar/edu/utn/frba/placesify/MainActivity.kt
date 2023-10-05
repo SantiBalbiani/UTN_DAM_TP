@@ -33,6 +33,7 @@ import ar.edu.utn.frba.placesify.view.HomeScreen
 import ar.edu.utn.frba.placesify.view.LoginScreen
 import ar.edu.utn.frba.placesify.view.MyListsScreen
 import ar.edu.utn.frba.placesify.view.NewPlacesScreen
+import ar.edu.utn.frba.placesify.view.SplashScreen
 import ar.edu.utn.frba.placesify.view.theme.PlacesifyTheme
 import ar.edu.utn.frba.placesify.viewmodel.DetailListViewModel
 import ar.edu.utn.frba.placesify.viewmodel.DetailPlacesViewModel
@@ -65,9 +66,15 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val navController = rememberNavController()
-                    NavHost(navController = navController, startDestination = "login") {
+                    NavHost(navController = navController, startDestination = "splash") {
 
                         // Armo las Rutas de Navegación
+                        composable("splash") {
+                            SplashScreen(
+                                navController = navController
+                            )
+                        }
+
                         composable("login") {
 
                             val viewModel = viewModel<LoginViewModel>()

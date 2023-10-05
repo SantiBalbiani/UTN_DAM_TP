@@ -52,7 +52,7 @@ fun LoginScreen(
     Box(
         Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.inversePrimary),
+            .background(Color.White),
     ) {
         Login(Modifier.align(Alignment.Center), onSignInClick, navController)
     }
@@ -86,7 +86,7 @@ fun Login(
 fun LoginButton(onSignInClick: () -> Unit) {
     Button(
         onClick = { onSignInClick() }, shape = RoundedCornerShape(6.dp),
-        colors = ButtonDefaults.buttonColors(containerColor = Color.White),
+        colors = ButtonDefaults.buttonColors(containerColor = Color.LightGray),
         border = BorderStroke(width = 1.dp, color = MaterialTheme.colorScheme.primary),
         modifier = Modifier
             .fillMaxWidth()
@@ -121,7 +121,7 @@ fun EncabezadoImagen(modifier: Modifier, texto: String) {
             fontSize = 30.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier
-                .padding(12.dp)
+                .padding(horizontal = 12.dp, vertical = 5.dp)
         )
     }
 }
