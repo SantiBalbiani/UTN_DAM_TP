@@ -3,18 +3,14 @@ package ar.edu.utn.frba.placesify.viewmodel
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ar.edu.utn.frba.placesify.api.OpenStreetmapService
-import ar.edu.utn.frba.placesify.model.Listas
 import ar.edu.utn.frba.placesify.model.Lugares
 import ar.edu.utn.frba.placesify.model.OpenStreetmapResponse
-import ar.edu.utn.frba.placesify.model.PreferencesManager
 import kotlinx.coroutines.launch
 
 class NewPlacesViewModel(private val mapService: OpenStreetmapService, ) : ViewModel(){
@@ -30,23 +26,11 @@ class NewPlacesViewModel(private val mapService: OpenStreetmapService, ) : ViewM
     val lugaresActualizados: LiveData<Boolean> = _lugaresActualizados
     val buscadoContenidos: LiveData<Boolean> = _buscadoContenidos
 
+    // Utilizada para guardar temporalmente el lugar seleccionado
+    lateinit var lugarAuxiliar: Lugares
+
     fun updateSearchText(input: String) {
         searchText = input
-    }
-
-    /*
-    val preferencesManager = PreferencesManager(LocalContext.current);
-    val data = preferencesManager.getData("myKey", "")
-
-
-    // Update data and save to SharedPreferences
-    //preferencesManager.saveData("myKey", newDataValue)
-    //data.value = newDataValue
-*/
-
-    // Persistir un Lugar en el SharedPreferences
-    fun agregarLugar(){
-
     }
 
     // Obtengo los lugares de OpenStreetMap API
@@ -67,5 +51,10 @@ class NewPlacesViewModel(private val mapService: OpenStreetmapService, ) : ViewM
                 e.message?.let { Log.d("OpenStreetmapService API_CALL 2", it) }
             }
         }
+    }
+
+    fun limpiarLugaresBuscados() {
+        _lugaresActualizados.value = false
+        _buscadoContenidos.value = false
     }
 }

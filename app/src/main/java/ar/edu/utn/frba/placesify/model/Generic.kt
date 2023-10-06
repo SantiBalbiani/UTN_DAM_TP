@@ -1,7 +1,8 @@
 package ar.edu.utn.frba.placesify.model
 
-import com.squareup.moshi.Json
 import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import kotlinx.serialization.Serializable
 
 data class Categorias(
     @field:Json(name = "id") // Usado por Retrofit
@@ -11,8 +12,10 @@ data class Categorias(
     @field:Json(name = "icono") // Usado por Retrofit
     val icono: String = "",
 )
+
+@Serializable
 data class Lugares(
-    val id: Int = 0,
+    val id: Long? = 0,
     val name: String = "",
     val description: String = "",
     @field:Json(name = "latitud") // Usado por Retrofit
