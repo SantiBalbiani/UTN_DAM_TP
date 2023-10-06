@@ -162,7 +162,7 @@ fun BarraNavegacionSuperior(title: String, navController: NavController?, isHome
                 )
                 DropdownMenuItem(
                     text = { Text("Favoritos") },
-                    onClick = { navController?.navigate("favorities") }
+                    onClick = { navController?.navigate("favorites") }
                 )
                 Divider()
                 DropdownMenuItem(
