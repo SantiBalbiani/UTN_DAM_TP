@@ -25,6 +25,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
@@ -184,10 +185,10 @@ fun ItemLista(
                 onClick = { },
                 enabled = false,
                 border = null,
-                label = { Text(text = lista.review.toString()) },
+                label = { Text(text = lista.likes.toString()) },
                 leadingIcon = {
                     Icon(
-                        Icons.Filled.Star,
+                        Icons.Filled.Favorite,
                         contentDescription = "Start",
                         Modifier.size(AssistChipDefaults.IconSize)
                     )

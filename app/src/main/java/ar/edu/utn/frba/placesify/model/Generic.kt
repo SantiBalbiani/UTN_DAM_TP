@@ -31,7 +31,8 @@ data class Listas(
     val review: Double = 0.0,
     val email_owner: String = "",
     val lstPlaces: List<Lugares>?,
-    val lstCategories: List<Int>?
+    val lstCategories: List<Int>?,
+    val likes: Int = 0
 )
 
 data class Usuarios(
