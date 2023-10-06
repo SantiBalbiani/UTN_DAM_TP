@@ -1,6 +1,6 @@
 <p align="center">
 	<picture>
-	  <img alt="hyperdx logo" src="https://github.com/UTN-FRBA-Mobile/Placesify/blob/main/app/src/main/res/drawable/ico_placesify.png?raw=true">
+	  <img alt="hyperdx logo" src="https://github.com/UTN-FRBA-Mobile/Placesify/blob/main/app/src/main/res/drawable/splash_placesify.png?raw=true">
 	</picture>
 </p>
 
