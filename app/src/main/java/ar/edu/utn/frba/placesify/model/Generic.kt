@@ -25,6 +25,8 @@ data class Lugares(
 )
 
 data class Listas(
+    @field:Json(name = "_created") // Usado por Retrofit
+    val created: Double = 0.00,
     @field:Json(name = "_uuid") // Usado por Retrofit
     val id: String = "",
     @field:Json(name = "name") // Usado por Retrofit

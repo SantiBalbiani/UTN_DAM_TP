@@ -60,6 +60,7 @@ class DiscoverCategoryViewModel(
                     }
                     _listasDeCategoriaActualizada.value = true
                 }
+                Log.d("Listas CALL", "${_listasDeCategoria.value.toString()}")
 
             } catch (e: Exception) {
                 Log.d("CATCH API ${e.toString()}", "API_CALL 2")
