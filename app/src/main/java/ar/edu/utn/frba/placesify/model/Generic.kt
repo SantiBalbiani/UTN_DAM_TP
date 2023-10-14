@@ -43,7 +43,7 @@ data class Listas(
 data class Usuarios(
     val email: String = "",
     val fullname: String = "",
-    val favoritesLists: List<String>?
+    val favoritesLists: MutableList<String>?
 )
 
 data class ApiListResponse(
@@ -62,6 +62,10 @@ data class ApiUserResponse(
     val cursor: String? = "",
     val items: List<Usuarios>,
     val next_page: String? = ""
+)
+
+data class ApiPutUserResponse(
+    val items: List<Usuarios>
 )
 
 data class OpenStreetmapResponse(
