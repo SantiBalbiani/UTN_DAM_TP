@@ -139,6 +139,7 @@ fun Home(modifier: Modifier, viewModel: HomeViewModel, navController: NavControl
                     // Muestro las Listas Destacadas
                     MostrarListasDestacadas(navController, listasDestacadas, categorias)
                 }
+
             }
 
             PullRefreshIndicator(

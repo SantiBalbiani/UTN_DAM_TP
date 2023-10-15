@@ -232,7 +232,7 @@ fun DetailList(
             }
         }
     }
-}
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
