@@ -36,11 +36,9 @@ fun InternetStatusComponent() {
     Column(
         modifier = Modifier.fillMaxSize().padding(horizontal = 50.dp),
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.End
     ) {
-        if (isInternetAvailable) {
-            Text("Conectado a Internet", fontWeight = FontWeight.Bold)
-        } else {
+        if (!isInternetAvailable) {
             Text("No hay conexión a Internet", fontWeight = FontWeight.Bold)
         }
     }
