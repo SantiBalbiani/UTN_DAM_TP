@@ -34,6 +34,7 @@ import ar.edu.utn.frba.placesify.view.InternetStatusComponent
 import ar.edu.utn.frba.placesify.view.LoginScreen
 import ar.edu.utn.frba.placesify.view.MyListsScreen
 import ar.edu.utn.frba.placesify.view.NewListScreen
+import ar.edu.utn.frba.placesify.view.NewPlacesPrincipalScreen
 import ar.edu.utn.frba.placesify.view.NewPlacesScreen
 import ar.edu.utn.frba.placesify.view.SplashScreen
 import ar.edu.utn.frba.placesify.view.theme.PlacesifyTheme
@@ -46,6 +47,7 @@ import ar.edu.utn.frba.placesify.viewmodel.HomeViewModel
 import ar.edu.utn.frba.placesify.viewmodel.LoginViewModel
 import ar.edu.utn.frba.placesify.viewmodel.MyListsViewModel
 import ar.edu.utn.frba.placesify.viewmodel.NewListViewModel
+import ar.edu.utn.frba.placesify.viewmodel.NewPlacesPrincipalViewModel
 import ar.edu.utn.frba.placesify.viewmodel.NewPlacesViewModel
 import com.google.android.gms.auth.api.identity.Identity
 import kotlinx.coroutines.launch
@@ -175,6 +177,14 @@ class MainActivity : ComponentActivity() {
                                 navController = navController
                                 )
                         }
+                        //TODO DEJO ASI POR AHORA
+                        composable("new_places_principal") {
+                            NewPlacesPrincipalScreen(
+                                NewPlacesPrincipalViewModel(),
+                                navController = navController
+                            )
+                        }
+
                         composable("new_places") {
                             NewPlacesScreen(
                                 NewPlacesViewModel(OpenStreetmapService.instance, ),

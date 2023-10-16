@@ -54,6 +54,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -121,15 +123,16 @@ fun NewList(
     val isRefreshing: Boolean by viewModel.isRefreshing.observeAsState(
         initial = false
     )
-    val pullRefreshState = rememberPullRefreshState(isRefreshing, { viewModel.refresh() })
+    var pullRefreshState = rememberPullRefreshState(isRefreshing, { viewModel.refresh() })
 
-    val name = remember {
+    var name = rememberSaveable {
         mutableStateOf("")
     }
 
-    val descripcion = remember {
+    var descripcion = rememberSaveable {
         mutableStateOf("")
     }
+
 
     Scaffold(
         topBar = { BarraNavegacionSuperior("Crear Nueva Lista", navController) },
@@ -291,12 +294,12 @@ fun NewList(
                 Spacer(modifier = Modifier.padding(24.dp))
 
                 Button(
-                    onClick = { navController?.navigate("discover_places") },
+                    onClick = { navController?.navigate("new_places_principal") },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(40.dp)
                 ) {
-                    Text(text = "Continuar")
+                    Text(text = "Agregar Lugar")
                 }
             }
         }
@@ -311,10 +314,6 @@ fun NewList(
 
 
 
-data class ItemList(
-    val titulo: String,
-    val id: Int,
-    val isSelected: Boolean
-)
+
 
 
