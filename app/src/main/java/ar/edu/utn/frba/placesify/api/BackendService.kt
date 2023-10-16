@@ -2,14 +2,17 @@ package ar.edu.utn.frba.placesify.api
 
 import ar.edu.utn.frba.placesify.model.ApiCategoriesResponse
 import ar.edu.utn.frba.placesify.model.ApiListResponse
+import ar.edu.utn.frba.placesify.model.ApiPutUserResponse
 import ar.edu.utn.frba.placesify.model.ApiUserResponse
 import ar.edu.utn.frba.placesify.model.Listas
+import ar.edu.utn.frba.placesify.model.Usuarios
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface BackendService {
@@ -55,4 +58,8 @@ interface BackendService {
 
     @GET("usuarios")
     suspend fun getUsuarios(): ApiUserResponse
+
+    @PUT("usuarios")
+    suspend fun putUsuario(@Body usuario: Usuarios):ApiPutUserResponse
+
 }

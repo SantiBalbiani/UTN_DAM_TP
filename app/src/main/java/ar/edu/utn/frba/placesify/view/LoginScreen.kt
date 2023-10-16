@@ -55,6 +55,7 @@ fun LoginScreen(
             .background(Color.White),
     ) {
         Login(Modifier.align(Alignment.Center), onSignInClick, navController)
+        InternetStatusComponent()
     }
 }
 

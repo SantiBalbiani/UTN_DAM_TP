@@ -30,6 +30,7 @@ import ar.edu.utn.frba.placesify.view.DiscoverPlacesScreen
 import ar.edu.utn.frba.placesify.view.DiscoverCategoryScreen
 import ar.edu.utn.frba.placesify.view.FavoritesScreen
 import ar.edu.utn.frba.placesify.view.HomeScreen
+import ar.edu.utn.frba.placesify.view.InternetStatusComponent
 import ar.edu.utn.frba.placesify.view.LoginScreen
 import ar.edu.utn.frba.placesify.view.MyListsScreen
 import ar.edu.utn.frba.placesify.view.NewListScreen
@@ -70,15 +71,19 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     NavHost(navController = navController, startDestination = "splash") {
 
+
+
+
                         // Armo las Rutas de Navegación
                         composable("splash") {
+                            InternetStatusComponent()
                             SplashScreen(
                                 navController = navController
                             )
                         }
 
                         composable("login") {
-
+                            InternetStatusComponent()
                             val viewModel = viewModel<LoginViewModel>()
                             val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -106,6 +111,7 @@ class MainActivity : ComponentActivity() {
                             )
 
                             LaunchedEffect(key1 = state.isSignInSuccessful) {
+
                                 if (state.isSignInSuccessful) {
                                     Toast.makeText(
                                         applicationContext,

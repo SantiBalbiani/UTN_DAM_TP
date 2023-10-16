@@ -72,6 +72,7 @@ fun SplashScreen(navController: NavController? = null) {
                 .padding(horizontal = 50.dp)
                 .alpha(alpha.value)
         )
+        InternetStatusComponent()
     }
 }
 
