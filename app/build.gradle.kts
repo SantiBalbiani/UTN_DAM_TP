@@ -54,6 +54,7 @@ android {
 dependencies {
 
     implementation("com.google.firebase:firebase-auth:22.1.1")
+    implementation("com.google.android.material:material:1.10.0")
     val nav_version = "2.7.2"
 
     implementation("androidx.navigation:navigation-compose:$nav_version")

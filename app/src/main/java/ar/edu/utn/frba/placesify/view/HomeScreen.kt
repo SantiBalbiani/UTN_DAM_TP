@@ -130,6 +130,17 @@ fun Home(modifier: Modifier, viewModel: HomeViewModel, navController: NavControl
                         Text(text = "Descubrir Lugares")
                     }
                     Spacer(modifier = Modifier.padding(8.dp))
+
+                    Button(
+                        onClick = { navController?.navigate("new_list") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(40.dp)
+                    ) {
+                        Text(text = "Agregar nueva Lista")
+                    }
+                    Spacer(modifier = Modifier.padding(8.dp))
+
                     Text(
                         text = "Listas destacadas",
                         fontSize = dimensionResource(id = R.dimen.font_size_titulo).value.sp,

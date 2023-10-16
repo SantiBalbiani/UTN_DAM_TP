@@ -32,6 +32,7 @@ import ar.edu.utn.frba.placesify.view.FavoritesScreen
 import ar.edu.utn.frba.placesify.view.HomeScreen
 import ar.edu.utn.frba.placesify.view.LoginScreen
 import ar.edu.utn.frba.placesify.view.MyListsScreen
+import ar.edu.utn.frba.placesify.view.NewListScreen
 import ar.edu.utn.frba.placesify.view.NewPlacesScreen
 import ar.edu.utn.frba.placesify.view.SplashScreen
 import ar.edu.utn.frba.placesify.view.theme.PlacesifyTheme
@@ -43,6 +44,7 @@ import ar.edu.utn.frba.placesify.viewmodel.FavoritesViewModel
 import ar.edu.utn.frba.placesify.viewmodel.HomeViewModel
 import ar.edu.utn.frba.placesify.viewmodel.LoginViewModel
 import ar.edu.utn.frba.placesify.viewmodel.MyListsViewModel
+import ar.edu.utn.frba.placesify.viewmodel.NewListViewModel
 import ar.edu.utn.frba.placesify.viewmodel.NewPlacesViewModel
 import com.google.android.gms.auth.api.identity.Identity
 import kotlinx.coroutines.launch
@@ -173,6 +175,16 @@ class MainActivity : ComponentActivity() {
                                 navController = navController
                             )
                         }
+
+                        composable("new_list") {
+                            NewListScreen(
+                                NewListViewModel(OpenStreetmapService.instance,
+                                    BackendService.instance),
+                                navController = navController
+                            )
+                        }
+
+
                         composable(
                             "detail_list/{id_list}",
                             arguments = listOf(navArgument("id_list") { type = NavType.StringType })
