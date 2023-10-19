@@ -17,20 +17,21 @@ class DetailListViewModel(
     private val listService: BackendService,
     private val id_list: String?
 ) : ViewModel() {
-    // Declaro las Suscripciones a los LiveData
-    private val _detalleLista = MutableLiveData<Listas>()
-    private val _detalleListaActualizada = MutableLiveData<Boolean>()
-    private val _usuarioLogueado = MutableLiveData<Usuarios>()
-    private val _usuarioLogueadoActualizada = MutableLiveData<Boolean>()
 
-    // Declaro los LiveData
+    private val _detalleLista = MutableLiveData<Listas>()
     val detalleLista: LiveData<Listas> = _detalleLista
+
+    private val _detalleListaActualizada = MutableLiveData<Boolean>()
     val detalleListaActualizada: LiveData<Boolean> = _detalleListaActualizada
 
-    // Accede a usuarioLogueado como LiveData
+    private val _usuarioLogueadoActualizada = MutableLiveData<Boolean>()
+    val usuarioLogueadoActualizada: LiveData<Boolean> = _usuarioLogueadoActualizada
+
+    private val _usuarioLogueado = MutableLiveData<Usuarios>()
     val usuarioLogueado: LiveData<Usuarios> = _usuarioLogueado
 
-    val usuarioLogueadoActualizada: LiveData<Boolean> = _usuarioLogueadoActualizada
+    private val _isFavorite = MutableLiveData<Boolean>()
+    val isFavorite: LiveData<Boolean> = _isFavorite
 
     init {
         // Obtengo las Listas Destacadas
@@ -39,8 +40,8 @@ class DetailListViewModel(
         }
 
         // Obtengo el Registro del Usuario Logueado
-
         getUsuario()
+
     }
 
     private fun getLista(idLista: String) {
@@ -65,14 +66,13 @@ class DetailListViewModel(
 
                 if (response.items.isNotEmpty()) {
                     // Cargo la lista Destacadas
-                    Log.d("GET USUARIO2", "${response.toString()}")
-
                     _usuarioLogueado.value =
                         response.items.filter { it.email == Firebase.auth.currentUser?.email }
                             .first()
                     _usuarioLogueadoActualizada.value = true
-                    Log.d("GET USUARIO3", "${_usuarioLogueado.value.toString()}")
 
+                    // Inicializo el boton de favorito
+                    _isFavorite.value = _usuarioLogueado.value?.favoritesLists?.contains(id_list)
                 }
 
             } catch (e: Exception) {
@@ -95,4 +95,39 @@ class DetailListViewModel(
             }
         }
     }
+
+    fun onClickFavorite() {
+
+        if (_usuarioLogueado != null) {
+
+            if (_usuarioLogueado.value?.favoritesLists?.contains(id_list) == true) {
+                _usuarioLogueado.value?.favoritesLists?.remove(id_list)
+            } else {
+                if (id_list != null) {
+                    _usuarioLogueado.value?.favoritesLists?.add(id_list)
+                }
+            }
+            _isFavorite.value = _usuarioLogueado.value?.favoritesLists?.contains(id_list)
+
+
+            viewModelScope.launch() {
+                try {
+                    //val response = _usuarioLogueado.value?.let { listService.putUsuario(it) }
+                    Log.d("PrePut", "${_usuarioLogueado.value!!.id.toString()}")
+                    Log.d("PrePut", "${_usuarioLogueado.value!!.favoritesLists!!.toString()}")
+
+
+                    val response = listService.putUsuario2(
+                                        _usuarioLogueado.value!!.id,
+                                        _usuarioLogueado.value!!.favoritesLists!!.toList())
+                } catch (e: Exception) {
+                    Log.d("CATCH API ${e.toString()}", "API_CALL putUsuario")
+                }
+            }
+        }
+    }
 }
+
+
+
+

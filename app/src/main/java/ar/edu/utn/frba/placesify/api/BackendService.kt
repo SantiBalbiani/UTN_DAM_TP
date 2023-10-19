@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.placesify.api
 
+import android.util.Log
 import ar.edu.utn.frba.placesify.model.ApiCategoriesResponse
 import ar.edu.utn.frba.placesify.model.ApiListResponse
 import ar.edu.utn.frba.placesify.model.ApiPutUserResponse
@@ -25,7 +26,7 @@ interface BackendService {
                     "Authorization",
                     "Bearer s6A42K8fhYhBeQ7QZD-yhfj6zVAQpWkYPws_ucD_aGKkbJxc9A"
                 ).build()
-
+                Log.d("RETROFIT REQUEST", "${request.toString()}")
                 val resp = chain.proceed(request)
                 // Deal with the response code
                 if (resp.code == 200) {
@@ -61,5 +62,10 @@ interface BackendService {
 
     @PUT("usuarios")
     suspend fun putUsuario(@Body usuario: Usuarios):ApiPutUserResponse
+
+    @PUT("usuarios/{id}")
+    suspend fun putUsuario2(
+        @Path("id") id:String,
+        @Body favoritesLists: List<String>):Usuarios
 
 }

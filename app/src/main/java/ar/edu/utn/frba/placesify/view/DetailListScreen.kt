@@ -37,6 +37,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -56,6 +57,7 @@ import ar.edu.utn.frba.placesify.view.componentes.ShowLoading
 import ar.edu.utn.frba.placesify.viewmodel.DetailListViewModel
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 
 @Composable
@@ -86,24 +88,19 @@ fun DetailList(
 ) {
     // Declaro los viewData
     val detalleLista: Listas? by viewModel.detalleLista.observeAsState(initial = null)
-
-    val detalleListaActualizada: Boolean by viewModel.detalleListaActualizada.observeAsState(
-        initial = false
-    )
-    val usuarioLogueado: Usuarios? = viewModel.usuarioLogueado.value
-
-    val usuarioLogueadoActualizada: Boolean by viewModel.usuarioLogueadoActualizada.observeAsState(
-        initial = false
-    )
+    val detalleListaActualizada: Boolean by viewModel.detalleListaActualizada.observeAsState( initial = false )
+    val usuarioLogueado: Usuarios? by viewModel.usuarioLogueado.observeAsState( initial = null)
+    val usuarioLogueadoActualizada: Boolean by viewModel.usuarioLogueadoActualizada.observeAsState( initial = false )
+    val isFavorite: Boolean by viewModel.isFavorite.observeAsState( initial = false)
 
     // Defino el Contexto Actual
     val context = LocalContext.current
 
-    var isFavorite by remember { mutableStateOf(false) }
+    /*var isFavorite by remember { mutableStateOf(false) }
 
     if (detalleLista != null && usuarioLogueado != null) {
         isFavorite = esFavorita(detalleLista!!.id, usuarioLogueado) == true
-    }
+    }*/
 
     // Genero el Intent de Share
     val intent =
@@ -123,9 +120,7 @@ fun DetailList(
     ) { innerPadding ->
 
         // Muestreo Loading mientras llegan los datos
-        Log.d("GET USUARIO4", "${usuarioLogueado.toString()}")
-        //if ( !detalleListaActualizada || !usuarioLogueadoActualizada || detalleLista == null || usuarioLogueado == null  ) {
-        if ( !detalleListaActualizada || !usuarioLogueadoActualizada) {
+        if ( !detalleListaActualizada || !usuarioLogueadoActualizada || detalleLista == null || usuarioLogueado == null  ) {
                 ShowLoading("Actualizando...")
             } else {
 
@@ -166,8 +161,7 @@ fun DetailList(
 
                                     AssistChip(
                                         onClick = {
-                                            isFavorite = !isFavorite
-                                            onClickFavorito(detalleLista!!.id, usuarioLogueado, viewModel)
+                                                  viewModel.onClickFavorite()
                                         },
                                         enabled = true,
                                         border = null,
