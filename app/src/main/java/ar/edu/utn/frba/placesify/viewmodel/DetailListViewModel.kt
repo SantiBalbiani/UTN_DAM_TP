@@ -1,7 +1,6 @@
 package ar.edu.utn.frba.placesify.viewmodel
 
 import android.util.Log
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -41,7 +40,6 @@ class DetailListViewModel(
 
         // Obtengo el Registro del Usuario Logueado
         getUsuario()
-
     }
 
     private fun getLista(idLista: String) {
@@ -118,10 +116,15 @@ class DetailListViewModel(
 
 
                     val response = listService.putUsuario2(
-                                        "1", //_usuarioLogueado.value!!.id,
-                                        _usuarioLogueado.value!!.favoritesLists!!.toList())
+                        "da264666-348d-4efc-b8ef-bec396133e43", //_usuarioLogueado.value!!.id,
+                        Usuarios(
+                            email = _usuarioLogueado.value!!.email,
+                            favoritesLists = usuarioLogueado.value!!.favoritesLists!!
+                        )
+                    )
+
                 } catch (e: Exception) {
-                    Log.d("CATCH API ${e.toString()}", "API_CALL putUsuario")
+                    Log.d("API_CALL putUsuario", "CATCH  ${e.toString()}")
                 }
             }
         }

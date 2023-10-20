@@ -8,6 +8,7 @@ import ar.edu.utn.frba.placesify.model.ApiUserResponse
 import ar.edu.utn.frba.placesify.model.Listas
 import ar.edu.utn.frba.placesify.model.Usuarios
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.Body
@@ -16,29 +17,39 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
 
+
 interface BackendService {
     companion object {
+
+        // Configuro el log level. Poner Level.NONE en PRODUCTION
+        val logger = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
+
         val instance = Retrofit.Builder()
             .baseUrl("https://crudapi.co.uk/api/v1/")
             .addConverterFactory(MoshiConverterFactory.create())
-            .client(OkHttpClient.Builder().addInterceptor { chain ->
+            .client(OkHttpClient.Builder().addInterceptor(logger)
+            .addInterceptor { chain ->
                 val request = chain.request().newBuilder().addHeader(
                     "Authorization",
                     "Bearer s6A42K8fhYhBeQ7QZD-yhfj6zVAQpWkYPws_ucD_aGKkbJxc9A"
+                ).addHeader(
+                    "Content-Type",
+                    "application/json"
                 ).build()
                 Log.d("RETROFIT REQUEST", "${request.toString()}")
                 val resp = chain.proceed(request)
                 // Deal with the response code
-                if (resp.code == 200) {
+                if (resp.code == 200 || resp.code == 400) {
                     try {
                         val myJson =
                             resp.peekBody(2048).string() // peekBody() will not close the response
                         println(myJson)
+                        println(resp.request)
                     } catch (e: Exception) {
                         println("Error parse json from intercept..............")
                     }
                 } else {
-                    println(resp)
+                    println(resp.body)
                 }
                 resp
             }.build())
@@ -66,6 +77,7 @@ interface BackendService {
     @PUT("usuarios/{id}")
     suspend fun putUsuario2(
         @Path("id") id:String,
-        @Body favoritesLists: List<String>):Usuarios
+        @Body usuario: Usuarios
+    ):Usuarios
 
 }
