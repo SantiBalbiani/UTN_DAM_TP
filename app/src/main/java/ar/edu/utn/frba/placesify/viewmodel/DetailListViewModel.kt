@@ -116,9 +116,11 @@ class DetailListViewModel(
 
 
                     val response = listService.putUsuario2(
-                        "da264666-348d-4efc-b8ef-bec396133e43", //_usuarioLogueado.value!!.id,
+                        "ed6f7974-1c33-4d64-82bc-3b8bece177b8", //_usuarioLogueado.value!!.id,
                         Usuarios(
                             email = _usuarioLogueado.value!!.email,
+                            fullname = _usuarioLogueado.value!!.fullname,
+                            id = "ed6f7974-1c33-4d64-82bc-3b8bece177b8",
                             favoritesLists = usuarioLogueado.value!!.favoritesLists!!
                         )
                     )

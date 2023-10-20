@@ -41,6 +41,7 @@ data class Listas(
 )
 
 data class Usuarios(
+    @field:Json(name = "_uuid") // Usado por Retrofit
     val id: String? = "",
     val email: String? = "",
     val fullname: String? = "",
