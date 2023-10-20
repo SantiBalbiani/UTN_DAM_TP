@@ -2,11 +2,5 @@
 <resources>
     <style name="Theme.Placesify" parent="android:Theme.Material.Light.NoActionBar" >
         <item name="android:windowBackground">#FF50A2C7</item>
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:backgroundDimEnabled">false</item>
-        <item name="android:windowDisablePreview">true</item>
-        <item name="android:windowFullscreen">true</item>
     </style>
 </resources>

@@ -113,12 +113,12 @@ class DetailListViewModel(
             viewModelScope.launch() {
                 try {
                     //val response = _usuarioLogueado.value?.let { listService.putUsuario(it) }
-                    Log.d("PrePut", "${_usuarioLogueado.value!!.id.toString()}")
+                    //Log.d("PrePut", "${_usuarioLogueado.value!!.id.toString()}")
                     Log.d("PrePut", "${_usuarioLogueado.value!!.favoritesLists!!.toString()}")
 
 
                     val response = listService.putUsuario2(
-                                        _usuarioLogueado.value!!.id,
+                                        "1", //_usuarioLogueado.value!!.id,
                                         _usuarioLogueado.value!!.favoritesLists!!.toList())
                 } catch (e: Exception) {
                     Log.d("CATCH API ${e.toString()}", "API_CALL putUsuario")
