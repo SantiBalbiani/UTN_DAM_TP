@@ -41,9 +41,9 @@ data class Listas(
 )
 
 data class Usuarios(
-    val id: String = "",
-    val email: String = "",
-    val fullname: String = "",
+    val id: String? = "",
+    val email: String? = "",
+    val fullname: String? = "",
     val favoritesLists: MutableList<String>?
 )
 
