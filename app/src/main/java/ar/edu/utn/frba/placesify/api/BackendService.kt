@@ -62,8 +62,14 @@ interface BackendService {
     @GET("listas/{id}")
     suspend fun getLista(@Path("id") id: String): Listas
 
-    @POST("lista")
-    suspend fun addLista(@Body lista: Listas): Listas
+    @POST("listas")
+    suspend fun postLista(@Body lista: Listas): Listas
+
+    @PUT("listas/{id}")
+    suspend fun putLista(
+        @Path("id") id:String,
+        @Body lista:Listas
+    ):Listas
 
     @GET("categorias")
     suspend fun getCategorias(): ApiCategoriesResponse
@@ -71,13 +77,14 @@ interface BackendService {
     @GET("usuarios")
     suspend fun getUsuarios(): ApiUserResponse
 
-    @PUT("usuarios")
-    suspend fun putUsuario(@Body usuario: Usuarios):ApiPutUserResponse
+    @POST("usuarios")
+    suspend fun postUsuario(@Body usuario: Usuarios): Usuarios
 
     @PUT("usuarios/{id}")
-    suspend fun putUsuario2(
+    suspend fun putUsuario(
         @Path("id") id:String,
         @Body usuario: Usuarios
     ):Usuarios
+
 
 }

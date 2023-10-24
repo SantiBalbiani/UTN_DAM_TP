@@ -96,12 +96,6 @@ fun DetailList(
     // Defino el Contexto Actual
     val context = LocalContext.current
 
-    /*var isFavorite by remember { mutableStateOf(false) }
-
-    if (detalleLista != null && usuarioLogueado != null) {
-        isFavorite = esFavorita(detalleLista!!.id, usuarioLogueado) == true
-    }*/
-
     // Genero el Intent de Share
     val intent =
         detalleLista?.name?.let {
@@ -213,7 +207,7 @@ fun DetailList(
                         // Si la Lista posee Lugares, los muestro
                         if (detalleLista?.lstPlaces?.isNotEmpty() == true) {
                             detalleLista?.lstPlaces?.forEach { lugar ->
-                                ItemLugares(lugar, navController, usuarioLogueado, viewModel)
+                                ItemLugares(lugar, navController) //, usuarioLogueado, viewModel)
                             }
                         } else {
                             Text(
@@ -232,9 +226,7 @@ fun DetailList(
 @Composable
 fun ItemLugares(
     lugar: Lugares,
-    navController: NavController?,
-    usuarioLogueado: Usuarios?,
-    viewModel: DetailListViewModel
+    navController: NavController?
 ) {
 
     val id_lugar: String = lugar.id.toString()
@@ -273,38 +265,5 @@ fun ItemLugares(
             )
         }
         Divider()
-    }
-}
-
-fun esFavorita(
-    id_lista: String,
-    usuarioLogueado: Usuarios?
-): Boolean? {
-    if (usuarioLogueado != null) {
-        return usuarioLogueado.favoritesLists?.contains(id_lista)
-    } else {
-        return false
-    }
-}
-
-fun onClickFavorito(
-    listaId: String,
-    usuarioLogueado: Usuarios?,
-    viewModel: DetailListViewModel
-) {
-
-    val usuario = usuarioLogueado
-
-    if (usuario != null) {
-
-        if (usuario.favoritesLists?.contains(listaId) == true) {
-            usuario.favoritesLists?.remove(listaId)
-        } else {
-            usuario.favoritesLists?.add(listaId)
-        }
-
-        // Actualizar la lista de favoritos en el ViewModel
-        //viewModel.updateUsuarioLogueado(usuarioComoLista)
-
     }
 }

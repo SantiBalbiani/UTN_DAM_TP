@@ -80,20 +80,6 @@ class DetailListViewModel(
 
     }
 
-    fun updateUsuarioLogueado(updatedUsuario: Usuarios) {
-
-        viewModelScope.launch() {
-            try {
-
-                _usuarioLogueado.value = updatedUsuario
-                val response = listService.putUsuario(updatedUsuario)
-
-            } catch (e: Exception) {
-                Log.d("CATCH API ${e.toString()}", "API_CALL 2")
-            }
-        }
-    }
-
     fun onClickFavorite() {
 
         if (_usuarioLogueado != null) {
@@ -106,23 +92,25 @@ class DetailListViewModel(
                 }
             }
             _isFavorite.value = _usuarioLogueado.value?.favoritesLists?.contains(id_list)
-
+            if (_isFavorite.value == true)
+            {
+                _detalleLista.value!!?.likes = _detalleLista.value!!?.likes!! + 1
+            }
+            else{
+                _detalleLista.value!!?.likes = _detalleLista.value!!?.likes!! - 1
+            }
 
             viewModelScope.launch() {
                 try {
-                    //val response = _usuarioLogueado.value?.let { listService.putUsuario(it) }
-                    //Log.d("PrePut", "${_usuarioLogueado.value!!.id.toString()}")
-                    Log.d("PrePut", "${_usuarioLogueado.value!!.favoritesLists!!.toString()}")
 
+                    val resp1 = listService.putUsuario(
+                        _usuarioLogueado.value!!.id.toString(),
+                        _usuarioLogueado.value!!
+                    )
 
-                    val response = listService.putUsuario2(
-                        "ed6f7974-1c33-4d64-82bc-3b8bece177b8", //_usuarioLogueado.value!!.id,
-                        Usuarios(
-                            email = _usuarioLogueado.value!!.email,
-                            fullname = _usuarioLogueado.value!!.fullname,
-                            id = "ed6f7974-1c33-4d64-82bc-3b8bece177b8",
-                            favoritesLists = usuarioLogueado.value!!.favoritesLists!!
-                        )
+                    val resp2 = listService.putLista(
+                        _detalleLista.value!!.id.toString(),
+                        _detalleLista.value!!
                     )
 
                 } catch (e: Exception) {

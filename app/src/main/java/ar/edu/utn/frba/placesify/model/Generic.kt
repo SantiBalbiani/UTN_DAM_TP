@@ -26,9 +26,9 @@ data class Lugares(
 
 data class Listas(
     @field:Json(name = "_created") // Usado por Retrofit
-    val created: Double = 0.00,
+    val created: String? = "",
     @field:Json(name = "_uuid") // Usado por Retrofit
-    val id: String = "",
+    val id: String? = "",
     @field:Json(name = "name") // Usado por Retrofit
     val name: String = "",
     @field:Json(name = "description") // Usado por Retrofit
@@ -37,7 +37,7 @@ data class Listas(
     val email_owner: String = "",
     val lstPlaces: List<Lugares>?,
     val lstCategories: List<Int>?,
-    val likes: Int = 0
+    var likes: Int = 0
 )
 
 data class Usuarios(
