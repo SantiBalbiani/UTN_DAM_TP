@@ -46,12 +46,15 @@ class DetailListViewModel(
         // Lanzo la Coroutine en el thread de MAIN
         viewModelScope.launch() {
             try {
+
+                Log.d("API_CALL 2", idLista.toString())
+
                 val response = listService.getLista(idLista)
                 _detalleLista.value = response
                 _detalleListaActualizada.value = true
 
             } catch (e: Exception) {
-                Log.d("CATCH API ${e.toString()}", "API_CALL 2")
+                Log.d("API_CALL 2", "CATCH API ${e.toString()}")
             }
         }
     }
@@ -63,6 +66,9 @@ class DetailListViewModel(
                 val response = listService.getUsuarios()
 
                 if (response.items.isNotEmpty()) {
+
+                    Log.d("API_CALL 3.1", response.items.toString())
+
                     // Cargo la lista Destacadas
                     _usuarioLogueado.value =
                         response.items.filter { it.email == Firebase.auth.currentUser?.email }
@@ -74,7 +80,7 @@ class DetailListViewModel(
                 }
 
             } catch (e: Exception) {
-                Log.d("CATCH API ${e.toString()}", "API_CALL 2")
+                Log.d("API_CALL 3", "CATCH API ${e.toString()}")
             }
         }
 
