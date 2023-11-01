@@ -6,6 +6,7 @@ import ar.edu.utn.frba.placesify.model.ApiListResponse
 import ar.edu.utn.frba.placesify.model.ApiPutUserResponse
 import ar.edu.utn.frba.placesify.model.ApiUserResponse
 import ar.edu.utn.frba.placesify.model.Listas
+import ar.edu.utn.frba.placesify.model.NuevoUsuario
 import ar.edu.utn.frba.placesify.model.Usuarios
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -31,7 +32,7 @@ interface BackendService {
             .addInterceptor { chain ->
                 val request = chain.request().newBuilder().addHeader(
                     "Authorization",
-                    "Bearer s6A42K8fhYhBeQ7QZD-yhfj6zVAQpWkYPws_ucD_aGKkbJxc9A"
+                    "Bearer mJtzfkgldCK080hZjWQ8hh2hj_4HoS2qvQeh7C1Ve5P5uEeZTw"
                 ).addHeader(
                     "Content-Type",
                     "application/json"
@@ -78,7 +79,7 @@ interface BackendService {
     suspend fun getUsuarios(): ApiUserResponse
 
     @POST("usuarios")
-    suspend fun postUsuario(@Body usuario: Usuarios): Usuarios
+    suspend fun postUsuario(@Body usuarios: List<NuevoUsuario>): Usuarios
 
     @PUT("usuarios/{id}")
     suspend fun putUsuario(

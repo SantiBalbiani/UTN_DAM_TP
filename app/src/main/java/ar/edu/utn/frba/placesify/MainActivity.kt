@@ -1,6 +1,7 @@
 package ar.edu.utn.frba.placesify
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -88,15 +89,6 @@ class MainActivity : ComponentActivity() {
                             InternetStatusComponent()
                             val viewModel = viewModel<LoginViewModel>()
                             val state by viewModel.state.collectAsStateWithLifecycle()
-
-                            // Si ya estoy logueado...
-                            /*
-                                                        LaunchedEffect(key1 = Unit) {
-                                                            if (googleAuthUiClient.getSignedInUser() != null) {
-                                                                navController.navigate("home")
-                                                            }
-                                                        }
-                            */
 
                             val launcher = rememberLauncherForActivityResult(
                                 contract = ActivityResultContracts.StartIntentSenderForResult(),

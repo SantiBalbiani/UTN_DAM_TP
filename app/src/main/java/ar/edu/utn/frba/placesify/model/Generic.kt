@@ -48,6 +48,12 @@ data class Usuarios(
     val favoritesLists: MutableList<String>?
 )
 
+data class NuevoUsuario(
+    val email: String? = "",
+    val fullname: String? = "",
+    val favoritesLists: MutableList<String>?
+)
+
 data class ApiListResponse(
     val cursor: String? = "",
     val items: List<Listas>,
