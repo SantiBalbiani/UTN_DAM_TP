@@ -1,6 +1,9 @@
 package ar.edu.utn.frba.placesify.view
 
-import android.annotation.SuppressLint
+import android.net.Uri
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -12,10 +15,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material3.Button
@@ -38,20 +39,19 @@ import androidx.navigation.NavController
 import ar.edu.utn.frba.placesify.R
 import ar.edu.utn.frba.placesify.view.theme.Purple80
 import ar.edu.utn.frba.placesify.viewmodel.NewPlacesPrincipalViewModel
-import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.input.TextFieldValue
-import ar.edu.utn.frba.placesify.model.Categorias
-import coil.compose.AsyncImage
+import ar.edu.utn.frba.placesify.model.Usuarios
+import coil.compose.rememberAsyncImagePainter
 
 
 @Composable
@@ -417,10 +417,17 @@ fun NewPlace3(
     navController: NavController?,
     viewModel: NewPlacesPrincipalViewModel
 ){
+    val context = LocalContext.current
+    val uriState = remember { mutableStateOf<Uri?>(null) }
 
-    var descripcion by rememberSaveable {
-        mutableStateOf("Descripcion del lugar")
+    val imageLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        viewModel.handleImageSelection(uri, context)
     }
+
+    val latitud: String by viewModel.latitud.observeAsState( initial = "")
+    val longitud: String by viewModel.longitud.observeAsState( initial = "")
+
+    viewModel.setImagePickerCallback { uri -> uriState.value = uri }
 
     Scaffold(
         topBar = { BarraNavegacionSuperior("Buscar por imagen", navController) },
@@ -443,16 +450,50 @@ fun NewPlace3(
                         )
                 }
 
-
-                Spacer(modifier = Modifier.padding(24.dp))
+                Spacer(modifier = Modifier.padding(10.dp))
 
                 Row {
-                    Image(
-                        painter = painterResource(id = R.drawable.camara),
-                        contentDescription = "Camara",
-                        alignment = Alignment.Center
-                    )
+
+                    if ( uriState.value != null ) {
+
+                        uriState.value?.let { uri ->
+                            Image(
+                                painter = rememberAsyncImagePainter(model = uri),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(250.dp),
+                                contentScale = ContentScale.Crop
+                            )
+                        }
+
+                    }
+                    else{
+                        Image(
+                            painter = painterResource(id = R.drawable.camara),
+                            contentDescription = "Camara",
+                            alignment = Alignment.Center
+                        )
+                    }
                 }
+
+                Row {
+                    if (uriState.value != null)
+                        Text(text = "Latitud: ${latitud} Longitud: ${longitud}",
+                            textAlign = TextAlign.Center
+                        )
+                }
+
+                Row {
+                    Button(
+                        onClick = { viewModel.pickImage(imageLauncher) },
+                        modifier = Modifier.padding(16.dp)
+                    ) {
+                        Text("Seleccionar imagen")
+                    }
+                }
+
+
 
                 Spacer(modifier = Modifier.padding(48.dp))
 
@@ -474,10 +515,5 @@ fun NewPlace3(
 
             }
         }
-
-
     }
-
-
-
 }
