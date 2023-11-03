@@ -50,6 +50,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import ar.edu.utn.frba.placesify.model.OpenStreetmapResponse
 import ar.edu.utn.frba.placesify.model.Usuarios
 import coil.compose.rememberAsyncImagePainter
 
@@ -426,6 +427,8 @@ fun NewPlace3(
 
     val latitud: String by viewModel.latitud.observeAsState( initial = "")
     val longitud: String by viewModel.longitud.observeAsState( initial = "")
+    val lugaresAPI: OpenStreetmapResponse? by viewModel.lugaresAPI.observeAsState(initial = null  )
+
 
     viewModel.setImagePickerCallback { uri -> uriState.value = uri }
 
@@ -478,8 +481,9 @@ fun NewPlace3(
                 }
 
                 Row {
-                    if (uriState.value != null)
-                        Text(text = "Latitud: ${latitud} Longitud: ${longitud}",
+                    if (uriState.value != null && lugaresAPI?.displayName != null )
+                        //Text(text = "Latitud: ${latitud} Longitud: ${longitud}",
+                        Text(text = "${lugaresAPI?.displayName.toString()}",
                             textAlign = TextAlign.Center
                         )
                 }

@@ -51,4 +51,17 @@ interface OpenStreetmapService {
         @Query("limit") limit: String = "5",
         @Query("countrycodes") countrycodes: String = "AR"
     ): List<OpenStreetmapResponse>
+
+    @GET("reverse?")
+    @Headers(
+        "Accept: application/json",
+        "Accept-Language: es-ES"
+    )
+    suspend fun getLugarPorCoords(
+        @Query("lat") lat: String,
+        @Query("lon") lon: String,
+        @Query("format") format: String = "jsonv2",
+        @Query("countrycodes") countrycodes: String = "AR"
+    ): OpenStreetmapResponse
+
 }

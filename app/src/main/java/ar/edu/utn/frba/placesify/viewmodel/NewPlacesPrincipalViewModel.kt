@@ -9,10 +9,15 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import ar.edu.utn.frba.placesify.api.OpenStreetmapService
+import ar.edu.utn.frba.placesify.model.OpenStreetmapResponse
+import kotlinx.coroutines.launch
 import java.io.IOException
 
 
-class NewPlacesPrincipalViewModel {
+class NewPlacesPrincipalViewModel() : ViewModel() {
 
     private var imagePickerCallback: ((Uri?) -> Unit)? = null
 
@@ -21,6 +26,9 @@ class NewPlacesPrincipalViewModel {
 
     val _longitud = MutableLiveData<String>()
     val longitud: LiveData<String> = _longitud
+
+    val _lugaresAPI = MutableLiveData<OpenStreetmapResponse>()
+    val lugaresAPI: LiveData<OpenStreetmapResponse> = _lugaresAPI
 
     val _pantalla = MutableLiveData<Int>()
     val pantalla: LiveData<Int> = _pantalla
@@ -64,6 +72,8 @@ class NewPlacesPrincipalViewModel {
                     exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE),
                     exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF)
                 ).toString()
+
+                getLugarEnOpenStreetMapApi()
 
             }
         } catch (e: IOException) {
@@ -128,6 +138,25 @@ class NewPlacesPrincipalViewModel {
         val decimalDegrees = degreesValue + minutesValue / 60 + secondsValue / 3600
 
         return if (longitudeRef == "W") -decimalDegrees else decimalDegrees
+    }
+
+    fun getLugarEnOpenStreetMapApi(){
+
+        viewModelScope.launch() {
+            try {
+                val response = OpenStreetmapService.instance.getLugarPorCoords(
+                    _latitud.value.toString(),
+                    _longitud.value.toString())
+                //Log.d( "OpenStreetmapService" , response.toString())
+
+                _lugaresAPI.value = response
+
+                //Log.d( "OpenStreetmapService" , response.toString())
+            } catch (e: Exception) {
+                e.message?.let { Log.d("OpenStreetmapService API_CALL 2", it) }
+            }
+        }
+
     }
 
 
