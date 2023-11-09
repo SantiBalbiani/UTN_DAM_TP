@@ -1,10 +1,12 @@
 package ar.edu.utn.frba.placesify.view
 
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,7 +17,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
@@ -63,7 +67,7 @@ import com.utsman.osmandcompose.ZoomButtonVisibility
 import com.utsman.osmandcompose.rememberCameraState
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
-
+import androidx.compose.runtime.SideEffect
 
 @Composable
 fun NewPlacesPrincipalScreen(
@@ -344,11 +348,9 @@ fun NewPlace2(
     viewModel: NewPlacesPrincipalViewModel
 ){
 
-    var descripcion by rememberSaveable {
-        mutableStateOf("Descripcion del lugar")
-    }
     val lat: Double by viewModel.gpsLat.observeAsState( initial = 0.0 )
     val lon: Double by viewModel.gpsLon.observeAsState( initial = 0.0 )
+    val lugaresAPI: OpenStreetmapResponse? by viewModel.lugaresAPI.observeAsState(initial = null  )
 
     Scaffold(
         topBar = { BarraNavegacionSuperior("Buscar por el mapa", navController) },
@@ -404,11 +406,13 @@ fun NewPlace2(
                             mutableStateOf(DefaultMapProperties)
                         }
 
-                        mapProperties = mapProperties
+                        SideEffect {
+                            mapProperties = mapProperties
                                 .copy(isTilesScaledToDpi = true)
                                 .copy(tileSources = TileSourceFactory.MAPNIK)
                                 .copy(isEnableRotationGesture = false)
                                 .copy(zoomButtonVisibility = ZoomButtonVisibility.NEVER)
+                        }
 
                         OpenStreetMap(
                             modifier = Modifier
@@ -419,6 +423,8 @@ fun NewPlace2(
                             onMapClick = {
                                 println("on click  -> $it")
                                 markerState.geoPoint = it
+                                viewModel.getLugarEnOpenStreetMapApi(it.latitude.toString(),it.longitude.toString())
+                                println("lugar -> ${lugaresAPI.toString()}")
                             }
                         ) {
                             Marker(

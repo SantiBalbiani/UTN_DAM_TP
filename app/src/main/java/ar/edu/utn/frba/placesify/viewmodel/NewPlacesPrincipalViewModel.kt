@@ -88,7 +88,7 @@ class NewPlacesPrincipalViewModel(
                     exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF)
                 ).toString()
 
-                getLugarEnOpenStreetMapApi()
+                getLugarEnOpenStreetMapApi(_latitud.value.toString(),_longitud.value.toString())
 
             }
         } catch (e: IOException) {
@@ -155,13 +155,13 @@ class NewPlacesPrincipalViewModel(
         return if (longitudeRef == "W") -decimalDegrees else decimalDegrees
     }
 
-    fun getLugarEnOpenStreetMapApi(){
+    fun getLugarEnOpenStreetMapApi(lat: String, lon: String){
 
         viewModelScope.launch() {
             try {
                 val response = OpenStreetmapService.instance.getLugarPorCoords(
-                    _latitud.value.toString(),
-                    _longitud.value.toString())
+                    lat, //_latitud.value.toString(),
+                    lon) //_longitud.value.toString())
 
                 _lugaresAPI.value = response
 
