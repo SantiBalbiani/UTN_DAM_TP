@@ -1,25 +1,40 @@
 package ar.edu.utn.frba.placesify.viewmodel
 
+import android.app.Application
 import android.content.Context
 import android.media.ExifInterface
 import android.net.Uri
 import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.ActivityResultRegistry
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ar.edu.utn.frba.placesify.api.OpenStreetmapService
+import ar.edu.utn.frba.placesify.model.LocationHandler
 import ar.edu.utn.frba.placesify.model.OpenStreetmapResponse
 import kotlinx.coroutines.launch
 import java.io.IOException
 
 
-class NewPlacesPrincipalViewModel() : ViewModel() {
+
+class NewPlacesPrincipalViewModel(
+    application: Application,
+    activityResultRegistry: ActivityResultRegistry
+) : ViewModel() {
 
     private var imagePickerCallback: ((Uri?) -> Unit)? = null
+
+    private val locationHandler = LocationHandler(this, application, activityResultRegistry)
+    val _gpsLat = MutableLiveData<Double>()
+    val gpsLat: LiveData<Double> = _gpsLat
+    val _gpsLon = MutableLiveData<Double>()
+    val gpsLon: LiveData<Double> = _gpsLon
+
 
     val _latitud = MutableLiveData<String>()
     val latitud: LiveData<String> = _latitud
@@ -147,11 +162,9 @@ class NewPlacesPrincipalViewModel() : ViewModel() {
                 val response = OpenStreetmapService.instance.getLugarPorCoords(
                     _latitud.value.toString(),
                     _longitud.value.toString())
-                //Log.d( "OpenStreetmapService" , response.toString())
 
                 _lugaresAPI.value = response
 
-                //Log.d( "OpenStreetmapService" , response.toString())
             } catch (e: Exception) {
                 e.message?.let { Log.d("OpenStreetmapService API_CALL 2", it) }
             }
@@ -159,5 +172,15 @@ class NewPlacesPrincipalViewModel() : ViewModel() {
 
     }
 
+    fun requestLocationPermission(context: Context) {
+        locationHandler.requestLocationPermission(context)
+    }
+
+    fun onLocationReceived(lat: Double, lon: Double) {
+        _gpsLon.value = lon
+        _gpsLat.value = lat
+    }
+
 
 }
+

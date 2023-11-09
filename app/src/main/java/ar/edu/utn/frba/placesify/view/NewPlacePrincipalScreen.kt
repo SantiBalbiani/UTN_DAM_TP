@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material3.Button
@@ -42,6 +43,7 @@ import ar.edu.utn.frba.placesify.viewmodel.NewPlacesPrincipalViewModel
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -53,6 +55,9 @@ import androidx.compose.ui.res.painterResource
 import ar.edu.utn.frba.placesify.model.OpenStreetmapResponse
 import ar.edu.utn.frba.placesify.model.Usuarios
 import coil.compose.rememberAsyncImagePainter
+import com.utsman.osmandcompose.OpenStreetMap
+import com.utsman.osmandcompose.rememberCameraState
+import org.osmdroid.util.GeoPoint
 
 
 @Composable
@@ -337,6 +342,8 @@ fun NewPlace2(
     var descripcion by rememberSaveable {
         mutableStateOf("Descripcion del lugar")
     }
+    val lat: Double by viewModel.gpsLat.observeAsState( initial = 0.0 )
+    val lon: Double by viewModel.gpsLon.observeAsState( initial = 0.0 )
 
     Scaffold(
         topBar = { BarraNavegacionSuperior("Buscar por el mapa", navController) },
@@ -370,20 +377,28 @@ fun NewPlace2(
 
                 Spacer(modifier = Modifier.padding(20.dp))
 
-                OutlinedTextField(
-                    label = {Text(text = "Descripcion del lugar")},
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        focusedBorderColor = Purple80,
-                        focusedLabelColor = Purple80,
-                        cursorColor = Purple80,
-                        textColor = Color.White
-                    ),
-                    value = descripcion,
-                    onValueChange = {
-                        descripcion = it
-                    },
-                    modifier = Modifier.fillMaxWidth())
+                viewModel.requestLocationPermission(LocalContext.current)
 
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colors.background
+                ) {
+
+                    if (lat != 0.0 && lon != 0.0){
+                        val cameraState = rememberCameraState {
+                            geoPoint = GeoPoint(lat, lon)
+                            zoom = 12.0 // optional, default is 5.0
+                        }
+
+                        OpenStreetMap(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(350.dp),
+                            cameraState = cameraState
+                        )
+                    }
+
+                }
 
                 //TODO falta para agregar opcion de foto del lugar
 

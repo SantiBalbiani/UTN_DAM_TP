@@ -55,6 +55,8 @@ dependencies {
 
     implementation("com.google.firebase:firebase-auth:22.1.1")
     implementation("com.google.android.material:material:1.10.0")
+    implementation("com.google.firebase:firebase-firestore-ktx:24.9.1")
+    implementation("com.google.android.gms:play-services-location:21.0.1")
     val nav_version = "2.7.2"
 
     implementation("androidx.navigation:navigation-compose:$nav_version")
@@ -99,6 +101,15 @@ dependencies {
 
     // Serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
+
+    //OSM
+    implementation("org.osmdroid:osmdroid-android:6.1.16")
+    implementation("tech.utsmankece:osm-android-compose:0.0.5")
+
+    //GPS
+    implementation("com.google.android.gms:play-services-location:21.0.1")
+    implementation("androidx.activity:activity-compose:1.3.0-alpha01")
+
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

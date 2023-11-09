@@ -1,7 +1,6 @@
 package ar.edu.utn.frba.placesify
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -73,8 +72,6 @@ class MainActivity : ComponentActivity() {
                 ) {
                     val navController = rememberNavController()
                     NavHost(navController = navController, startDestination = "splash") {
-
-
 
 
                         // Armo las Rutas de Navegación
@@ -172,7 +169,7 @@ class MainActivity : ComponentActivity() {
                         //TODO DEJO ASI POR AHORA
                         composable("new_places_principal") {
                             NewPlacesPrincipalScreen(
-                                NewPlacesPrincipalViewModel(),
+                                NewPlacesPrincipalViewModel(application, activityResultRegistry),
                                 navController = navController
                             )
                         }
