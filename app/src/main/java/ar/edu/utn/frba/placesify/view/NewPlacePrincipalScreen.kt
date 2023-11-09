@@ -55,8 +55,13 @@ import androidx.compose.ui.res.painterResource
 import ar.edu.utn.frba.placesify.model.OpenStreetmapResponse
 import ar.edu.utn.frba.placesify.model.Usuarios
 import coil.compose.rememberAsyncImagePainter
+import com.utsman.osmandcompose.DefaultMapProperties
 import com.utsman.osmandcompose.OpenStreetMap
+import com.utsman.osmandcompose.rememberMarkerState
+import com.utsman.osmandcompose.Marker
+import com.utsman.osmandcompose.ZoomButtonVisibility
 import com.utsman.osmandcompose.rememberCameraState
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 
 
@@ -385,17 +390,41 @@ fun NewPlace2(
                 ) {
 
                     if (lat != 0.0 && lon != 0.0){
-                        val cameraState = rememberCameraState {
+
+                        val markerState = rememberMarkerState(
                             geoPoint = GeoPoint(lat, lon)
-                            zoom = 12.0 // optional, default is 5.0
+                        )
+
+                        val cameraState = rememberCameraState {
+                            geoPoint = markerState.geoPoint //GeoPoint(lat, lon)
+                            zoom = 15.0 // optional, default is 5.0
                         }
+
+                        var mapProperties by remember {
+                            mutableStateOf(DefaultMapProperties)
+                        }
+
+                        mapProperties = mapProperties
+                                .copy(isTilesScaledToDpi = true)
+                                .copy(tileSources = TileSourceFactory.MAPNIK)
+                                .copy(isEnableRotationGesture = false)
+                                .copy(zoomButtonVisibility = ZoomButtonVisibility.NEVER)
 
                         OpenStreetMap(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(350.dp),
-                            cameraState = cameraState
-                        )
+                                .height(500.dp),
+                            cameraState = cameraState,
+                            properties = mapProperties,
+                            onMapClick = {
+                                println("on click  -> $it")
+                                markerState.geoPoint = it
+                            }
+                        ) {
+                            Marker(
+                                state = markerState
+                            )
+                        }
                     }
 
                 }
