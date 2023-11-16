@@ -24,7 +24,6 @@ class NewListViewModel(
     val categorias: LiveData<List<Categorias>> = _categorias
     val categoriasActualizada: LiveData<Boolean> = _categoriasActualizada
 
-
     val _categoriasSeleccionadas = MutableLiveData<MutableList<Categorias>>()
     val categoriasSeleccionadas: MutableLiveData<MutableList<Categorias>>
         get() = _categoriasSeleccionadas

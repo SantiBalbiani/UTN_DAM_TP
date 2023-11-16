@@ -68,6 +68,9 @@ import com.utsman.osmandcompose.rememberCameraState
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import androidx.compose.runtime.SideEffect
+import ar.edu.utn.frba.placesify.model.Listas
+import ar.edu.utn.frba.placesify.model.Lugares
+import ar.edu.utn.frba.placesify.model.PreferencesManager
 
 @Composable
 fun NewPlacesPrincipalScreen(
@@ -101,7 +104,6 @@ fun NewPlaces(
     val pantalla: Int? by viewModel.pantalla.observeAsState(initial = null)
     val cantidad_lugares_agregados: Int? by viewModel.cantAgregados.observeAsState(initial = null)
 
-
     // Controlador del Teclado Virtual
     val keyboardController: SoftwareKeyboardController? = LocalSoftwareKeyboardController.current
 
@@ -111,8 +113,6 @@ fun NewPlaces(
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
-
 
     if(pantalla == 0){
         NewPlacesPrincipal(modifier, navController,viewModel)
@@ -125,7 +125,6 @@ fun NewPlaces(
         NewPlace3(modifier, navController,viewModel)
     }
 
-
 }
 
 @Composable
@@ -134,6 +133,18 @@ fun NewPlacesPrincipal(
     navController: NavController?,
     viewModel: NewPlacesPrincipalViewModel
 ){
+
+    //Contexto
+    val context = LocalContext.current
+    // Instancio al PreferencesManager
+    val preferencesManager = remember { PreferencesManager(context) }
+
+    var nuevaLista =
+        remember { mutableStateOf(preferencesManager.getList("nuevaLista", Listas(
+            lstPlaces = emptyList(),
+            lstCategories = emptyList()
+        ) )) }
+
 
     Scaffold(
         topBar = { BarraNavegacionSuperior("Agregar Lugar nuevo", navController) },
@@ -231,6 +242,12 @@ fun NewPlacesPrincipal(
                 ) {
                     Text(text = "Crear Lista")
                 }
+
+                // Para debug muestro por pantalla la lista en todo momento
+                Text(
+                    text = nuevaLista.toString(),
+                    modifier = Modifier.padding(5.dp)
+                )
 
             }
 

@@ -23,21 +23,21 @@ data class Lugares(
     @field:Json(name = "longitud") // Usado por Retrofit
     val longitud: Double = 0.0
 )
-
+@Serializable
 data class Listas(
     @field:Json(name = "_created") // Usado por Retrofit
     val created: String? = "",
     @field:Json(name = "_uuid") // Usado por Retrofit
     val id: String? = "",
     @field:Json(name = "name") // Usado por Retrofit
-    val name: String = "",
+    var name: String = "",
     @field:Json(name = "description") // Usado por Retrofit
-    val description: String = "",
-    val review: Double = 0.0,
+    var description: String? = "",
+    val review: Double? = 0.0,
     val email_owner: String = "",
     val lstPlaces: List<Lugares>?,
-    val lstCategories: List<Int>?,
-    var likes: Int = 0
+    var lstCategories: List<Int>?,
+    var likes: Int? = 0
 )
 
 data class Usuarios(

@@ -196,7 +196,7 @@ fun DetailList(
                             }
                         }
 
-                        detalleLista?.let { Text(text = it.description) }
+                        detalleLista?.let { Text(text = it.description!!) }
                         Spacer(modifier = Modifier.padding(8.dp))
                         Text(
                             text = "Lugares",

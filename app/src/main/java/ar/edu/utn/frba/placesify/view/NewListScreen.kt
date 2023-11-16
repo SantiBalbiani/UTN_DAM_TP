@@ -79,12 +79,16 @@ import androidx.navigation.compose.rememberNavController
 import ar.edu.utn.frba.placesify.R
 import ar.edu.utn.frba.placesify.model.Categorias
 import ar.edu.utn.frba.placesify.model.Listas
+import ar.edu.utn.frba.placesify.model.Lugares
+import ar.edu.utn.frba.placesify.model.PreferencesManager
 import ar.edu.utn.frba.placesify.view.componentes.ShowLoading
 import ar.edu.utn.frba.placesify.view.theme.Purple80
 import ar.edu.utn.frba.placesify.viewmodel.HomeViewModel
 import ar.edu.utn.frba.placesify.viewmodel.NewListViewModel
 import coil.compose.AsyncImage
 import com.google.android.material.card.MaterialCardView
+import com.google.firebase.auth.ktx.*
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.delay
 
 @Composable
@@ -116,13 +120,20 @@ fun NewList(
     viewModel: NewListViewModel,
     navController: NavController?
 ) {
+    //Contexto
+    val context = LocalContext.current
+    // Instancio al PreferencesManager
+    val preferencesManager = remember { PreferencesManager(context) }
+
+    // Obtengo los lugares persistidos en el PreferencesManager
+    val lugaresSharedPreferences =
+        remember { mutableStateOf(preferencesManager.getData("lugares", ArrayList<Lugares>())) }
 
     // Declaro los viewData
     val categorias: List<Categorias>? by viewModel.categorias.observeAsState(initial = null)
     val categoriasActualizada: Boolean by viewModel.categoriasActualizada.observeAsState(
         initial = false
     )
-
 
     val isRefreshing: Boolean by viewModel.isRefreshing.observeAsState(
         initial = false
@@ -137,6 +148,36 @@ fun NewList(
         mutableStateOf("")
     }
 
+    var nuevaLista =
+        remember { mutableStateOf(preferencesManager.getList("nuevaLista", Listas(
+            lstPlaces = emptyList(),
+            lstCategories = emptyList()
+        ) )) }
+
+    //TODO obtener el dia de creacion
+    val fecha_creacion = "10/10/2023"
+
+    //TODO selector multiple de categoria
+    val cant_categorias = categorias?.size
+
+    var esta_abierto by remember {
+        mutableStateOf(false)
+    }
+    var categoriaPredeterminada by remember {
+        mutableStateOf("Seleccionar categoria")
+    }
+
+    val categoriasSeleccionadas: MutableList<Categorias>? by viewModel.categoriasSeleccionadas.observeAsState(
+        initial = null
+    )
+
+    /*
+    if(nuevaLista.value?.lstCategories?.size!! > 0){
+        // Actualizo las categorias seleccionadas con la Lista que se está creando si existe
+        nuevaLista.value?.lstCategories?.forEach { idCat -> categorias?.get(idCat)
+            ?.let { categoriasSeleccionadas?.add(it) } }
+    }
+    */
 
     Scaffold(
         topBar = { BarraNavegacionSuperior("Crear Nueva Lista", navController) },
@@ -192,29 +233,6 @@ fun NewList(
 
                 Spacer(modifier = Modifier.padding(8.dp))
 
-                //TODO obtener el mail de quien crea la lista
-                val email_owner = "ejemplo@gmail.com"
-
-                //TODO obtener el dia de creacion
-                val fecha_creacion = "10/10/2023"
-
-
-                //TODO selector multiple de categoria
-                val cant_categorias = categorias?.size
-
-                var esta_abierto by remember {
-                    mutableStateOf(false)
-                }
-                var categoriaPredeterminada by remember {
-                    mutableStateOf("Seleeccionar categoria")
-                }
-
-                val CategoriasSeleccionadas: MutableList<Categorias>? by viewModel.categoriasSeleccionadas.observeAsState(
-                    initial = null
-                )
-                var context = LocalContext.current
-
-
                 Box(
                     modifier = Modifier.fillMaxWidth()
                 ) {
@@ -257,8 +275,7 @@ fun NewList(
 
                 Spacer(modifier = Modifier.padding(12.dp))
 
-                if (CategoriasSeleccionadas?.count()!! > 0) {
-
+                if (categoriasSeleccionadas?.count()!! > 0) {
 
                     Text(
                         text = "Categorias seleccionadas",
@@ -267,7 +284,7 @@ fun NewList(
                         textAlign = TextAlign.Center
                     )
 
-                    CategoriasSeleccionadas?.forEach { cat ->
+                    categoriasSeleccionadas?.forEach { cat ->
 
                         Card(
                             modifier = Modifier
@@ -315,14 +332,22 @@ fun NewList(
 
                 Button(
                     onClick = {
-                        if(CategoriasSeleccionadas!!.isEmpty()){
+                        if(categoriasSeleccionadas!!.isEmpty()){
                             Toast.makeText(
                                 context,
                                 "Debe seleccionar al menos una categoría",
                                 Toast.LENGTH_LONG
                             ).show()
                         }
-                        else { navController?.navigate("new_places_principal") }
+                        else {
+                            nuevaLista.value?.name = name.value
+                            nuevaLista.value?.description = descripcion.value
+                            val lstCategories: List<Int> = categoriasSeleccionadas!!.map { cat -> cat.id }
+                            nuevaLista.value?.lstCategories = lstCategories
+                            println(nuevaLista.toString())
+                            nuevaLista?.value?.let { preferencesManager.saveList("nuevaLista", it) }
+                            navController?.navigate("new_places_principal")
+                        }
                               },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -330,6 +355,17 @@ fun NewList(
                 ) {
                     Text(text = "Agregar Lugares")
                 }
+
+                // Para debug muestro por pantalla la lista en todo momento
+                Text(
+                    text = preferencesManager.getList("nuevaLista",
+                        Listas(
+                            lstPlaces = emptyList(),
+                            lstCategories = emptyList()
+                        )).toString(),
+                    modifier = Modifier.padding(5.dp)
+                )
+
             }
         }
 
