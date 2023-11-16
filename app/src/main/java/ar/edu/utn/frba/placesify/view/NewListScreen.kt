@@ -2,9 +2,11 @@ package ar.edu.utn.frba.placesify.view
 
 import android.annotation.SuppressLint
 import android.view.animation.OvershootInterpolator
+import android.widget.Toast
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -61,6 +63,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -87,7 +90,8 @@ import kotlinx.coroutines.delay
 @Composable
 fun NewListScreen(
     viewModel: NewListViewModel,
-    navController: NavController? = null) {
+    navController: NavController? = null
+) {
     Box(
         Modifier
             .fillMaxSize()
@@ -104,14 +108,14 @@ fun NewListScreen(
 }
 
 
-
 @OptIn(ExperimentalMaterialApi::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun NewList(
     modifier: Modifier,
     viewModel: NewListViewModel,
-    navController: NavController?) {
+    navController: NavController?
+) {
 
     // Declaro los viewData
     val categorias: List<Categorias>? by viewModel.categorias.observeAsState(initial = null)
@@ -155,48 +159,44 @@ fun NewList(
                 Spacer(modifier = Modifier.padding(8.dp))
 
                 OutlinedTextField(
-                    label = {Text(text = "Nombre de la lista")},
+                    label = { Text(text = "Nombre de la lista") },
                     colors = TextFieldDefaults.outlinedTextFieldColors(
                         focusedBorderColor = Purple80,
                         focusedLabelColor = Purple80,
                         cursorColor = Purple80,
-                        textColor = Color.White
+                        textColor = Color.Black
                     ),
                     value = name.value,
                     onValueChange = {
                         name.value = it
                     },
-                    modifier = Modifier.fillMaxWidth())
+                    modifier = Modifier.fillMaxWidth()
+                )
 
                 Spacer(modifier = Modifier.padding(8.dp))
 
                 OutlinedTextField(
-                    label = {Text(text = "Descripcion de la lista")},
+                    label = { Text(text = "Descripcion de la lista") },
                     colors = TextFieldDefaults.outlinedTextFieldColors(
                         focusedBorderColor = Purple80,
                         focusedLabelColor = Purple80,
                         cursorColor = Purple80,
-                        textColor = Color.White
+                        textColor = Color.Black
                     ),
                     value = descripcion.value,
                     onValueChange = {
                         descripcion.value = it
                     },
-                    modifier = Modifier.fillMaxWidth())
-
+                    modifier = Modifier.fillMaxWidth()
+                )
 
                 Spacer(modifier = Modifier.padding(8.dp))
-
-
 
                 //TODO obtener el mail de quien crea la lista
                 val email_owner = "ejemplo@gmail.com"
 
                 //TODO obtener el dia de creacion
                 val fecha_creacion = "10/10/2023"
-
-
-
 
 
                 //TODO selector multiple de categoria
@@ -209,16 +209,18 @@ fun NewList(
                     mutableStateOf("Seleeccionar categoria")
                 }
 
-                val CategoriasSeleccionadas: MutableList<Categorias>? by viewModel.categoriasSeleccionadas.observeAsState(initial = null)
-
+                val CategoriasSeleccionadas: MutableList<Categorias>? by viewModel.categoriasSeleccionadas.observeAsState(
+                    initial = null
+                )
+                var context = LocalContext.current
 
 
                 Box(
                     modifier = Modifier.fillMaxWidth()
-                ){
+                ) {
                     ExposedDropdownMenuBox(
                         expanded = esta_abierto,
-                        onExpandedChange = {esta_abierto = it}) {
+                        onExpandedChange = { esta_abierto = it }) {
                         TextField(
                             value = categoriaPredeterminada,
                             onValueChange = {},
@@ -227,13 +229,13 @@ fun NewList(
                                 ExposedDropdownMenuDefaults.TrailingIcon(expanded = esta_abierto)
                             },
                             colors = ExposedDropdownMenuDefaults.textFieldColors(
-                                textColor = Color.White
+                                textColor = Color.Black
                             )
                         )
 
                         ExposedDropdownMenu(
                             expanded = esta_abierto,
-                            onDismissRequest = { esta_abierto = false}
+                            onDismissRequest = { esta_abierto = false }
                         ) {
 
                             categorias?.forEach { categoria ->
@@ -253,60 +255,88 @@ fun NewList(
                     }
                 }
 
-
                 Spacer(modifier = Modifier.padding(12.dp))
-                Text(
-                    text = "Categorias seleccionadas",
-                    fontSize = dimensionResource(id = R.dimen.font_size_normal).value.sp,
-                    modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.Center
-                )
 
-                CategoriasSeleccionadas?.forEach { cat ->
+                if (CategoriasSeleccionadas?.count()!! > 0) {
 
 
-                    Card(
-                        modifier = Modifier
-                            .padding(7.dp)
-                            .fillMaxWidth()
-                            .background(color = MaterialTheme.colorScheme.surfaceVariant)
-                        //.clickable { onCategoryClick(categoria) }//,
-                        //elevation = 6.dp
-                    ) {
-                        Row {
-                            AsyncImage(
-                                model = cat.icono,
-                                contentDescription = "",
-                                modifier = Modifier
-                                    .padding(5.dp)
-                                    .size(width = 40.dp, height = 40.dp)
-                            )
-                            Text(
-                                text = cat.name,
-                                modifier = Modifier.padding(5.dp),
-                            )
+                    Text(
+                        text = "Categorias seleccionadas",
+                        fontSize = dimensionResource(id = R.dimen.font_size_normal).value.sp,
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center
+                    )
+
+                    CategoriasSeleccionadas?.forEach { cat ->
+
+                        Card(
+                            modifier = Modifier
+                                .padding(7.dp)
+                                .fillMaxWidth()
+                                .background(color = MaterialTheme.colorScheme.surfaceVariant)
+                            //.clickable { onCategoryClick(categoria) }//,
+                            //elevation = 6.dp
+                        ) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.weight(1f)
+                                ) {
+                                    AsyncImage(
+                                        model = cat.icono,
+                                        contentDescription = "",
+                                        modifier = Modifier
+                                            .padding(5.dp)
+                                            .size(width = 40.dp, height = 40.dp)
+                                    )
+                                    Text(
+                                        text = cat.name,
+                                        modifier = Modifier.padding(5.dp)
+                                    )
+                                }
+
+                                AsyncImage(
+                                    model = com.google.android.material.R.drawable.mtrl_ic_cancel,
+                                    contentDescription = "Cerrar",
+                                    modifier = Modifier
+                                        .size(width = 40.dp, height = 40.dp)
+                                        .padding(5.dp)
+                                        .clickable { viewModel.quitarCat(cat) }
+                                )
+                            }
                         }
                     }
                 }
 
-
-
                 Spacer(modifier = Modifier.padding(24.dp))
 
                 Button(
-                    onClick = { navController?.navigate("new_places_principal") },
+                    onClick = {
+                        if(CategoriasSeleccionadas!!.isEmpty()){
+                            Toast.makeText(
+                                context,
+                                "Debe seleccionar al menos una categoría",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+                        else { navController?.navigate("new_places_principal") }
+                              },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(40.dp)
                 ) {
-                    Text(text = "Agregar Lugar")
+                    Text(text = "Agregar Lugares")
                 }
             }
         }
 
         PullRefreshIndicator(
             refreshing = isRefreshing,
-            state = pullRefreshState,)
+            state = pullRefreshState,
+        )
 
     }
 }

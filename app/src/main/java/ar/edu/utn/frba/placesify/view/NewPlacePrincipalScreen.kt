@@ -116,7 +116,6 @@ fun NewPlaces(
 
     if(pantalla == 0){
         NewPlacesPrincipal(modifier, navController,viewModel)
-
     }else if(pantalla == 1){
         NewPlace1(modifier, navController,viewModel,keyboardController)
     }else if(pantalla == 2){

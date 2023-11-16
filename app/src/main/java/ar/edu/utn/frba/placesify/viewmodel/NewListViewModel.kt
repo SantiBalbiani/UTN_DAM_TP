@@ -63,11 +63,20 @@ class NewListViewModel(
         val cat: MutableList<Categorias>? = _categoriasSeleccionadas.value
         val estaEnLista: Boolean = cat?.any { x -> x.id == categoria.id } == true
         if(estaEnLista){
-            cat?.remove(categoria)
+           // cat?.remove(categoria)
         }else{
             cat?.add(categoria)
         }
         _categoriasSeleccionadas.value = cat
+    }
+
+    fun quitarCat(categoria: Categorias) {
+        val categoriasActuales = _categoriasSeleccionadas.value?.toMutableList()
+        val estaEnLista: Boolean = categoriasActuales?.any { x -> x.id == categoria.id } == true
+        if (estaEnLista) {
+            categoriasActuales?.remove(categoria)
+        }
+        _categoriasSeleccionadas.value = categoriasActuales
     }
 
 }
