@@ -1,6 +1,7 @@
 package ar.edu.utn.frba.placesify.view
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.animation.OvershootInterpolator
 import android.widget.Toast
 import androidx.compose.animation.core.tween
@@ -125,10 +126,6 @@ fun NewList(
     // Instancio al PreferencesManager
     val preferencesManager = remember { PreferencesManager(context) }
 
-    // Obtengo los lugares persistidos en el PreferencesManager
-    val lugaresSharedPreferences =
-        remember { mutableStateOf(preferencesManager.getData("lugares", ArrayList<Lugares>())) }
-
     // Declaro los viewData
     val categorias: List<Categorias>? by viewModel.categorias.observeAsState(initial = null)
     val categoriasActualizada: Boolean by viewModel.categoriasActualizada.observeAsState(
@@ -138,6 +135,9 @@ fun NewList(
     val isRefreshing: Boolean by viewModel.isRefreshing.observeAsState(
         initial = false
     )
+
+    val nuevaLista: Listas? by viewModel.nuevaLista.observeAsState(initial = null)
+
     var pullRefreshState = rememberPullRefreshState(isRefreshing, { viewModel.refresh() })
 
     var name = rememberSaveable {
@@ -147,12 +147,6 @@ fun NewList(
     var descripcion = rememberSaveable {
         mutableStateOf("")
     }
-
-    var nuevaLista =
-        remember { mutableStateOf(preferencesManager.getList("nuevaLista", Listas(
-            lstPlaces = emptyList(),
-            lstCategories = emptyList()
-        ) )) }
 
     //TODO obtener el dia de creacion
     val fecha_creacion = "10/10/2023"
@@ -167,214 +161,213 @@ fun NewList(
         mutableStateOf("Seleccionar categoria")
     }
 
-    val categoriasSeleccionadas: MutableList<Categorias>? by viewModel.categoriasSeleccionadas.observeAsState(
-        initial = null
-    )
-
-    /*
-    if(nuevaLista.value?.lstCategories?.size!! > 0){
-        // Actualizo las categorias seleccionadas con la Lista que se está creando si existe
-        nuevaLista.value?.lstCategories?.forEach { idCat -> categorias?.get(idCat)
-            ?.let { categoriasSeleccionadas?.add(it) } }
-    }
-    */
+    val categoriasSeleccionadas by viewModel.categoriasSeleccionadas.observeAsState()
 
     Scaffold(
         topBar = { BarraNavegacionSuperior("Crear Nueva Lista", navController) },
     ) { innerPadding ->
 
-        LazyColumn(
-            modifier = modifier.padding(innerPadding),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            item {
+        if (categoriasSeleccionadas == null || !categoriasActualizada) {
+            ShowLoading("Actualizando...")
+        } else {
 
-                Text(
-                    text = "Crear lista nueva",
-                    fontSize = dimensionResource(id = R.dimen.font_size_titulo).value.sp,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.Center
-                )
 
-                Spacer(modifier = Modifier.padding(8.dp))
-
-                OutlinedTextField(
-                    label = { Text(text = "Nombre de la lista") },
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        focusedBorderColor = Purple80,
-                        focusedLabelColor = Purple80,
-                        cursorColor = Purple80,
-                        textColor = Color.Black
-                    ),
-                    value = name.value,
-                    onValueChange = {
-                        name.value = it
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                Spacer(modifier = Modifier.padding(8.dp))
-
-                OutlinedTextField(
-                    label = { Text(text = "Descripcion de la lista") },
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        focusedBorderColor = Purple80,
-                        focusedLabelColor = Purple80,
-                        cursorColor = Purple80,
-                        textColor = Color.Black
-                    ),
-                    value = descripcion.value,
-                    onValueChange = {
-                        descripcion.value = it
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                Spacer(modifier = Modifier.padding(8.dp))
-
-                Box(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    ExposedDropdownMenuBox(
-                        expanded = esta_abierto,
-                        onExpandedChange = { esta_abierto = it }) {
-                        TextField(
-                            value = categoriaPredeterminada,
-                            onValueChange = {},
-                            readOnly = true,
-                            trailingIcon = {
-                                ExposedDropdownMenuDefaults.TrailingIcon(expanded = esta_abierto)
-                            },
-                            colors = ExposedDropdownMenuDefaults.textFieldColors(
-                                textColor = Color.Black
-                            )
-                        )
-
-                        ExposedDropdownMenu(
-                            expanded = esta_abierto,
-                            onDismissRequest = { esta_abierto = false }
-                        ) {
-
-                            categorias?.forEach { categoria ->
-                                androidx.compose.material3.DropdownMenuItem(
-                                    text = { Text(categoria.name, color = Color.Black) },
-                                    onClick = {
-                                        viewModel.agregarCat(categoria)
-                                        esta_abierto = false
-
-                                    }
-                                )
-
-                            }
-
-                        }
-
-                    }
-                }
-
-                Spacer(modifier = Modifier.padding(12.dp))
-
-                if (categoriasSeleccionadas?.count()!! > 0) {
+            LazyColumn(
+                modifier = modifier.padding(innerPadding),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                item {
 
                     Text(
-                        text = "Categorias seleccionadas",
-                        fontSize = dimensionResource(id = R.dimen.font_size_normal).value.sp,
+                        text = "Crear lista nueva",
+                        fontSize = dimensionResource(id = R.dimen.font_size_titulo).value.sp,
+                        fontWeight = FontWeight.Bold,
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Center
                     )
 
-                    categoriasSeleccionadas?.forEach { cat ->
+                    Spacer(modifier = Modifier.padding(8.dp))
 
-                        Card(
-                            modifier = Modifier
-                                .padding(7.dp)
-                                .fillMaxWidth()
-                                .background(color = MaterialTheme.colorScheme.surfaceVariant)
-                            //.clickable { onCategoryClick(categoria) }//,
-                            //elevation = 6.dp
-                        ) {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween
+                    OutlinedTextField(
+                        label = { Text(text = "Nombre de la lista") },
+                        colors = TextFieldDefaults.outlinedTextFieldColors(
+                            focusedBorderColor = Purple80,
+                            focusedLabelColor = Purple80,
+                            cursorColor = Purple80,
+                            textColor = Color.Black
+                        ),
+                        value = name.value,
+                        onValueChange = {
+                            name.value = it
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
+                    Spacer(modifier = Modifier.padding(8.dp))
+
+                    OutlinedTextField(
+                        label = { Text(text = "Descripcion de la lista") },
+                        colors = TextFieldDefaults.outlinedTextFieldColors(
+                            focusedBorderColor = Purple80,
+                            focusedLabelColor = Purple80,
+                            cursorColor = Purple80,
+                            textColor = Color.Black
+                        ),
+                        value = descripcion.value,
+                        onValueChange = {
+                            descripcion.value = it
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
+                    Spacer(modifier = Modifier.padding(8.dp))
+
+                    Box(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        ExposedDropdownMenuBox(
+                            expanded = esta_abierto,
+                            onExpandedChange = { esta_abierto = it }) {
+                            TextField(
+                                value = categoriaPredeterminada,
+                                onValueChange = {},
+                                readOnly = true,
+                                trailingIcon = {
+                                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = esta_abierto)
+                                },
+                                colors = ExposedDropdownMenuDefaults.textFieldColors(
+                                    textColor = Color.Black
+                                )
+                            )
+
+                            ExposedDropdownMenu(
+                                expanded = esta_abierto,
+                                onDismissRequest = { esta_abierto = false }
                             ) {
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    modifier = Modifier.weight(1f)
-                                ) {
-                                    AsyncImage(
-                                        model = cat.icono,
-                                        contentDescription = "",
-                                        modifier = Modifier
-                                            .padding(5.dp)
-                                            .size(width = 40.dp, height = 40.dp)
+
+                                categorias?.forEach { categoria ->
+                                    androidx.compose.material3.DropdownMenuItem(
+                                        text = { Text(categoria.name, color = Color.Black) },
+                                        onClick = {
+                                            viewModel.agregarCat(categoria)
+                                            esta_abierto = false
+
+                                        }
                                     )
-                                    Text(
-                                        text = cat.name,
-                                        modifier = Modifier.padding(5.dp)
-                                    )
+
                                 }
 
-                                AsyncImage(
-                                    model = com.google.android.material.R.drawable.mtrl_ic_cancel,
-                                    contentDescription = "Cerrar",
-                                    modifier = Modifier
-                                        .size(width = 40.dp, height = 40.dp)
-                                        .padding(5.dp)
-                                        .clickable { viewModel.quitarCat(cat) }
-                                )
+                            }
+
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.padding(12.dp))
+
+                    if (!categoriasSeleccionadas.isNullOrEmpty()) {
+
+                        Text(
+                            text = "Categorias seleccionadas",
+                            fontSize = dimensionResource(id = R.dimen.font_size_normal).value.sp,
+                            modifier = Modifier.fillMaxWidth(),
+                            textAlign = TextAlign.Center
+                        )
+
+                        categoriasSeleccionadas?.forEach { cat ->
+
+                            Card(
+                                modifier = Modifier
+                                    .padding(7.dp)
+                                    .fillMaxWidth()
+                                    .background(color = MaterialTheme.colorScheme.surfaceVariant)
+                                //.clickable { onCategoryClick(categoria) }//,
+                                //elevation = 6.dp
+                            ) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        modifier = Modifier.weight(1f)
+                                    ) {
+                                        AsyncImage(
+                                            model = cat.icono,
+                                            contentDescription = "",
+                                            modifier = Modifier
+                                                .padding(5.dp)
+                                                .size(width = 40.dp, height = 40.dp)
+                                        )
+                                        Text(
+                                            text = cat.name,
+                                            modifier = Modifier.padding(5.dp)
+                                        )
+                                    }
+
+                                    AsyncImage(
+                                        model = com.google.android.material.R.drawable.mtrl_ic_cancel,
+                                        contentDescription = "Cerrar",
+                                        modifier = Modifier
+                                            .size(width = 40.dp, height = 40.dp)
+                                            .padding(5.dp)
+                                            .clickable { viewModel.quitarCat(cat) }
+                                    )
+                                }
                             }
                         }
                     }
+
+                    Spacer(modifier = Modifier.padding(24.dp))
+
+                    Button(
+                        onClick = {
+                            if (categoriasSeleccionadas!!.isEmpty()) {
+                                Toast.makeText(
+                                    context,
+                                    "Debe seleccionar al menos una categoría",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            } else {
+                                nuevaLista?.name = name.value
+                                nuevaLista?.description = descripcion.value
+                                val lstCategories: List<Int> =
+                                    categoriasSeleccionadas!!.map { cat -> cat.id }
+                                nuevaLista?.lstCategories = lstCategories
+
+                                nuevaLista?.let { preferencesManager.saveList("nuevaLista", it) }
+                                navController?.navigate("new_places_principal")
+                            }
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(40.dp)
+                    ) {
+                        Text(text = "Agregar Lugares")
+                    }
+
+                    // Para debug muestro por pantalla la lista en todo momento
+                    Text(
+                        text = preferencesManager.getList(
+                            "nuevaLista",
+                            Listas(
+                                lstPlaces = emptyList(),
+                                lstCategories = emptyList()
+                            )
+                        ).toString(),
+                        modifier = Modifier.padding(5.dp)
+                    )
+
                 }
-
-                Spacer(modifier = Modifier.padding(24.dp))
-
-                Button(
-                    onClick = {
-                        if(categoriasSeleccionadas!!.isEmpty()){
-                            Toast.makeText(
-                                context,
-                                "Debe seleccionar al menos una categoría",
-                                Toast.LENGTH_LONG
-                            ).show()
-                        }
-                        else {
-                            nuevaLista.value?.name = name.value
-                            nuevaLista.value?.description = descripcion.value
-                            val lstCategories: List<Int> = categoriasSeleccionadas!!.map { cat -> cat.id }
-                            nuevaLista.value?.lstCategories = lstCategories
-                            println(nuevaLista.toString())
-                            nuevaLista?.value?.let { preferencesManager.saveList("nuevaLista", it) }
-                            navController?.navigate("new_places_principal")
-                        }
-                              },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(40.dp)
-                ) {
-                    Text(text = "Agregar Lugares")
-                }
-
-                // Para debug muestro por pantalla la lista en todo momento
-                Text(
-                    text = preferencesManager.getList("nuevaLista",
-                        Listas(
-                            lstPlaces = emptyList(),
-                            lstCategories = emptyList()
-                        )).toString(),
-                    modifier = Modifier.padding(5.dp)
-                )
-
             }
+
+            PullRefreshIndicator(
+                refreshing = isRefreshing,
+                state = pullRefreshState,
+            )
+
         }
-
-        PullRefreshIndicator(
-            refreshing = isRefreshing,
-            state = pullRefreshState,
-        )
-
     }
+
 }
 
 

@@ -54,10 +54,10 @@ class PreferencesManager(context: Context) {
             lista = sharedPreferences.getString(key, defaultValue.toString())
                 ?.let { Json.decodeFromString(it) }!!
 
-            Log.d("getList ", "${lista.toString()}")
+            //Log.d("getList ", "${lista.toString()}")
             return lista
         } catch (e: Exception) {
-            Log.d("GetList", "${e.toString()}")
+            //Log.d("GetList", "${e.toString()}")
         }
 
         return Listas(

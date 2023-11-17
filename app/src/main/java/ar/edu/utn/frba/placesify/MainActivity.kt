@@ -13,6 +13,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -184,7 +185,8 @@ class MainActivity : ComponentActivity() {
                         composable("new_list") {
                             NewListScreen(
                                 NewListViewModel(OpenStreetmapService.instance,
-                                    BackendService.instance),
+                                    BackendService.instance,
+                                    LocalContext.current),
                                 navController = navController
                             )
                         }
