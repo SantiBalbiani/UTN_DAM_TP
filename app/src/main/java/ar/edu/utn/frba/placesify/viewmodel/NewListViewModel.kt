@@ -97,9 +97,6 @@ class NewListViewModel(
             }
             _categoriasSeleccionadas.value = categoriasSeleccionadasActualizadas
         }
-
-
-
     }
 
 

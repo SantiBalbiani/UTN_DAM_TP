@@ -170,7 +170,10 @@ class MainActivity : ComponentActivity() {
                         //TODO DEJO ASI POR AHORA
                         composable("new_places_principal") {
                             NewPlacesPrincipalScreen(
-                                NewPlacesPrincipalViewModel(application, activityResultRegistry),
+                                NewPlacesPrincipalViewModel(
+                                    application,
+                                    activityResultRegistry,
+                                    LocalContext.current),
                                 navController = navController
                             )
                         }

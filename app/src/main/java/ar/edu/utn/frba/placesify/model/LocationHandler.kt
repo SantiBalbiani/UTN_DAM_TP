@@ -29,6 +29,7 @@ class LocationHandler(
                 requestLocation()
             } else {
                 // Manejar el caso cuando se deniegan los permisos
+                Log.d("Permission", "El usuario denegó el permiso al GPS")
             }
         }
 

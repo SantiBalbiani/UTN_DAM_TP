@@ -68,6 +68,7 @@ import com.utsman.osmandcompose.rememberCameraState
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.internal.enableLiveLiterals
 import ar.edu.utn.frba.placesify.model.Listas
 import ar.edu.utn.frba.placesify.model.Lugares
 import ar.edu.utn.frba.placesify.model.PreferencesManager
@@ -115,13 +116,16 @@ fun NewPlaces(
     ////////////////////////////////////////////////////////////////////////////
 
     if(pantalla == 0){
+        // Pantalla principal para seleccionar como cargar el lugar
         NewPlacesPrincipal(modifier, navController,viewModel)
     }else if(pantalla == 1){
+        // Cargar buscando la dirección por texto
         NewPlace1(modifier, navController,viewModel,keyboardController)
     }else if(pantalla == 2){
+        // Seleccionar lugar en el mapa
         NewPlace2(modifier, navController,viewModel)
-    }
-    else if(pantalla == 3){
+    }else if(pantalla == 3){
+        // Seleccionar lugar a partir de una foto
         NewPlace3(modifier, navController,viewModel)
     }
 
@@ -134,17 +138,7 @@ fun NewPlacesPrincipal(
     viewModel: NewPlacesPrincipalViewModel
 ){
 
-    //Contexto
-    val context = LocalContext.current
-    // Instancio al PreferencesManager
-    val preferencesManager = remember { PreferencesManager(context) }
-
-    var nuevaLista =
-        remember { mutableStateOf(preferencesManager.getList("nuevaLista", Listas(
-            lstPlaces = emptyList(),
-            lstCategories = emptyList()
-        ) )) }
-
+    val nuevaLista: Listas? by viewModel.nuevaLista.observeAsState(initial = null)
 
     Scaffold(
         topBar = { BarraNavegacionSuperior("Agregar Lugar nuevo", navController) },
@@ -168,7 +162,6 @@ fun NewPlacesPrincipal(
 
                 Button(
                     onClick = {
-                        //navController?.navigate("new_places_principal")
                         viewModel._pantalla.value = 1
                     },
                     modifier = Modifier
@@ -182,7 +175,6 @@ fun NewPlacesPrincipal(
 
                 Button(
                     onClick = {
-                        //navController?.navigate("new_places_principal")
                         viewModel._pantalla.value = 2
                     },
                     modifier = Modifier
@@ -196,7 +188,6 @@ fun NewPlacesPrincipal(
 
                 Button(
                     onClick = {
-                        //navController?.navigate("new_places_principal")
                         viewModel._pantalla.value = 3
                     },
                     modifier = Modifier
@@ -228,8 +219,9 @@ fun NewPlacesPrincipal(
 
                 Spacer(modifier = Modifier.padding(16.dp))
 
-                val boton = Button(
+                Button(
                     onClick = {
+                        // TODO Validaciones y Creacion final de la lista
                         navController?.navigate("new_places_principal")
                     },
                     modifier = Modifier
@@ -491,10 +483,8 @@ fun NewPlace3(
         viewModel.handleImageSelection(uri, context)
     }
 
-    val latitud: String by viewModel.latitud.observeAsState( initial = "")
-    val longitud: String by viewModel.longitud.observeAsState( initial = "")
     val lugaresAPI: OpenStreetmapResponse? by viewModel.lugaresAPI.observeAsState(initial = null  )
-
+    val continuar3Enabled: Boolean by viewModel.continar3Enabled.observeAsState( initial = false )
 
     viewModel.setImagePickerCallback { uri -> uriState.value = uri }
 
@@ -514,7 +504,7 @@ fun NewPlace3(
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    Text(text = "A partir de la foto cargada, nuestra aplicacion detectara la ubicacion del lugar que desee agregar",
+                    Text(text = "A partir de la foto, nuestra aplicacion detectará la ubicacion del lugar que desee agregar si se encuentra disponible",
                         textAlign = TextAlign.Center
                         )
                 }
@@ -547,23 +537,29 @@ fun NewPlace3(
                 }
 
                 Row {
-                    if (uriState.value != null && lugaresAPI?.displayName != null )
-                        //Text(text = "Latitud: ${latitud} Longitud: ${longitud}",
+                    if (uriState.value != null && lugaresAPI?.displayName != null ){
+                        viewModel._continuar3Enabled.value = true
                         Text(text = "${lugaresAPI?.displayName.toString()}",
                             textAlign = TextAlign.Center
                         )
+                    }
+                    else if (uriState.value != null && lugaresAPI?.displayName == null){
+                        viewModel._continuar3Enabled.value = false
+                        Text(text = "No se detectó ningún lugar en la imagen, intente con otra",
+                            textAlign = TextAlign.Center
+                        )
+                    }
                 }
 
                 Row {
                     Button(
-                        onClick = { viewModel.pickImage(imageLauncher) },
+                        onClick = { viewModel.requestStoragePermission() },
+                            //viewModel.pickImage(imageLauncher)
                         modifier = Modifier.padding(16.dp)
                     ) {
                         Text("Seleccionar imagen")
                     }
                 }
-
-
 
                 Spacer(modifier = Modifier.padding(48.dp))
 
@@ -577,8 +573,8 @@ fun NewPlace3(
                         .height(40.dp),
                     colors = androidx.compose.material3.ButtonDefaults.buttonColors(
                         containerColor = Color.Green
-                    )
-
+                    ),
+                    enabled = continuar3Enabled
                 ) {
                     Text(text = "Continuar")
                 }

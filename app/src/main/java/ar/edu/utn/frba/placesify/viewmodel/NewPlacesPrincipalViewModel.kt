@@ -7,6 +7,7 @@ import android.net.Uri
 import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.ActivityResultRegistry
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
@@ -15,8 +16,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ar.edu.utn.frba.placesify.api.OpenStreetmapService
+import ar.edu.utn.frba.placesify.model.Listas
 import ar.edu.utn.frba.placesify.model.LocationHandler
 import ar.edu.utn.frba.placesify.model.OpenStreetmapResponse
+import ar.edu.utn.frba.placesify.model.PreferencesManager
+import ar.edu.utn.frba.placesify.model.StorageHandler
 import kotlinx.coroutines.launch
 import java.io.IOException
 
@@ -24,12 +28,14 @@ import java.io.IOException
 
 class NewPlacesPrincipalViewModel(
     application: Application,
-    activityResultRegistry: ActivityResultRegistry
+    activityResultRegistry: ActivityResultRegistry,
+    private val context: Context
 ) : ViewModel() {
 
     private var imagePickerCallback: ((Uri?) -> Unit)? = null
 
     private val locationHandler = LocationHandler(this, application, activityResultRegistry)
+    private val storageHandler = StorageHandler(this, application, activityResultRegistry, context)
     val _gpsLat = MutableLiveData<Double>()
     val gpsLat: LiveData<Double> = _gpsLat
     val _gpsLon = MutableLiveData<Double>()
@@ -51,15 +57,23 @@ class NewPlacesPrincipalViewModel(
     val _cantAgregados = MutableLiveData<Int>()
     val cantAgregados: LiveData<Int> = _cantAgregados
 
+    val _nuevaLista = MutableLiveData<Listas>()
+    val nuevaLista: LiveData<Listas> = _nuevaLista
+
+    val _continuar3Enabled = MutableLiveData<Boolean>()
+    val continar3Enabled: LiveData<Boolean> = _continuar3Enabled
+
     init {
         _pantalla.value = 0
         _cantAgregados.value = 0
+        _continuar3Enabled.value = false
+
+        getNuevaLista()
     }
 
     fun setImagePickerCallback(callback: (Uri?) -> Unit) {
         imagePickerCallback = callback
     }
-
     fun pickImage(launcher: ActivityResultLauncher<String>) {
         // TODO
         // Aquí solicita permiso de lectura de almacenamiento externo si no está concedido.
@@ -69,6 +83,9 @@ class NewPlacesPrincipalViewModel(
     }
 
     fun handleImageSelection(uri: Uri?, context: Context) {
+        // Limpia la ubicación si existia desde otra imagen
+        _lugaresAPI.value = null
+
         // Procesa la imagen seleccionada, por ejemplo, la muestra en la vista.
         imagePickerCallback?.invoke(uri)
 
@@ -176,11 +193,25 @@ class NewPlacesPrincipalViewModel(
         locationHandler.requestLocationPermission(context)
     }
 
+    fun requestStoragePermission(){
+        storageHandler.requestStoragePermission()
+    }
+
     fun onLocationReceived(lat: Double, lon: Double) {
         _gpsLon.value = lon
         _gpsLat.value = lat
     }
 
+    private fun getNuevaLista() {
+        val preferencesManager = PreferencesManager(context)
+
+        _nuevaLista.value = preferencesManager.getList(
+            "nuevaLista", Listas(
+                lstPlaces = emptyList(),
+                lstCategories = emptyList()
+            )
+        )
+    }
 
 }
 
