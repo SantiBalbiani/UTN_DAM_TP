@@ -3,6 +3,7 @@ package ar.edu.utn.frba.placesify.view
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -45,9 +46,14 @@ import ar.edu.utn.frba.placesify.R
 import ar.edu.utn.frba.placesify.view.theme.Purple80
 import ar.edu.utn.frba.placesify.viewmodel.NewPlacesPrincipalViewModel
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -69,9 +75,11 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.internal.enableLiveLiterals
+import androidx.compose.ui.graphics.vector.ImageVector
 import ar.edu.utn.frba.placesify.model.Listas
 import ar.edu.utn.frba.placesify.model.Lugares
 import ar.edu.utn.frba.placesify.model.PreferencesManager
+
 
 @Composable
 fun NewPlacesPrincipalScreen(
@@ -101,8 +109,7 @@ fun NewPlaces(
 
 
     //TODO VARIABLES
-
-    val pantalla: Int? by viewModel.pantalla.observeAsState(initial = null)
+    val pantalla = viewModel.pantalla.value
     val cantidad_lugares_agregados: Int? by viewModel.cantAgregados.observeAsState(initial = null)
 
     // Controlador del Teclado Virtual
@@ -140,8 +147,30 @@ fun NewPlacesPrincipal(
 
     val nuevaLista: Listas? by viewModel.nuevaLista.observeAsState(initial = null)
 
+    val showConfirmationDialog = viewModel.showConfirmationDialog.value
+
+    if (showConfirmationDialog){
+        Confirmacion(
+            onDismissRequest = {
+                viewModel.setShowConfirmationDialog(false)
+            },
+            onConfirmation = {
+                viewModel.setShowConfirmationDialog(false)
+                //TODO Actualizar nuevaLista eliminandole los lugares
+                navController?.navigateUp()
+            },
+            dialogTitle = "Confirmación",
+            dialogText = "¿Estás seguro de querer retroceder? Se perderán los lugares cargados",
+            icon = Icons.Default.Info
+        )
+    }
+
+    BackHandler(onBack = {
+        viewModel.setShowConfirmationDialog(true)
+    })
+
     Scaffold(
-        topBar = { BarraNavegacionSuperior("Agregar Lugar nuevo", navController) },
+        topBar = { BarraNavegacionSuperior("Agregar Lugar nuevo", navController, viewModel = viewModel) },
     ) { innerPadding ->
 
         LazyColumn(
@@ -162,7 +191,7 @@ fun NewPlacesPrincipal(
 
                 Button(
                     onClick = {
-                        viewModel._pantalla.value = 1
+                        viewModel.setPantalla(1)
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -175,7 +204,7 @@ fun NewPlacesPrincipal(
 
                 Button(
                     onClick = {
-                        viewModel._pantalla.value = 2
+                        viewModel.setPantalla(2)
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -188,7 +217,7 @@ fun NewPlacesPrincipal(
 
                 Button(
                     onClick = {
-                        viewModel._pantalla.value = 3
+                        viewModel.setPantalla(3)
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -264,8 +293,29 @@ fun NewPlace1(
         mutableStateOf("")
     }
 
+    val showConfirmationDialog = viewModel.showConfirmationDialog.value
+
+    if (showConfirmationDialog){
+        Confirmacion(
+            onDismissRequest = {
+                viewModel.setShowConfirmationDialog(false)
+            },
+            onConfirmation = {
+                viewModel.setShowConfirmationDialog(false)
+                viewModel.setPantalla(0)
+            },
+            dialogTitle = "Confirmación",
+            dialogText = "¿Estás seguro de querer retroceder? Se perderá la información del lugar seleccionado",
+            icon = Icons.Default.Info
+        )
+    }
+
+    BackHandler(onBack = {
+        viewModel.setShowConfirmationDialog(true)
+    })
+
     Scaffold(
-        topBar = { BarraNavegacionSuperior("Buscar por direccion", navController) },
+        topBar = { BarraNavegacionSuperior("Buscar por direccion", navController, viewModel = viewModel) },
     ) { innerPadding ->
 
         LazyColumn(
@@ -328,7 +378,7 @@ fun NewPlace1(
                 Button(
                     onClick = {
                         viewModel._cantAgregados.value = viewModel._cantAgregados.value?.plus(1)
-                        viewModel._pantalla.value = 0
+                        viewModel.setPantalla(0)
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -360,8 +410,29 @@ fun NewPlace2(
     val lon: Double by viewModel.gpsLon.observeAsState( initial = 0.0 )
     val lugaresAPI: OpenStreetmapResponse? by viewModel.lugaresAPI.observeAsState(initial = null  )
 
+    val showConfirmationDialog = viewModel.showConfirmationDialog.value
+
+    if (showConfirmationDialog){
+        Confirmacion(
+            onDismissRequest = {
+                viewModel.setShowConfirmationDialog(false)
+            },
+            onConfirmation = {
+                viewModel.setShowConfirmationDialog(false)
+                viewModel.setPantalla(0)
+            },
+            dialogTitle = "Confirmación",
+            dialogText = "¿Estás seguro de querer retroceder? Se perderá la información del lugar seleccionado",
+            icon = Icons.Default.Info
+        )
+    }
+
+    BackHandler(onBack = {
+        viewModel.setShowConfirmationDialog(true)
+    })
+
     Scaffold(
-        topBar = { BarraNavegacionSuperior("Buscar por el mapa", navController) },
+        topBar = { BarraNavegacionSuperior("Buscar por el mapa", navController, viewModel = viewModel) },
     ) { innerPadding ->
 
         LazyColumn(
@@ -450,7 +521,7 @@ fun NewPlace2(
                 Button(
                     onClick = {
                         viewModel._cantAgregados.value = viewModel._cantAgregados.value?.plus(1)
-                        viewModel._pantalla.value = 0
+                        viewModel.setPantalla(0)
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -476,20 +547,39 @@ fun NewPlace3(
     navController: NavController?,
     viewModel: NewPlacesPrincipalViewModel
 ){
-    val context = LocalContext.current
+    val route = "NewPlace3Tag"
     val uriState = remember { mutableStateOf<Uri?>(null) }
-
-    val imageLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-        viewModel.handleImageSelection(uri, context)
-    }
 
     val lugaresAPI: OpenStreetmapResponse? by viewModel.lugaresAPI.observeAsState(initial = null  )
     val continuar3Enabled: Boolean by viewModel.continar3Enabled.observeAsState( initial = false )
 
     viewModel.setImagePickerCallback { uri -> uriState.value = uri }
 
+    val showConfirmationDialog = viewModel.showConfirmationDialog.value
+
+    if (showConfirmationDialog){
+        Confirmacion(
+            onDismissRequest = {
+                // Acá se cancela la acción de retroceso
+                viewModel.setShowConfirmationDialog(false)
+            },
+            onConfirmation = {
+                viewModel.setShowConfirmationDialog(false)
+                viewModel.setPantalla(0)
+                //navController?.navigateUp() // Esto navega hacia atrás
+            },
+            dialogTitle = "Confirmación",
+            dialogText = "¿Estás seguro de querer retroceder? Se perderá la información del lugar seleccionado",
+            icon = Icons.Default.Info
+        )
+    }
+
+    BackHandler(onBack = {
+        viewModel.setShowConfirmationDialog(true)
+    })
+
     Scaffold(
-        topBar = { BarraNavegacionSuperior("Buscar por imagen", navController) },
+        topBar = { BarraNavegacionSuperior("Buscar por imagen", navController, viewModel = viewModel) },
     ) { innerPadding ->
 
 
@@ -566,7 +656,7 @@ fun NewPlace3(
                 Button(
                     onClick = {
                         viewModel._cantAgregados.value = viewModel._cantAgregados.value?.plus(1)
-                        viewModel._pantalla.value = 0
+                        viewModel.setPantalla(0)
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -582,4 +672,46 @@ fun NewPlace3(
             }
         }
     }
+}
+
+@Composable
+fun Confirmacion(
+    onDismissRequest: () -> Unit,
+    onConfirmation: () -> Unit,
+    dialogTitle: String,
+    dialogText: String,
+    icon: ImageVector,
+) {
+    AlertDialog(
+        icon = {
+            Icon(icon, contentDescription = "")
+        },
+        title = {
+            Text(text = dialogTitle)
+        },
+        text = {
+            Text(text = dialogText)
+        },
+        onDismissRequest = {
+            onDismissRequest()
+        },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    onConfirmation()
+                }
+            ) {
+                Text("Confirmar")
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = {
+                    onDismissRequest()
+                }
+            ) {
+                Text("Cancelar")
+            }
+        }
+    )
 }

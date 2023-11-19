@@ -9,6 +9,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.ActivityResultRegistry
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -51,8 +52,8 @@ class NewPlacesPrincipalViewModel(
     val _lugaresAPI = MutableLiveData<OpenStreetmapResponse>()
     val lugaresAPI: LiveData<OpenStreetmapResponse> = _lugaresAPI
 
-    val _pantalla = MutableLiveData<Int>()
-    val pantalla: LiveData<Int> = _pantalla
+    private val _pantalla = mutableIntStateOf(0)
+    val pantalla: State<Int> = _pantalla
 
     val _cantAgregados = MutableLiveData<Int>()
     val cantAgregados: LiveData<Int> = _cantAgregados
@@ -62,6 +63,9 @@ class NewPlacesPrincipalViewModel(
 
     val _continuar3Enabled = MutableLiveData<Boolean>()
     val continar3Enabled: LiveData<Boolean> = _continuar3Enabled
+
+    private val _showConfirmationDialog = mutableStateOf(false)
+    val showConfirmationDialog: State<Boolean> = _showConfirmationDialog
 
     init {
         _pantalla.value = 0
@@ -73,13 +77,6 @@ class NewPlacesPrincipalViewModel(
 
     fun setImagePickerCallback(callback: (Uri?) -> Unit) {
         imagePickerCallback = callback
-    }
-    fun pickImage(launcher: ActivityResultLauncher<String>) {
-        // TODO
-        // Aquí solicita permiso de lectura de almacenamiento externo si no está concedido.
-
-        // Utiliza el launcher para abrir el selector de imágenes y obtiene la URI de la imagen seleccionada.
-        launcher.launch("image/*")
     }
 
     fun handleImageSelection(uri: Uri?, context: Context) {
@@ -211,6 +208,14 @@ class NewPlacesPrincipalViewModel(
                 lstCategories = emptyList()
             )
         )
+    }
+
+    fun setShowConfirmationDialog(show: Boolean) {
+        _showConfirmationDialog.value = show
+    }
+
+    fun setPantalla(pantalla: Int){
+        _pantalla.value = pantalla
     }
 
 }

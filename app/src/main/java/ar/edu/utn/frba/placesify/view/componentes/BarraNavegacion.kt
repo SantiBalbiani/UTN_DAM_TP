@@ -1,6 +1,7 @@
 package ar.edu.utn.frba.placesify.view
 
 import android.app.Activity
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -43,13 +44,23 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
+import ar.edu.utn.frba.placesify.R
+import ar.edu.utn.frba.placesify.viewmodel.NewPlacesPrincipalViewModel
 import coil.compose.AsyncImage
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BarraNavegacionSuperior(title: String, navController: NavController?, isHome: Boolean = false) {
+fun BarraNavegacionSuperior(
+    title: String,
+    navController: NavController?,
+    isHome: Boolean = false,
+    viewModel: NewPlacesPrincipalViewModel? = null
+)
+{
+
     var menuExpanded by remember { mutableStateOf(false) }
     var logout by remember { mutableStateOf(false) }
     var showSearch by remember { mutableStateOf(false) }
@@ -97,7 +108,7 @@ fun BarraNavegacionSuperior(title: String, navController: NavController?, isHome
         },
         navigationIcon = {
             if (!isHome) {
-                IconButton(onClick = { navController?.navigateUp() }) {
+                IconButton(onClick = { onNavigationButtonClicked(navController, viewModel) }) {
                     Icon(
                         imageVector = Icons.Filled.ArrowBack,
                         contentDescription = "Localized description"
@@ -235,3 +246,17 @@ fun BarraNavegacionSuperior(title: String, navController: NavController?, isHome
     */
 }
 
+private fun onNavigationButtonClicked(
+    navController: NavController?,
+    viewModel: NewPlacesPrincipalViewModel?
+) {
+    if (navController?.currentDestination?.id != null) {
+        val currentRoute = navController?.currentBackStackEntry?.destination?.route
+        Log.d("NAV", "${currentRoute.toString()}")
+        if (currentRoute == "new_places_principal") {
+            viewModel?.setShowConfirmationDialog(true)
+        } else {
+            navController.navigateUp()
+        }
+    }
+}
