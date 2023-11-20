@@ -115,7 +115,6 @@ fun NewPlaces(
 
     //TODO VARIABLES
     val pantalla = viewModel.pantalla.value
-    val cantidad_lugares_agregados: Int? by viewModel.cantAgregados.observeAsState(initial = null)
 
     // Controlador del Teclado Virtual
     val keyboardController: SoftwareKeyboardController? = LocalSoftwareKeyboardController.current
@@ -243,7 +242,7 @@ fun NewPlacesPrincipal(
                     Column(modifier = Modifier.padding(horizontal = 10.dp)) {
 
                         Text(
-                            text = "${viewModel._cantAgregados.value} lugar/es agregado/s",
+                            text = "${viewModel._nuevaLista.value?.lstPlaces?.count()} lugar/es agregado/s",
                             fontSize = dimensionResource(id = R.dimen.font_size_normal).value.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -382,7 +381,6 @@ fun NewPlace1(
 
                 Button(
                     onClick = {
-                        viewModel._cantAgregados.value = viewModel._cantAgregados.value?.plus(1)
                         viewModel.setPantalla(0)
                     },
                     modifier = Modifier
@@ -525,7 +523,6 @@ fun NewPlace2(
 
                 Button(
                     onClick = {
-                        viewModel._cantAgregados.value = viewModel._cantAgregados.value?.plus(1)
                         viewModel.setPantalla(0)
                     },
                     modifier = Modifier
@@ -678,7 +675,6 @@ fun NewPlace3(
 
                 Button(
                     onClick = {
-                        viewModel._cantAgregados.value = viewModel._cantAgregados.value?.plus(1)
                         val lugarAuxiliar =  lugaresAPI?.lon?.let {
                             lugaresAPI?.displayName?.let { it1 ->
                                 lugaresAPI?.category?.let { it2 ->

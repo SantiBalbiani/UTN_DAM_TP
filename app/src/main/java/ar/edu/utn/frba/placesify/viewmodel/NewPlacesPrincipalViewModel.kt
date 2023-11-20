@@ -57,8 +57,8 @@ class NewPlacesPrincipalViewModel(
     private val _pantalla = mutableIntStateOf(0)
     val pantalla: State<Int> = _pantalla
 
-    val _cantAgregados = MutableLiveData<Int>()
-    val cantAgregados: LiveData<Int> = _cantAgregados
+    //val _cantAgregados = MutableLiveData<Int>()
+    //val cantAgregados: LiveData<Int> = _cantAgregados
 
     val _nuevaLista = MutableLiveData<Listas>()
     val nuevaLista: LiveData<Listas> = _nuevaLista
@@ -71,7 +71,7 @@ class NewPlacesPrincipalViewModel(
 
     init {
         _pantalla.value = 0
-        _cantAgregados.value = 0
+        //_cantAgregados.value = 0
         _continuar3Enabled.value = false
 
         getNuevaLista()

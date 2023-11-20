@@ -200,7 +200,9 @@ fun NewList(
                         onValueChange = {
                             name.value = it
                         },
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
+                        singleLine = true,
+                        maxLines = 1
                     )
 
                     Spacer(modifier = Modifier.padding(8.dp))
