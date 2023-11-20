@@ -54,6 +54,16 @@ data class NuevoUsuario(
     val favoritesLists: MutableList<String>?
 )
 
+data class NuevaLista(
+    var name: String = "",
+    var description: String? = "",
+    var review: Double? = 0.0,
+    var email_owner: String = "",
+    var lstPlaces: List<Lugares>?,
+    var lstCategories: List<Int>?,
+    var likes: Int? = 0
+)
+
 data class ApiListResponse(
     val cursor: String? = "",
     val items: List<Listas>,

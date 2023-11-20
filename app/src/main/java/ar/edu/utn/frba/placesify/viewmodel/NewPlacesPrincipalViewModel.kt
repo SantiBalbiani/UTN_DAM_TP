@@ -18,14 +18,19 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import ar.edu.utn.frba.placesify.api.BackendService
 import ar.edu.utn.frba.placesify.api.OpenStreetmapService
 import ar.edu.utn.frba.placesify.model.Categorias
 import ar.edu.utn.frba.placesify.model.Listas
 import ar.edu.utn.frba.placesify.model.LocationHandler
 import ar.edu.utn.frba.placesify.model.Lugares
+import ar.edu.utn.frba.placesify.model.NuevaLista
+import ar.edu.utn.frba.placesify.model.NuevoUsuario
 import ar.edu.utn.frba.placesify.model.OpenStreetmapResponse
 import ar.edu.utn.frba.placesify.model.PreferencesManager
 import ar.edu.utn.frba.placesify.model.StorageHandler
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 import java.io.IOException
 
@@ -70,6 +75,9 @@ class NewPlacesPrincipalViewModel(
     private val _showConfirmationDialog = mutableStateOf(false)
     val showConfirmationDialog: State<Boolean> = _showConfirmationDialog
 
+    private val _showSaveDialog = mutableStateOf(false)
+    val showSaveDialog: State<Boolean> = _showSaveDialog
+
     var searchText by mutableStateOf("")
 
     private val _lugaresAPI = MutableLiveData<List<OpenStreetmapResponse>>()
@@ -98,6 +106,7 @@ class NewPlacesPrincipalViewModel(
 
     fun resetScreen3(){
         _continuar3Enabled.value = false
+        _lugarAPI.value = null
     }
 
     fun setImagePickerCallback(callback: (Uri?) -> Unit) {
@@ -239,6 +248,11 @@ class NewPlacesPrincipalViewModel(
         _showConfirmationDialog.value = show
     }
 
+    fun setShowSaveDialog(show: Boolean) {
+        _showSaveDialog.value = show
+    }
+
+
     fun setPantalla(pantalla: Int){
         _pantalla.value = pantalla
     }
@@ -289,5 +303,40 @@ class NewPlacesPrincipalViewModel(
         _buscandoContenidos.value = false
     }
 
+    fun persistirNuevaLista(){
+
+        viewModelScope.launch() {
+
+            if (_nuevaLista.value?.name == "")
+                _nuevaLista.value?.name = "Lista sin nombre"
+
+            try{
+
+                BackendService.instance.postLista(
+                    listOf(
+                        NuevaLista(
+                            name = _nuevaLista.value?.name!!,
+                            description = _nuevaLista.value?.description,
+                            email_owner = Firebase.auth.currentUser?.email!!,
+                            lstPlaces = _nuevaLista.value?.lstPlaces,
+                            lstCategories = _nuevaLista.value?.lstCategories
+                        )
+                    )
+                )
+
+                // Limpio la lista temporal del shared preferences
+                val preferencesManager = PreferencesManager(context)
+
+                _nuevaLista.value = null
+                preferencesManager.saveList(
+                    "nuevaLista", null
+                    )
+
+            }
+            catch (e: Exception) {
+                Log.d("PERSISTIR LISTA", "CATCH API ${e.toString()}")
+            }
+        }
+    }
 }
 

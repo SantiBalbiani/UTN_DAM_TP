@@ -40,7 +40,7 @@ class PreferencesManager(context: Context) {
             ?.let { Json.decodeFromString(it) }
     }
 
-    fun saveList(key: String, lista: Listas) {
+    fun saveList(key: String, lista: Listas?) {
         val editor = sharedPreferences.edit()
         println(lista.toString())
         editor.putString(key, Json.encodeToString(lista))

@@ -6,6 +6,7 @@ import ar.edu.utn.frba.placesify.model.ApiListResponse
 import ar.edu.utn.frba.placesify.model.ApiPutUserResponse
 import ar.edu.utn.frba.placesify.model.ApiUserResponse
 import ar.edu.utn.frba.placesify.model.Listas
+import ar.edu.utn.frba.placesify.model.NuevaLista
 import ar.edu.utn.frba.placesify.model.NuevoUsuario
 import ar.edu.utn.frba.placesify.model.Usuarios
 import okhttp3.OkHttpClient
@@ -64,7 +65,7 @@ interface BackendService {
     suspend fun getLista(@Path("id") id: String): Listas
 
     @POST("listas")
-    suspend fun postLista(@Body lista: Listas): Listas
+    suspend fun postLista(@Body listas: List<NuevaLista>): Listas
 
     @PUT("listas/{id}")
     suspend fun putLista(

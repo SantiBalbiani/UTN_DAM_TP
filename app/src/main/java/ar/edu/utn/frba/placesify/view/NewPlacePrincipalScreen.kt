@@ -142,23 +142,38 @@ fun NewPlacesPrincipal(
     navController: NavController?,
     viewModel: NewPlacesPrincipalViewModel
 ){
-
+    val context = LocalContext.current
     val nuevaLista: Listas? by viewModel.nuevaLista.observeAsState(initial = null)
-
     val showConfirmationDialog = viewModel.showConfirmationDialog.value
+    val showSaveDialog = viewModel.showSaveDialog.value
 
-    if (showConfirmationDialog){
+    if (showConfirmationDialog) {
+        viewModel.setShowConfirmationDialog(false)
+        navController?.navigateUp()
+    }
+
+    if(showSaveDialog){
         Confirmacion(
             onDismissRequest = {
-                viewModel.setShowConfirmationDialog(false)
+                viewModel.setShowSaveDialog(false)
             },
             onConfirmation = {
-                viewModel.setShowConfirmationDialog(false)
-                //TODO Actualizar nuevaLista eliminandole los lugares
-                navController?.navigateUp()
+                viewModel.setShowSaveDialog(false)
+
+                viewModel.persistirNuevaLista()
+
+                Toast.makeText(
+                    context,
+                    "Lista creada",
+                    Toast.LENGTH_LONG
+                ).show()
+
+                navController?.navigate("home")
+
+
             },
             dialogTitle = "Confirmación",
-            dialogText = "¿Estás seguro de querer retroceder? Se perderán los lugares cargados",
+            dialogText = "¿Desea grabar la lista con ${viewModel._nuevaLista.value?.lstPlaces?.count()} lugar/es agregado/s?",
             icon = Icons.Default.Info
         )
     }
@@ -250,8 +265,7 @@ fun NewPlacesPrincipal(
 
                 Button(
                     onClick = {
-                        // TODO Validaciones y Creacion final de la lista
-                        navController?.navigate("new_places_principal")
+                        viewModel.setShowSaveDialog(true)
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -265,10 +279,10 @@ fun NewPlacesPrincipal(
                 }
 
                 // Para debug muestro por pantalla la lista en todo momento
-                Text(
+                /*Text(
                     text = nuevaLista.toString(),
                     modifier = Modifier.padding(5.dp)
-                )
+                )*/
             }
         }
     }
@@ -385,7 +399,7 @@ fun NewPlace1(
                             modifier = Modifier
                                 .padding(vertical = 5.dp, horizontal = 5.dp)
                                 .fillMaxWidth()
-                                .clickable {  }
+                                .clickable { }
 
                         ) {
 

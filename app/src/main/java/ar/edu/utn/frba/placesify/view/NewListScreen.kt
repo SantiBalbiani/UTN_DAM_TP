@@ -348,7 +348,7 @@ fun NewList(
                     }
 
                     // Para debug muestro por pantalla la lista en todo momento
-                    Text(
+                    /*Text(
                         text = preferencesManager.getList(
                             "nuevaLista",
                             Listas(
@@ -357,7 +357,7 @@ fun NewList(
                             )
                         ).toString(),
                         modifier = Modifier.padding(5.dp)
-                    )
+                    )*/
 
                 }
             }
