@@ -1,6 +1,8 @@
 package ar.edu.utn.frba.placesify.viewmodel
 
 import android.util.Log
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -32,6 +34,12 @@ class DetailListViewModel(
     private val _isFavorite = MutableLiveData<Boolean>()
     val isFavorite: LiveData<Boolean> = _isFavorite
 
+    private val _borrarVisible = mutableStateOf(false)
+    val borrarVisible: State<Boolean> = _borrarVisible
+
+    private val _showConfirmationDeleteDialog = mutableStateOf(false)
+    val showConfirmationDeleteDialog: State<Boolean> = _showConfirmationDeleteDialog
+
     init {
         // Obtengo las Listas Destacadas
         if (id_list != null) {
@@ -52,6 +60,11 @@ class DetailListViewModel(
                 val response = listService.getLista(idLista)
                 _detalleLista.value = response
                 _detalleListaActualizada.value = true
+
+                // Inicializo la visualización del boton de borrado
+                if (_detalleLista.value?.email_owner == Firebase.auth.currentUser?.email){
+                    _borrarVisible.value = true
+                }
 
             } catch (e: Exception) {
                 Log.d("API_CALL 2", "CATCH API ${e.toString()}")
@@ -77,6 +90,7 @@ class DetailListViewModel(
 
                     // Inicializo el boton de favorito
                     _isFavorite.value = _usuarioLogueado.value?.favoritesLists?.contains(id_list)
+
                 }
 
             } catch (e: Exception) {
@@ -124,6 +138,23 @@ class DetailListViewModel(
                 }
             }
         }
+    }
+
+    fun setShowConfirmationDeleteDialog(show: Boolean) {
+        _showConfirmationDeleteDialog.value = show
+    }
+    fun borrarListaActual(){
+
+        viewModelScope.launch() {
+            try {
+
+                val resp = _detalleLista.value?.id?.let { listService.deleteLista(it) }
+
+            } catch (e: Exception) {
+                Log.d("API_CALL BORRAR LISTA", "CATCH  ${e.toString()}")
+            }
+        }
+
     }
 }
 

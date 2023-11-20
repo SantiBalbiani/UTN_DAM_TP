@@ -143,7 +143,6 @@ fun NewPlacesPrincipal(
     viewModel: NewPlacesPrincipalViewModel
 ){
     val context = LocalContext.current
-    val nuevaLista: Listas? by viewModel.nuevaLista.observeAsState(initial = null)
     val showConfirmationDialog = viewModel.showConfirmationDialog.value
     val showSaveDialog = viewModel.showSaveDialog.value
 

@@ -3,6 +3,7 @@ package ar.edu.utn.frba.placesify.view
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,8 +18,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Place
@@ -92,6 +95,8 @@ fun DetailList(
     val usuarioLogueado: Usuarios? by viewModel.usuarioLogueado.observeAsState( initial = null)
     val usuarioLogueadoActualizada: Boolean by viewModel.usuarioLogueadoActualizada.observeAsState( initial = false )
     val isFavorite: Boolean by viewModel.isFavorite.observeAsState( initial = false)
+    val borrarVisible = viewModel.borrarVisible.value
+    val showConfirmationDeleteDialog = viewModel.showConfirmationDeleteDialog.value
 
     // Defino el Contexto Actual
     val context = LocalContext.current
@@ -104,6 +109,29 @@ fun DetailList(
                 extraText = "Lista compartida por Placesify"
             )
         }
+
+    if (showConfirmationDeleteDialog){
+        Confirmacion(
+            onDismissRequest = {
+                viewModel.setShowConfirmationDeleteDialog(false)
+            },
+            onConfirmation = {
+                viewModel.setShowConfirmationDeleteDialog(false)
+                viewModel.borrarListaActual()
+
+                Toast.makeText(
+                    context,
+                    "Lista eliminada correctamente",
+                    Toast.LENGTH_LONG
+                ).show()
+
+                navController?.navigateUp()
+            },
+            dialogTitle = "Confirmación",
+            dialogText = "¿Estás seguro de querer eliminar la lista? Esta acción no se puede revertir",
+            icon = Icons.Default.Info
+        )
+    }
 
     Scaffold(
         topBar = {
@@ -192,6 +220,22 @@ fun DetailList(
                                         },
                                         modifier = Modifier.padding(horizontal = 5.dp)
                                     )
+
+                                    if(borrarVisible){
+
+                                        AssistChip(
+                                            onClick = { viewModel.setShowConfirmationDeleteDialog(true) },
+                                            border = null,
+                                            label = { Icon(
+                                                Icons.Outlined.Delete,
+                                                contentDescription = "Eliminar",
+                                                Modifier.size(AssistChipDefaults.IconSize)
+                                            ) },
+                                            leadingIcon = { },
+                                            modifier = Modifier.padding(horizontal = 5.dp)
+                                        )
+
+                                    }
                                 }
                             }
                         }

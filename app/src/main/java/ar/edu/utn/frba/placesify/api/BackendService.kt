@@ -14,6 +14,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
@@ -88,5 +89,7 @@ interface BackendService {
         @Body usuario: Usuarios
     ):Usuarios
 
+    @DELETE("listas/{id}")
+    suspend fun deleteLista(@Path("id") id:String):Listas
 
 }
