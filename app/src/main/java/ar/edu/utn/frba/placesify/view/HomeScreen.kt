@@ -86,7 +86,7 @@ fun Home(modifier: Modifier, viewModel: HomeViewModel, navController: NavControl
     Scaffold(
         topBar = { BarraNavegacionSuperior("Placesify", navController, isHome = true) },
         floatingActionButton = {
-            FloatingActionButton(onClick = { navController?.navigate("new_places") }) {
+            FloatingActionButton(onClick = { navController?.navigate("new_list") }) {
                 Icon(Icons.Default.Add, contentDescription = "Add")
             }
         }
@@ -114,7 +114,7 @@ fun Home(modifier: Modifier, viewModel: HomeViewModel, navController: NavControl
                     }
                     Spacer(modifier = Modifier.padding(8.dp))
 
-                    Button(
+                    /*Button(
                         onClick = { navController?.navigate("new_list") },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -123,6 +123,7 @@ fun Home(modifier: Modifier, viewModel: HomeViewModel, navController: NavControl
                         Text(text = "Agregar nueva Lista")
                     }
                     Spacer(modifier = Modifier.padding(8.dp))
+                    */
 
                     Text(
                         text = "Listas destacadas",
