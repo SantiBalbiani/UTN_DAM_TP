@@ -44,7 +44,6 @@ class NewPlacesPrincipalViewModel(
     val _gpsLon = MutableLiveData<Double>()
     val gpsLon: LiveData<Double> = _gpsLon
 
-
     val _latitud = MutableLiveData<String>()
     val latitud: LiveData<String> = _latitud
 
@@ -57,12 +56,11 @@ class NewPlacesPrincipalViewModel(
     private val _pantalla = mutableIntStateOf(0)
     val pantalla: State<Int> = _pantalla
 
-    //val _cantAgregados = MutableLiveData<Int>()
-    //val cantAgregados: LiveData<Int> = _cantAgregados
-
     val _nuevaLista = MutableLiveData<Listas>()
     val nuevaLista: LiveData<Listas> = _nuevaLista
 
+    val _continuar2Enabled = MutableLiveData<Boolean>()
+    val continar2Enabled: LiveData<Boolean> = _continuar2Enabled
     val _continuar3Enabled = MutableLiveData<Boolean>()
     val continar3Enabled: LiveData<Boolean> = _continuar3Enabled
 
@@ -71,10 +69,18 @@ class NewPlacesPrincipalViewModel(
 
     init {
         _pantalla.value = 0
-        //_cantAgregados.value = 0
-        _continuar3Enabled.value = false
-
+        resetScreen2()
+        resetScreen3()
         getNuevaLista()
+    }
+
+    fun resetScreen2(){
+        _continuar2Enabled.value = false
+        _lugaresAPI.value = null
+    }
+
+    fun resetScreen3(){
+        _continuar3Enabled.value = false
     }
 
     fun setImagePickerCallback(callback: (Uri?) -> Unit) {

@@ -208,6 +208,7 @@ fun NewPlacesPrincipal(
 
                 Button(
                     onClick = {
+                        viewModel.resetScreen2()
                         viewModel.setPantalla(2)
                     },
                     modifier = Modifier
@@ -221,6 +222,7 @@ fun NewPlacesPrincipal(
 
                 Button(
                     onClick = {
+                        viewModel.resetScreen3()
                         viewModel.setPantalla(3)
                     },
                     modifier = Modifier
@@ -409,9 +411,12 @@ fun NewPlace2(
     viewModel: NewPlacesPrincipalViewModel
 ){
 
+    val context = LocalContext.current
     val lat: Double by viewModel.gpsLat.observeAsState( initial = 0.0 )
     val lon: Double by viewModel.gpsLon.observeAsState( initial = 0.0 )
     val lugaresAPI: OpenStreetmapResponse? by viewModel.lugaresAPI.observeAsState(initial = null  )
+
+    val continuar2Enabled: Boolean by viewModel.continar2Enabled.observeAsState( initial = false )
 
     val showConfirmationDialog = viewModel.showConfirmationDialog.value
 
@@ -464,7 +469,7 @@ fun NewPlace2(
 
                 }
 
-                Spacer(modifier = Modifier.padding(20.dp))
+                Spacer(modifier = Modifier.padding(10.dp))
 
                 viewModel.requestLocationPermission(LocalContext.current)
 
@@ -503,10 +508,9 @@ fun NewPlace2(
                             cameraState = cameraState,
                             properties = mapProperties,
                             onMapClick = {
-                                println("on click  -> $it")
                                 markerState.geoPoint = it
+                                // Carga la variable lugaresAPI con las coordenadas obtenidas
                                 viewModel.getLugarEnOpenStreetMapApi(it.latitude.toString(),it.longitude.toString())
-                                println("lugar -> ${lugaresAPI.toString()}")
                             }
                         ) {
                             Marker(
@@ -517,20 +521,60 @@ fun NewPlace2(
 
                 }
 
-                //TODO falta para agregar opcion de foto del lugar
-
-                Spacer(modifier = Modifier.padding(24.dp))
+                if(lugaresAPI != null ){
+                    viewModel._continuar2Enabled.value = true
+                    Spacer(modifier = Modifier.padding(8.dp))
+                    Row {
+                        Card( colors = CardDefaults.cardColors(
+                            containerColor = Color.LightGray, )
+                        ) {
+                            Text(
+                                text = lugaresAPI?.displayName.toString(),
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.padding(vertical = 10.dp, horizontal = 10.dp))
+                            Divider()
+                        }
+                    }
+                    Spacer(modifier = Modifier.padding(8.dp))
+                }
+                else{
+                    Spacer(modifier = Modifier.padding(24.dp))
+                }
 
                 Button(
                     onClick = {
+                        val lugarAuxiliar =  lugaresAPI?.lon?.let {
+                            lugaresAPI?.displayName?.let { it1 ->
+                                lugaresAPI?.category?.let { it2 ->
+                                    lugaresAPI?.lat?.let { it3 ->
+                                        Lugares(
+                                            id = lugaresAPI?.placeId,
+                                            name = it1,
+                                            description = it2,
+                                            latitud = it3.toDouble(),
+                                            longitud = it.toDouble()
+                                        )
+                                    }
+                                }
+                            }
+                        }!!
+
+                        viewModel.agregarLugar(lugarAuxiliar)
                         viewModel.setPantalla(0)
+
+                        Toast.makeText(
+                            context,
+                            "Ubicación agregada",
+                            Toast.LENGTH_LONG
+                        ).show()
                     },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(40.dp),
                     colors = androidx.compose.material3.ButtonDefaults.buttonColors(
                         containerColor = Color.Green
-                    )
+                    ),
+                    enabled = continuar2Enabled
 
                 ) {
                     Text(text = "Continuar")

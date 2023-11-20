@@ -34,13 +34,13 @@ class LocationHandler(
         }
 
     fun requestLocationPermission(context: Context) {
-
+        /*
         Toast.makeText(
             context,
             "Accediendo a GPS",
             Toast.LENGTH_LONG
         ).show()
-
+        */
         when {
             ContextCompat.checkSelfPermission(
                 application,
