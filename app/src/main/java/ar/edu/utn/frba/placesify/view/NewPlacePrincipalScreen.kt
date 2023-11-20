@@ -3,6 +3,7 @@ package ar.edu.utn.frba.placesify.view
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -51,6 +52,10 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TextButton
@@ -541,13 +546,14 @@ fun NewPlace2(
 
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewPlace3(
     modifier: Modifier,
     navController: NavController?,
     viewModel: NewPlacesPrincipalViewModel
 ){
-    val route = "NewPlace3Tag"
+    val context = LocalContext.current
     val uriState = remember { mutableStateOf<Uri?>(null) }
 
     val lugaresAPI: OpenStreetmapResponse? by viewModel.lugaresAPI.observeAsState(initial = null  )
@@ -629,7 +635,7 @@ fun NewPlace3(
                 Row {
                     if (uriState.value != null && lugaresAPI?.displayName != null ){
                         viewModel._continuar3Enabled.value = true
-                        Text(text = "${lugaresAPI?.displayName.toString()}",
+                        Text(text = "Lugar detectado",
                             textAlign = TextAlign.Center
                         )
                     }
@@ -651,12 +657,52 @@ fun NewPlace3(
                     }
                 }
 
-                Spacer(modifier = Modifier.padding(48.dp))
+                if( viewModel._continuar3Enabled.value == true ) {
+                    Spacer(modifier = Modifier.padding(12.dp))
+                    Row {
+                        Card( colors = CardDefaults.cardColors(
+                            containerColor = Color.LightGray, )
+                        ) {
+                            Text(
+                                text = lugaresAPI?.displayName.toString(),
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.padding(vertical = 10.dp, horizontal = 10.dp))
+                            Divider()
+                        }
+                    }
+                    Spacer(modifier = Modifier.padding(12.dp))
+                }
+                else{
+                    Spacer(modifier = Modifier.padding(48.dp))
+                }
 
                 Button(
                     onClick = {
                         viewModel._cantAgregados.value = viewModel._cantAgregados.value?.plus(1)
+                        val lugarAuxiliar =  lugaresAPI?.lon?.let {
+                            lugaresAPI?.displayName?.let { it1 ->
+                                lugaresAPI?.category?.let { it2 ->
+                                    lugaresAPI?.lat?.let { it3 ->
+                                        Lugares(
+                                            id = lugaresAPI?.placeId,
+                                            name = it1,
+                                            description = it2,
+                                            latitud = it3.toDouble(),
+                                            longitud = it.toDouble()
+                                        )
+                                    }
+                                }
+                            }
+                        }!!
+
+                        viewModel.agregarLugar(lugarAuxiliar)
                         viewModel.setPantalla(0)
+
+                        Toast.makeText(
+                            context,
+                            "Ubicación agregada",
+                            Toast.LENGTH_LONG
+                        ).show()
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -668,7 +714,6 @@ fun NewPlace3(
                 ) {
                     Text(text = "Continuar")
                 }
-
             }
         }
     }

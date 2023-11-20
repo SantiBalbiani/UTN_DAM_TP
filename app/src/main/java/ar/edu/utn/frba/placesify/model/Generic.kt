@@ -35,7 +35,7 @@ data class Listas(
     var description: String? = "",
     val review: Double? = 0.0,
     val email_owner: String = "",
-    val lstPlaces: List<Lugares>?,
+    var lstPlaces: List<Lugares>?,
     var lstCategories: List<Int>?,
     var likes: Int? = 0
 )

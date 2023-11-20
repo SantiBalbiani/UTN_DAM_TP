@@ -17,8 +17,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ar.edu.utn.frba.placesify.api.OpenStreetmapService
+import ar.edu.utn.frba.placesify.model.Categorias
 import ar.edu.utn.frba.placesify.model.Listas
 import ar.edu.utn.frba.placesify.model.LocationHandler
+import ar.edu.utn.frba.placesify.model.Lugares
 import ar.edu.utn.frba.placesify.model.OpenStreetmapResponse
 import ar.edu.utn.frba.placesify.model.PreferencesManager
 import ar.edu.utn.frba.placesify.model.StorageHandler
@@ -218,5 +220,22 @@ class NewPlacesPrincipalViewModel(
         _pantalla.value = pantalla
     }
 
+    fun agregarLugar(lugar: Lugares){
+        // Agrega un lugar nuevo a la lista en creación
+        val lstPlaces: MutableList<Lugares>? = _nuevaLista.value?.lstPlaces?.toMutableList()
+        if(lstPlaces != null){
+            lstPlaces?.add(lugar)
+            _nuevaLista.value?.lstPlaces = lstPlaces
+        }
+
+        // Actualiza la lista nueva en shared preferences
+        val preferencesManager = PreferencesManager(context)
+
+        _nuevaLista.value?.let {
+            preferencesManager.saveList(
+                "nuevaLista", it
+            )
+        }
+    }
 }
 
