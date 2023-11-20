@@ -84,6 +84,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import ar.edu.utn.frba.placesify.model.Listas
 import ar.edu.utn.frba.placesify.model.Lugares
 import ar.edu.utn.frba.placesify.model.PreferencesManager
+import ar.edu.utn.frba.placesify.view.componentes.ShowLoading
+import coil.compose.AsyncImage
 
 
 @Composable
@@ -116,14 +118,6 @@ fun NewPlaces(
     //TODO VARIABLES
     val pantalla = viewModel.pantalla.value
 
-    // Controlador del Teclado Virtual
-    val keyboardController: SoftwareKeyboardController? = LocalSoftwareKeyboardController.current
-
-    //PANTALLA 1
-    var direccion_lugar by rememberSaveable {
-        mutableStateOf("")
-    }
-
     ////////////////////////////////////////////////////////////////////////////
 
     if(pantalla == 0){
@@ -131,7 +125,7 @@ fun NewPlaces(
         NewPlacesPrincipal(modifier, navController,viewModel)
     }else if(pantalla == 1){
         // Cargar buscando la dirección por texto
-        NewPlace1(modifier, navController,viewModel,keyboardController)
+        NewPlace1(modifier, navController,viewModel)
     }else if(pantalla == 2){
         // Seleccionar lugar en el mapa
         NewPlace2(modifier, navController,viewModel)
@@ -275,45 +269,39 @@ fun NewPlacesPrincipal(
                     text = nuevaLista.toString(),
                     modifier = Modifier.padding(5.dp)
                 )
-
             }
-
         }
     }
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun NewPlace1(
     modifier: Modifier,
     navController: NavController?,
-    viewModel: NewPlacesPrincipalViewModel,
-    keyboardController: SoftwareKeyboardController?
+    viewModel: NewPlacesPrincipalViewModel
 ){
 
-    var direccion by rememberSaveable {
-        mutableStateOf("")
-    }
+    val context = LocalContext.current
+    val lugaresAPI: List<OpenStreetmapResponse>? by viewModel.lugaresAPI.observeAsState(initial = null)
+    val lugaresActualizados: Boolean by viewModel.lugaresActualizados.observeAsState(
+        initial = false
+    )
+    val buscandoContenidos: Boolean by viewModel.buscandoContenidos.observeAsState(
+        initial = false
+    )
+    val confirmacionAgregarLugar = remember { mutableStateOf(false) }
 
-    var descripcion by rememberSaveable {
-        mutableStateOf("")
-    }
+    // Controlador del Teclado Virtual
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     val showConfirmationDialog = viewModel.showConfirmationDialog.value
 
     if (showConfirmationDialog){
-        Confirmacion(
-            onDismissRequest = {
-                viewModel.setShowConfirmationDialog(false)
-            },
-            onConfirmation = {
-                viewModel.setShowConfirmationDialog(false)
-                viewModel.setPantalla(0)
-            },
-            dialogTitle = "Confirmación",
-            dialogText = "¿Estás seguro de querer retroceder? Se perderá la información del lugar seleccionado",
-            icon = Icons.Default.Info
-        )
+        viewModel.setShowConfirmationDialog(false)
+        viewModel.limpiarLugaresBuscados()
+        viewModel.searchText = ""
+        viewModel.setPantalla(0)
     }
 
     BackHandler(onBack = {
@@ -321,85 +309,189 @@ fun NewPlace1(
     })
 
     Scaffold(
-        topBar = { BarraNavegacionSuperior("Buscar por direccion", navController, viewModel = viewModel) },
+        topBar = { BarraNavegacionSuperior("Buscar lugar", navController) }
     ) { innerPadding ->
-
         LazyColumn(
             modifier = modifier.padding(innerPadding),
-            horizontalAlignment = Alignment.CenterHorizontally
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             item {
 
-                OutlinedTextField(
-                    value = direccion,
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        focusedBorderColor = Purple80,
-                        focusedLabelColor = Purple80,
-                        cursorColor = Purple80,
-                        textColor = Color.White
-                    ),
-                    onValueChange = {
-                        direccion = it
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(0.dp),
-                    singleLine = true,
-                    maxLines = 1,
-                    label = { Text(text = "Direccion de lugar") },
-                    trailingIcon = {
-                        Image(
-                            imageVector = Icons.Outlined.Search,
-                            contentDescription = "",
-                            modifier = Modifier
-                                .padding(horizontal = 5.dp)
-                                .clickable { keyboardController?.hide() }
-                        )
-                    },
-                    keyboardActions = KeyboardActions(
-                        onDone = { keyboardController?.hide()})
-                )
+                Row(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 0.dp)) {
 
-                Spacer(modifier = Modifier.padding(8.dp))
-
-                OutlinedTextField(
-                    label = {Text(text = "Descripcion del lugar")},
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        focusedBorderColor = Purple80,
-                        focusedLabelColor = Purple80,
-                        cursorColor = Purple80,
-                        textColor = Color.White
-                    ),
-                    value = descripcion,
-                    onValueChange = {
-                        descripcion = it
-                    },
-                    modifier = Modifier.fillMaxWidth())
-
-
-                //TODO falta para agregar opcion de foto del lugar
-
-                Spacer(modifier = Modifier.padding(24.dp))
-
-                Button(
-                    onClick = {
-                        viewModel.setPantalla(0)
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(40.dp),
-                    colors = androidx.compose.material3.ButtonDefaults.buttonColors(
-                        containerColor = Color.Green
+                    Image(
+                        painter = painterResource(id = R.drawable.ico_placesify2),
+                        contentDescription = "Imagen",
                     )
 
-                ) {
-                    Text(text = "Continuar")
+                    Spacer(modifier = Modifier.padding(20.dp))
+
+                    Text(
+                        text = "Ingrese el texto del lugar que desea buscar, por ejemplo 'Obelisco'",
+                        fontSize = dimensionResource(id = R.dimen.font_size_normal).value.sp,
+                        fontWeight = FontWeight.Bold,
+                        )
                 }
 
+                Spacer(modifier = Modifier.padding(10.dp))
+
+
+                Row(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 0.dp)) {
+                    androidx.compose.material3.OutlinedTextField(
+                        value = viewModel.searchText,
+                        onValueChange = { searchText -> viewModel.updateSearchText(searchText) },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(0.dp),
+                        singleLine = true,
+                        maxLines = 1,
+                        label = { Text(text = "Buscar lugares") },
+                        trailingIcon = {
+                            Image(
+                                imageVector = Icons.Outlined.Search,
+                                contentDescription = "",
+                                modifier = Modifier
+                                    .padding(horizontal = 5.dp)
+                                    .clickable { keyboardController?.hide(); viewModel.buscarLugares() }
+                            )
+                        },
+                        keyboardActions = KeyboardActions(
+                            onDone = { keyboardController?.hide(); viewModel.buscarLugares() })
+                    )
+                }
+
+                if (buscandoContenidos) {
+                    ShowLoading("Actualizando...")
+                }
+
+                if (lugaresActualizados) {
+                    Spacer(modifier = Modifier.padding(12.dp))
+
+                    Text(
+                        text = "Lugares encontrados:",
+                        fontSize = dimensionResource(id = R.dimen.font_size_normal).value.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(horizontal = 16.dp)
+                    )
+
+                    Spacer(modifier = Modifier.padding(8.dp))
+
+                    lugaresAPI?.forEach { elementoOpenStreetMap ->
+                        Column(
+                            modifier = Modifier
+                                .padding(vertical = 5.dp, horizontal = 5.dp)
+                                .fillMaxWidth()
+                                .clickable {  }
+
+                        ) {
+
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.baseline_add_location_24),
+                                    contentDescription = "Lugar Icon",
+                                    modifier = Modifier.size(40.dp)
+                                )
+                                Spacer(modifier = Modifier.padding(8.dp))
+                                Text(
+                                    text = elementoOpenStreetMap.displayName.toString(),
+                                    modifier = Modifier.weight(1f)
+                                )
+                            }
+
+                            Button(
+                                onClick = {
+                                    confirmacionAgregarLugar.value = true
+                                    viewModel.lugarAuxiliar = elementoOpenStreetMap.lon?.let {
+                                        elementoOpenStreetMap.displayName?.let { it1 ->
+                                            elementoOpenStreetMap.category?.let { it2 ->
+                                                elementoOpenStreetMap.lat?.let { it3 ->
+                                                    Lugares(
+                                                        id = elementoOpenStreetMap.placeId,
+                                                        name = it1,
+                                                        description = it2,
+                                                        latitud = it3.toDouble(),
+                                                        longitud = it.toDouble()
+                                                    )
+                                                }
+                                            }
+                                        }
+                                    }!!
+                                },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(start = 250.dp, top = 8.dp, bottom = 8.dp)
+                                    .height(30.dp)
+                                    .background(
+                                        color = Color.Transparent,
+                                        shape = RoundedCornerShape(5.dp)
+                                    )
+                            ) {
+                                Text(
+                                    text = "Agregar",
+                                    color = Color.White,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 10.sp
+                                )
+                            }
+                        }
+                        Divider()
+                    }
+                }
+
+                if (confirmacionAgregarLugar.value) {
+                    confirmacionAgregarLugar.value = false
+
+                    // Persisto el Lugar
+                    viewModel.agregarLugar(viewModel.lugarAuxiliar)
+
+                    // Vacio las variables
+                    viewModel.limpiarLugaresBuscados()
+                    viewModel.searchText = ""
+                    viewModel.setPantalla(0)
+
+                    Toast.makeText(
+                        context,
+                        "Ubicación agregada",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+
+                //////////////////////////////////////////////////////////////////////////////
+                // !!!! Creo que no hace falta una confirmación acá, viene de la logica vieja
+                //////////////////////////////////////////////////////////////////////////////
+                /*if (confirmacionAgregarLugar.value) {
+                    confirmacionLugar(
+                        onDismissRequest = { confirmacionAgregarLugar.value = false },
+                        onConfirmation = {
+                            confirmacionAgregarLugar.value = false
+
+                            // Persisto el Lugar
+                            viewModel.agregarLugar(viewModel.lugarAuxiliar)
+
+                            // Vacio la Lista de la busqueda
+                            viewModel.limpiarLugaresBuscados()
+                            viewModel.setPantalla(0)
+
+                            Toast.makeText(
+                                context,
+                                "Ubicación agregada",
+                                Toast.LENGTH_LONG
+                            ).show()
+
+                        },
+                        dialogTitle = "Agregar un Lugar",
+                        dialogText = "¿Está seguro que desea agregar el lugar ${viewModel.lugarAuxiliar.name} a la Lista?",
+                        icon = Icons.Default.Info
+                    )
+                }
+                */
             }
         }
     }
-
 
 }
 
@@ -414,7 +506,7 @@ fun NewPlace2(
     val context = LocalContext.current
     val lat: Double by viewModel.gpsLat.observeAsState( initial = 0.0 )
     val lon: Double by viewModel.gpsLon.observeAsState( initial = 0.0 )
-    val lugaresAPI: OpenStreetmapResponse? by viewModel.lugaresAPI.observeAsState(initial = null  )
+    val lugaresAPI: OpenStreetmapResponse? by viewModel.lugarAPI.observeAsState(initial = null  )
 
     val continuar2Enabled: Boolean by viewModel.continar2Enabled.observeAsState( initial = false )
 
@@ -597,7 +689,7 @@ fun NewPlace3(
     val context = LocalContext.current
     val uriState = remember { mutableStateOf<Uri?>(null) }
 
-    val lugaresAPI: OpenStreetmapResponse? by viewModel.lugaresAPI.observeAsState(initial = null  )
+    val lugarAPI: OpenStreetmapResponse? by viewModel.lugarAPI.observeAsState(initial = null  )
     val continuar3Enabled: Boolean by viewModel.continar3Enabled.observeAsState( initial = false )
 
     viewModel.setImagePickerCallback { uri -> uriState.value = uri }
@@ -674,13 +766,13 @@ fun NewPlace3(
                 }
 
                 Row {
-                    if (uriState.value != null && lugaresAPI?.displayName != null ){
+                    if (uriState.value != null && lugarAPI?.displayName != null ){
                         viewModel._continuar3Enabled.value = true
                         Text(text = "Lugar detectado",
                             textAlign = TextAlign.Center
                         )
                     }
-                    else if (uriState.value != null && lugaresAPI?.displayName == null){
+                    else if (uriState.value != null && lugarAPI?.displayName == null){
                         viewModel._continuar3Enabled.value = false
                         Text(text = "No se detectó ningún lugar en la imagen, intente con otra",
                             textAlign = TextAlign.Center
@@ -705,7 +797,7 @@ fun NewPlace3(
                             containerColor = Color.LightGray, )
                         ) {
                             Text(
-                                text = lugaresAPI?.displayName.toString(),
+                                text = lugarAPI?.displayName.toString(),
                                 textAlign = TextAlign.Center,
                                 modifier = Modifier.padding(vertical = 10.dp, horizontal = 10.dp))
                             Divider()
@@ -719,12 +811,12 @@ fun NewPlace3(
 
                 Button(
                     onClick = {
-                        val lugarAuxiliar =  lugaresAPI?.lon?.let {
-                            lugaresAPI?.displayName?.let { it1 ->
-                                lugaresAPI?.category?.let { it2 ->
-                                    lugaresAPI?.lat?.let { it3 ->
+                        val lugarAuxiliar =  lugarAPI?.lon?.let {
+                            lugarAPI?.displayName?.let { it1 ->
+                                lugarAPI?.category?.let { it2 ->
+                                    lugarAPI?.lat?.let { it3 ->
                                         Lugares(
-                                            id = lugaresAPI?.placeId,
+                                            id = lugarAPI?.placeId,
                                             name = it1,
                                             description = it2,
                                             latitud = it3.toDouble(),

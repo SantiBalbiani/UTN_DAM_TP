@@ -9,8 +9,10 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.ActivityResultRegistry
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -32,7 +34,8 @@ import java.io.IOException
 class NewPlacesPrincipalViewModel(
     application: Application,
     activityResultRegistry: ActivityResultRegistry,
-    private val context: Context
+    private val context: Context,
+    private val mapService: OpenStreetmapService
 ) : ViewModel() {
 
     private var imagePickerCallback: ((Uri?) -> Unit)? = null
@@ -50,8 +53,8 @@ class NewPlacesPrincipalViewModel(
     val _longitud = MutableLiveData<String>()
     val longitud: LiveData<String> = _longitud
 
-    val _lugaresAPI = MutableLiveData<OpenStreetmapResponse>()
-    val lugaresAPI: LiveData<OpenStreetmapResponse> = _lugaresAPI
+    val _lugarAPI = MutableLiveData<OpenStreetmapResponse>()
+    val lugarAPI: LiveData<OpenStreetmapResponse> = _lugarAPI
 
     private val _pantalla = mutableIntStateOf(0)
     val pantalla: State<Int> = _pantalla
@@ -67,6 +70,20 @@ class NewPlacesPrincipalViewModel(
     private val _showConfirmationDialog = mutableStateOf(false)
     val showConfirmationDialog: State<Boolean> = _showConfirmationDialog
 
+    var searchText by mutableStateOf("")
+
+    private val _lugaresAPI = MutableLiveData<List<OpenStreetmapResponse>>()
+    val lugaresAPI: LiveData<List<OpenStreetmapResponse>> = _lugaresAPI
+
+    private val _lugaresActualizados = MutableLiveData<Boolean>()
+    val lugaresActualizados: LiveData<Boolean> = _lugaresActualizados
+
+    private val _buscandoContenidos = MutableLiveData<Boolean>()
+    val buscandoContenidos: LiveData<Boolean> = _buscandoContenidos
+
+    // Utilizada para guardar temporalmente el lugar seleccionado
+    lateinit var lugarAuxiliar: Lugares
+
     init {
         _pantalla.value = 0
         resetScreen2()
@@ -76,7 +93,7 @@ class NewPlacesPrincipalViewModel(
 
     fun resetScreen2(){
         _continuar2Enabled.value = false
-        _lugaresAPI.value = null
+        _lugarAPI.value = null
     }
 
     fun resetScreen3(){
@@ -89,7 +106,7 @@ class NewPlacesPrincipalViewModel(
 
     fun handleImageSelection(uri: Uri?, context: Context) {
         // Limpia la ubicación si existia desde otra imagen
-        _lugaresAPI.value = null
+        _lugarAPI.value = null
 
         // Procesa la imagen seleccionada, por ejemplo, la muestra en la vista.
         imagePickerCallback?.invoke(uri)
@@ -185,7 +202,7 @@ class NewPlacesPrincipalViewModel(
                     lat, //_latitud.value.toString(),
                     lon) //_longitud.value.toString())
 
-                _lugaresAPI.value = response
+                _lugarAPI.value = response
 
             } catch (e: Exception) {
                 e.message?.let { Log.d("OpenStreetmapService API_CALL 2", it) }
@@ -243,5 +260,34 @@ class NewPlacesPrincipalViewModel(
             )
         }
     }
+
+    fun updateSearchText(input: String) {
+        searchText = input
+    }
+
+    fun buscarLugares() {
+        // Lanzo la Coroutine en el thread de MAIN
+        _buscandoContenidos.value = true
+        viewModelScope.launch() {
+            try {
+                val response = mapService.getLugares(searchText)
+
+                _lugaresActualizados.value = true
+                _lugaresAPI.value = response
+
+                _buscandoContenidos.value = false
+
+                Log.d(response.toString(), "OpenStreetmapService API_CALL 2")
+            } catch (e: Exception) {
+                e.message?.let { Log.d("OpenStreetmapService API_CALL 2", it) }
+            }
+        }
+    }
+
+    fun limpiarLugaresBuscados() {
+        _lugaresActualizados.value = false
+        _buscandoContenidos.value = false
+    }
+
 }
 

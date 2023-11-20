@@ -167,13 +167,14 @@ class MainActivity : ComponentActivity() {
                                 navController = navController
                                 )
                         }
-                        //TODO DEJO ASI POR AHORA
+
                         composable("new_places_principal") {
                             NewPlacesPrincipalScreen(
                                 NewPlacesPrincipalViewModel(
                                     application,
                                     activityResultRegistry,
-                                    LocalContext.current),
+                                    LocalContext.current,
+                                    OpenStreetmapService.instance),
                                 navController = navController
                             )
                         }
