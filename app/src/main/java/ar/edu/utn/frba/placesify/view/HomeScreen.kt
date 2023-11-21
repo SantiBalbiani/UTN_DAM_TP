@@ -175,6 +175,15 @@ fun ItemLista(
                         .padding(horizontal = 5.dp)
                 )
             }
+            else{
+                AsyncImage(
+                    model = R.drawable.baseline_auto_stories_24,
+                    contentDescription = "",
+                    modifier = Modifier
+                        .padding(horizontal = 5.dp)
+                )
+            }
+
 
             Text(lista.name, modifier = Modifier.width(width = 200.dp))
             AssistChip(
