@@ -5,6 +5,8 @@ import android.content.Intent
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,6 +19,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Share
@@ -27,6 +30,7 @@ import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
@@ -62,6 +66,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
 
 @Composable
 fun DetailListScreen(
@@ -275,39 +280,49 @@ fun ItemLugares(
 
     val id_lugar: String = lugar.id.toString()
 
-    Card(
-        onClick = { navController?.navigate("detail_places/${id_lugar}") },
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface,
-        ),
-        modifier = Modifier.padding(vertical = 8.dp)
+    Column(
+        modifier = Modifier
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .clickable { navController?.navigate("detail_places/${id_lugar}") }
     ) {
+
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Image(
+                imageVector = Icons.Outlined.Place,
+                contentDescription = "Lugar",
+                modifier = Modifier.padding(horizontal = 5.dp)
+            )
+            Spacer(modifier = Modifier.padding(8.dp))
+            Text(
+                text = lugar.name,
+                modifier = Modifier.weight(1f)
+            )
+        }
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(height = 50.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+                .padding(top = 10.dp)
         ) {
-            Image(
-                imageVector = Icons.Outlined.Place,
-                contentDescription = "",
-                modifier = Modifier.padding(horizontal = 5.dp)
-            )
-            Text(lugar.name, modifier = Modifier.width(width = 200.dp))
-            Text(
-                "Lat. ${lugar.latitud.toString()}}",
+            Column(
                 modifier = Modifier
-                    //.width(width = 70.dp)
-                    .padding(horizontal = 5.dp)
-            )
-            Text(
-                "Lon. ${lugar.longitud.toString()}",
-                modifier = Modifier
-                    //.width(width = 70.dp)
-                    .padding(horizontal = 5.dp)
-            )
+                    .weight(1f)
+                    .padding(start = 50.dp)
+            ) {
+                Text(
+                    text = "Latitud: ${lugar.latitud}",
+                    color = Color.Gray,
+                    fontSize = 10.sp
+                )
+                Text(
+                    text = "Longitud: ${lugar.longitud}",
+                    color = Color.Gray,
+                    fontSize = 10.sp
+                )
+            }
+
         }
+        Spacer(modifier = Modifier.padding(5.dp))
         Divider()
     }
 }
