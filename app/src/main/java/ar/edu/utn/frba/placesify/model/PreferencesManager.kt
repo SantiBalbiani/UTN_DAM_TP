@@ -12,7 +12,7 @@ class PreferencesManager(context: Context) {
     private val sharedPreferences: SharedPreferences =
         context.getSharedPreferences("PreferenciasPlacesify", Context.MODE_PRIVATE)
 
-    fun saveData(key: String, value: Lugares, empty: Boolean = false) {
+    fun saveData(key: String, value: Lugares, empty: Boolean =   false) {
 
         val editor = sharedPreferences.edit()
 

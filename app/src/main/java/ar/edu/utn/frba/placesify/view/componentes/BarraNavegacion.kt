@@ -46,6 +46,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import ar.edu.utn.frba.placesify.R
+import ar.edu.utn.frba.placesify.viewmodel.NewListViewModel
 import ar.edu.utn.frba.placesify.viewmodel.NewPlacesPrincipalViewModel
 import coil.compose.AsyncImage
 import com.google.firebase.auth.ktx.auth
@@ -57,7 +58,8 @@ fun BarraNavegacionSuperior(
     title: String,
     navController: NavController?,
     isHome: Boolean = false,
-    viewModel: NewPlacesPrincipalViewModel? = null
+    viewModel1: NewListViewModel? = null,
+    viewModel2: NewPlacesPrincipalViewModel? = null
 )
 {
 
@@ -108,7 +110,7 @@ fun BarraNavegacionSuperior(
         },
         navigationIcon = {
             if (!isHome) {
-                IconButton(onClick = { onNavigationButtonClicked(navController, viewModel) }) {
+                IconButton(onClick = { onNavigationButtonClicked(navController, viewModel1, viewModel2) }) {
                     Icon(
                         imageVector = Icons.Filled.ArrowBack,
                         contentDescription = "Localized description"
@@ -248,14 +250,20 @@ fun BarraNavegacionSuperior(
 
 private fun onNavigationButtonClicked(
     navController: NavController?,
-    viewModel: NewPlacesPrincipalViewModel?
+    viewModel1: NewListViewModel?,
+    viewModel2: NewPlacesPrincipalViewModel?
 ) {
     if (navController?.currentDestination?.id != null) {
         val currentRoute = navController?.currentBackStackEntry?.destination?.route
         Log.d("NAV", "${currentRoute.toString()}")
         if (currentRoute == "new_places_principal") {
-            viewModel?.setShowConfirmationDialog(true)
-        } else {
+            viewModel2?.setShowConfirmationDialog(true)
+        }
+        else if (currentRoute == "new_list") {
+            viewModel1?.setShowConfirmationDialog(true)
+        }
+
+        else {
             navController.navigateUp()
         }
     }

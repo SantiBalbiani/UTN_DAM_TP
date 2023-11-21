@@ -1,6 +1,7 @@
 package ar.edu.utn.frba.placesify
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -12,6 +13,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.internal.composableLambda
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -25,6 +27,7 @@ import androidx.navigation.navArgument
 import ar.edu.utn.frba.placesify.api.OpenStreetmapService
 import ar.edu.utn.frba.placesify.api.BackendService
 import ar.edu.utn.frba.placesify.api.GoogleAuthUiClient
+import ar.edu.utn.frba.placesify.model.PreferencesManager
 import ar.edu.utn.frba.placesify.view.DetailListScreen
 import ar.edu.utn.frba.placesify.view.DetailPlacesScreen
 import ar.edu.utn.frba.placesify.view.DiscoverPlacesScreen
@@ -55,6 +58,8 @@ import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
 
+    private lateinit var preferencesManager: PreferencesManager
+
     private val googleAuthUiClient by lazy {
         GoogleAuthUiClient(
             context = applicationContext,
@@ -64,6 +69,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        preferencesManager = PreferencesManager(this)
         setContent {
             PlacesifyTheme {
                 // A surface container using the 'background' color from the theme
@@ -224,6 +230,23 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d("ON STOP", "")
+        preferencesManager.saveList(
+            "nuevaLista", null
+        )
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("ON DESTROY", "")
+        preferencesManager.saveList(
+            "nuevaLista", null
+        )
+
     }
 }
 

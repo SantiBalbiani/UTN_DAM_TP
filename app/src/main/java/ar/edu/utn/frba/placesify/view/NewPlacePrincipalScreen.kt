@@ -189,7 +189,7 @@ fun NewPlacesPrincipal(
             BarraNavegacionSuperior(
                 "Agregar Lugar nuevo",
                 navController,
-                viewModel = viewModel
+                viewModel2 = viewModel
             )
         },
     ) { innerPadding ->
@@ -584,7 +584,7 @@ fun NewPlace2(
             BarraNavegacionSuperior(
                 "Buscar por el mapa",
                 navController,
-                viewModel = viewModel
+                viewModel2 = viewModel
             )
         },
     ) { innerPadding ->
@@ -786,7 +786,7 @@ fun NewPlace3(
             BarraNavegacionSuperior(
                 "Buscar por imagen",
                 navController,
-                viewModel = viewModel
+                viewModel2 = viewModel
             )
         },
     ) { innerPadding ->

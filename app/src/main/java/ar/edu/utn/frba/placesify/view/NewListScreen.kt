@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.util.Log
 import android.view.animation.OvershootInterpolator
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -37,6 +38,7 @@ import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
@@ -148,12 +150,6 @@ fun NewList(
         mutableStateOf("")
     }
 
-    //TODO obtener el dia de creacion
-    val fecha_creacion = "10/10/2023"
-
-    //TODO selector multiple de categoria
-    val cant_categorias = categorias?.size
-
     var esta_abierto by remember {
         mutableStateOf(false)
     }
@@ -162,9 +158,30 @@ fun NewList(
     }
 
     val categoriasSeleccionadas by viewModel.categoriasSeleccionadas.observeAsState()
+    val showConfirmationDialog = viewModel.showConfirmationDialog.value
+
+    if (showConfirmationDialog) {
+        Confirmacion(
+            onDismissRequest = {
+                viewModel.setShowConfirmationDialog(false)
+            },
+            onConfirmation = {
+                viewModel.setShowConfirmationDialog(false)
+                viewModel.limpiarNuevaLista()
+                navController?.navigateUp()
+            },
+            dialogTitle = "Confirmación",
+            dialogText = "¿Desea cancelar la creación de la lista? Se perderán los datos no guardados",
+            icon = Icons.Default.Info
+        )
+    }
+
+    BackHandler(onBack = {
+        viewModel.setShowConfirmationDialog(true)
+    })
 
     Scaffold(
-        topBar = { BarraNavegacionSuperior("Crear Nueva Lista", navController) },
+        topBar = { BarraNavegacionSuperior("Crear Nueva Lista", navController, viewModel1 = viewModel) },
     ) { innerPadding ->
 
         if (categoriasSeleccionadas == null || !categoriasActualizada) {

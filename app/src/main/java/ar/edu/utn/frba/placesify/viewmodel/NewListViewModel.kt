@@ -2,6 +2,8 @@ package ar.edu.utn.frba.placesify.viewmodel
 
 import android.content.Context
 import android.util.Log
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -39,10 +41,14 @@ class NewListViewModel(
     val nuevaLista: LiveData<Listas> = _nuevaLista
 
     val channel = Channel<Unit>()
+
+    private val _showConfirmationDialog = mutableStateOf(false)
+    val showConfirmationDialog: State<Boolean> = _showConfirmationDialog
+
     init {
 
         refresh()
-
+        Log.d("INIT new list", "API_CALL 2")
         viewModelScope.launch {
             launch {
                 getNuevaLista()
@@ -79,7 +85,6 @@ class NewListViewModel(
             if (response.items.isNotEmpty()) {
                 _categorias.value = response.items
                 _categoriasActualizada.value = true
-                //Log.d("INIT", "GET CAT: ${_categorias.value.toString()}")
             }
         } catch (e: Exception) {
             Log.d("CATCH API ${e.toString()}", "API_CALL 2")
@@ -125,6 +130,20 @@ class NewListViewModel(
             categoriasActuales?.remove(categoria)
         }
         _categoriasSeleccionadas.value = categoriasActuales
+    }
+
+    fun setShowConfirmationDialog(show: Boolean) {
+        _showConfirmationDialog.value = show
+    }
+
+    fun limpiarNuevaLista(){
+        // Limpio la lista temporal del shared preferences
+        val preferencesManager = PreferencesManager(context)
+
+        _nuevaLista.value = null
+        preferencesManager.saveList(
+            "nuevaLista", null
+        )
     }
 
 }
