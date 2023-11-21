@@ -92,7 +92,8 @@ import coil.compose.AsyncImage
 fun NewPlacesPrincipalScreen(
 
     viewModel: NewPlacesPrincipalViewModel,
-    navController: NavController? = null) {
+    navController: NavController? = null
+) {
     Box(
         Modifier
             .fillMaxSize()
@@ -107,12 +108,14 @@ fun NewPlacesPrincipalScreen(
         )
     }
 }
+
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun NewPlaces(
     modifier: Modifier,
     viewModel: NewPlacesPrincipalViewModel,
-    navController: NavController?) {
+    navController: NavController?
+) {
 
 
     //TODO VARIABLES
@@ -120,18 +123,18 @@ fun NewPlaces(
 
     ////////////////////////////////////////////////////////////////////////////
 
-    if(pantalla == 0){
+    if (pantalla == 0) {
         // Pantalla principal para seleccionar como cargar el lugar
-        NewPlacesPrincipal(modifier, navController,viewModel)
-    }else if(pantalla == 1){
+        NewPlacesPrincipal(modifier, navController, viewModel)
+    } else if (pantalla == 1) {
         // Cargar buscando la dirección por texto
-        NewPlace1(modifier, navController,viewModel)
-    }else if(pantalla == 2){
+        NewPlace1(modifier, navController, viewModel)
+    } else if (pantalla == 2) {
         // Seleccionar lugar en el mapa
-        NewPlace2(modifier, navController,viewModel)
-    }else if(pantalla == 3){
+        NewPlace2(modifier, navController, viewModel)
+    } else if (pantalla == 3) {
         // Seleccionar lugar a partir de una foto
-        NewPlace3(modifier, navController,viewModel)
+        NewPlace3(modifier, navController, viewModel)
     }
 
 }
@@ -141,7 +144,7 @@ fun NewPlacesPrincipal(
     modifier: Modifier,
     navController: NavController?,
     viewModel: NewPlacesPrincipalViewModel
-){
+) {
     val context = LocalContext.current
     val showConfirmationDialog = viewModel.showConfirmationDialog.value
     val showSaveDialog = viewModel.showSaveDialog.value
@@ -151,7 +154,7 @@ fun NewPlacesPrincipal(
         navController?.navigateUp()
     }
 
-    if(showSaveDialog){
+    if (showSaveDialog) {
         Confirmacion(
             onDismissRequest = {
                 viewModel.setShowSaveDialog(false)
@@ -182,7 +185,13 @@ fun NewPlacesPrincipal(
     })
 
     Scaffold(
-        topBar = { BarraNavegacionSuperior("Agregar Lugar nuevo", navController, viewModel = viewModel) },
+        topBar = {
+            BarraNavegacionSuperior(
+                "Agregar Lugar nuevo",
+                navController,
+                viewModel = viewModel
+            )
+        },
     ) { innerPadding ->
 
         LazyColumn(
@@ -293,7 +302,7 @@ fun NewPlace1(
     modifier: Modifier,
     navController: NavController?,
     viewModel: NewPlacesPrincipalViewModel
-){
+) {
 
     val context = LocalContext.current
     val lugaresAPI: List<OpenStreetmapResponse>? by viewModel.lugaresAPI.observeAsState(initial = null)
@@ -310,7 +319,7 @@ fun NewPlace1(
 
     val showConfirmationDialog = viewModel.showConfirmationDialog.value
 
-    if (showConfirmationDialog){
+    if (showConfirmationDialog) {
         viewModel.setShowConfirmationDialog(false)
         viewModel.limpiarLugaresBuscados()
         viewModel.searchText = ""
@@ -330,9 +339,11 @@ fun NewPlace1(
         ) {
             item {
 
-                Row(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 0.dp)) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 0.dp)
+                ) {
 
                     Image(
                         painter = painterResource(id = R.drawable.ico_placesify2),
@@ -345,15 +356,17 @@ fun NewPlace1(
                         text = "Ingrese el texto del lugar que desea buscar, por ejemplo 'Obelisco'",
                         fontSize = dimensionResource(id = R.dimen.font_size_normal).value.sp,
                         fontWeight = FontWeight.Bold,
-                        )
+                    )
                 }
 
                 Spacer(modifier = Modifier.padding(10.dp))
 
 
-                Row(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 0.dp)) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 0.dp)
+                ) {
                     androidx.compose.material3.OutlinedTextField(
                         value = viewModel.searchText,
                         onValueChange = { searchText -> viewModel.updateSearchText(searchText) },
@@ -396,8 +409,7 @@ fun NewPlace1(
                     lugaresAPI?.forEach { elementoOpenStreetMap ->
                         Column(
                             modifier = Modifier
-                                .padding(vertical = 5.dp, horizontal = 5.dp)
-                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp)
                                 .clickable { }
 
                         ) {
@@ -415,43 +427,66 @@ fun NewPlace1(
                                 )
                             }
 
-                            Button(
-                                onClick = {
-                                    confirmacionAgregarLugar.value = true
-                                    viewModel.lugarAuxiliar = elementoOpenStreetMap.lon?.let {
-                                        elementoOpenStreetMap.displayName?.let { it1 ->
-                                            elementoOpenStreetMap.category?.let { it2 ->
-                                                elementoOpenStreetMap.lat?.let { it3 ->
-                                                    Lugares(
-                                                        id = elementoOpenStreetMap.placeId,
-                                                        name = it1,
-                                                        description = it2,
-                                                        latitud = it3.toDouble(),
-                                                        longitud = it.toDouble()
-                                                    )
-                                                }
-                                            }
-                                        }
-                                    }!!
-                                },
+                            Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(start = 250.dp, top = 8.dp, bottom = 8.dp)
-                                    .height(30.dp)
-                                    .background(
-                                        color = Color.Transparent,
-                                        shape = RoundedCornerShape(5.dp)
-                                    )
+                                    .padding(top = 10.dp)
                             ) {
-                                Text(
-                                    text = "Agregar",
-                                    color = Color.White,
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 10.sp
-                                )
+                                Column(
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .padding(start = 58.dp)
+                                ) {
+                                    Text(
+                                        text = "Latitud: ${elementoOpenStreetMap.lat}",
+                                        color = Color.Gray,
+                                        fontSize = 10.sp
+                                    )
+                                    Text(
+                                        text = "Longitud: ${elementoOpenStreetMap.lon}",
+                                        color = Color.Gray,
+                                        fontSize = 10.sp
+                                    )
+                                }
+
+                                Button(
+                                    onClick = {
+                                        confirmacionAgregarLugar.value = true
+                                        viewModel.lugarAuxiliar = elementoOpenStreetMap.lon?.let {
+                                            elementoOpenStreetMap.displayName?.let { it1 ->
+                                                elementoOpenStreetMap.category?.let { it2 ->
+                                                    elementoOpenStreetMap.lat?.let { it3 ->
+                                                        Lugares(
+                                                            id = elementoOpenStreetMap.placeId,
+                                                            name = it1,
+                                                            description = it2,
+                                                            latitud = it3.toDouble(),
+                                                            longitud = it.toDouble()
+                                                        )
+                                                    }
+                                                }
+                                            }
+                                        }!!
+                                    },
+                                    modifier = Modifier
+                                        .padding(end = 16.dp)
+                                        .height(30.dp)
+                                        .background(
+                                            color = Color.Transparent,
+                                            shape = RoundedCornerShape(5.dp)
+                                        )
+                                ) {
+                                    Text(
+                                        text = "Agregar",
+                                        color = Color.White,
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 10.sp
+                                    )
+                                }
                             }
+                            Spacer(modifier = Modifier.padding(5.dp))
+                            Divider()
                         }
-                        Divider()
                     }
                 }
 
@@ -514,18 +549,18 @@ fun NewPlace2(
     modifier: Modifier,
     navController: NavController?,
     viewModel: NewPlacesPrincipalViewModel
-){
+) {
 
     val context = LocalContext.current
-    val lat: Double by viewModel.gpsLat.observeAsState( initial = 0.0 )
-    val lon: Double by viewModel.gpsLon.observeAsState( initial = 0.0 )
-    val lugaresAPI: OpenStreetmapResponse? by viewModel.lugarAPI.observeAsState(initial = null  )
+    val lat: Double by viewModel.gpsLat.observeAsState(initial = 0.0)
+    val lon: Double by viewModel.gpsLon.observeAsState(initial = 0.0)
+    val lugaresAPI: OpenStreetmapResponse? by viewModel.lugarAPI.observeAsState(initial = null)
 
-    val continuar2Enabled: Boolean by viewModel.continar2Enabled.observeAsState( initial = false )
+    val continuar2Enabled: Boolean by viewModel.continar2Enabled.observeAsState(initial = false)
 
     val showConfirmationDialog = viewModel.showConfirmationDialog.value
 
-    if (showConfirmationDialog){
+    if (showConfirmationDialog) {
         Confirmacion(
             onDismissRequest = {
                 viewModel.setShowConfirmationDialog(false)
@@ -545,7 +580,13 @@ fun NewPlace2(
     })
 
     Scaffold(
-        topBar = { BarraNavegacionSuperior("Buscar por el mapa", navController, viewModel = viewModel) },
+        topBar = {
+            BarraNavegacionSuperior(
+                "Buscar por el mapa",
+                navController,
+                viewModel = viewModel
+            )
+        },
     ) { innerPadding ->
 
         LazyColumn(
@@ -554,9 +595,11 @@ fun NewPlace2(
         ) {
             item {
 
-                Row(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 0.dp)) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 0.dp)
+                ) {
 
                     Image(
                         painter = painterResource(id = R.drawable.ico_placesify2),
@@ -583,7 +626,7 @@ fun NewPlace2(
                     color = MaterialTheme.colors.background
                 ) {
 
-                    if (lat != 0.0 && lon != 0.0){
+                    if (lat != 0.0 && lon != 0.0) {
 
                         val markerState = rememberMarkerState(
                             geoPoint = GeoPoint(lat, lon)
@@ -615,7 +658,10 @@ fun NewPlace2(
                             onMapClick = {
                                 markerState.geoPoint = it
                                 // Carga la variable lugaresAPI con las coordenadas obtenidas
-                                viewModel.getLugarEnOpenStreetMapApi(it.latitude.toString(),it.longitude.toString())
+                                viewModel.getLugarEnOpenStreetMapApi(
+                                    it.latitude.toString(),
+                                    it.longitude.toString()
+                                )
                             }
                         ) {
                             Marker(
@@ -626,29 +672,34 @@ fun NewPlace2(
 
                 }
 
-                if(lugaresAPI != null ){
+                if (lugaresAPI != null) {
                     viewModel._continuar2Enabled.value = true
                     Spacer(modifier = Modifier.padding(8.dp))
                     Row {
-                        Card( colors = CardDefaults.cardColors(
-                            containerColor = Color.LightGray, )
+                        Card(
+                            colors = CardDefaults.cardColors(
+                                containerColor = Color.LightGray,
+                            )
                         ) {
                             Text(
                                 text = lugaresAPI?.displayName.toString(),
                                 textAlign = TextAlign.Center,
-                                modifier = Modifier.padding(vertical = 10.dp, horizontal = 10.dp))
+                                modifier = Modifier.padding(
+                                    vertical = 10.dp,
+                                    horizontal = 10.dp
+                                )
+                            )
                             Divider()
                         }
                     }
                     Spacer(modifier = Modifier.padding(8.dp))
-                }
-                else{
+                } else {
                     Spacer(modifier = Modifier.padding(24.dp))
                 }
 
                 Button(
                     onClick = {
-                        val lugarAuxiliar =  lugaresAPI?.lon?.let {
+                        val lugarAuxiliar = lugaresAPI?.lon?.let {
                             lugaresAPI?.displayName?.let { it1 ->
                                 lugaresAPI?.category?.let { it2 ->
                                     lugaresAPI?.lat?.let { it3 ->
@@ -698,18 +749,18 @@ fun NewPlace3(
     modifier: Modifier,
     navController: NavController?,
     viewModel: NewPlacesPrincipalViewModel
-){
+) {
     val context = LocalContext.current
     val uriState = remember { mutableStateOf<Uri?>(null) }
 
-    val lugarAPI: OpenStreetmapResponse? by viewModel.lugarAPI.observeAsState(initial = null  )
-    val continuar3Enabled: Boolean by viewModel.continar3Enabled.observeAsState( initial = false )
+    val lugarAPI: OpenStreetmapResponse? by viewModel.lugarAPI.observeAsState(initial = null)
+    val continuar3Enabled: Boolean by viewModel.continar3Enabled.observeAsState(initial = false)
 
     viewModel.setImagePickerCallback { uri -> uriState.value = uri }
 
     val showConfirmationDialog = viewModel.showConfirmationDialog.value
 
-    if (showConfirmationDialog){
+    if (showConfirmationDialog) {
         Confirmacion(
             onDismissRequest = {
                 // Acá se cancela la acción de retroceso
@@ -731,7 +782,13 @@ fun NewPlace3(
     })
 
     Scaffold(
-        topBar = { BarraNavegacionSuperior("Buscar por imagen", navController, viewModel = viewModel) },
+        topBar = {
+            BarraNavegacionSuperior(
+                "Buscar por imagen",
+                navController,
+                viewModel = viewModel
+            )
+        },
     ) { innerPadding ->
 
 
@@ -746,16 +803,17 @@ fun NewPlace3(
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    Text(text = "A partir de la foto, nuestra aplicacion detectará la ubicacion del lugar que desee agregar si se encuentra disponible",
+                    Text(
+                        text = "A partir de la foto, nuestra aplicacion detectará la ubicacion del lugar que desee agregar si se encuentra disponible",
                         textAlign = TextAlign.Center
-                        )
+                    )
                 }
 
                 Spacer(modifier = Modifier.padding(10.dp))
 
                 Row {
 
-                    if ( uriState.value != null ) {
+                    if (uriState.value != null) {
 
                         uriState.value?.let { uri ->
                             Image(
@@ -768,8 +826,7 @@ fun NewPlace3(
                             )
                         }
 
-                    }
-                    else{
+                    } else {
                         Image(
                             painter = painterResource(id = R.drawable.camara),
                             contentDescription = "Camara",
@@ -779,15 +836,16 @@ fun NewPlace3(
                 }
 
                 Row {
-                    if (uriState.value != null && lugarAPI?.displayName != null ){
+                    if (uriState.value != null && lugarAPI?.displayName != null) {
                         viewModel._continuar3Enabled.value = true
-                        Text(text = "Lugar detectado",
+                        Text(
+                            text = "Lugar detectado",
                             textAlign = TextAlign.Center
                         )
-                    }
-                    else if (uriState.value != null && lugarAPI?.displayName == null){
+                    } else if (uriState.value != null && lugarAPI?.displayName == null) {
                         viewModel._continuar3Enabled.value = false
-                        Text(text = "No se detectó ningún lugar en la imagen, intente con otra",
+                        Text(
+                            text = "No se detectó ningún lugar en la imagen, intente con otra",
                             textAlign = TextAlign.Center
                         )
                     }
@@ -796,35 +854,40 @@ fun NewPlace3(
                 Row {
                     Button(
                         onClick = { viewModel.requestStoragePermission() },
-                            //viewModel.pickImage(imageLauncher)
+                        //viewModel.pickImage(imageLauncher)
                         modifier = Modifier.padding(16.dp)
                     ) {
                         Text("Seleccionar imagen")
                     }
                 }
 
-                if( viewModel._continuar3Enabled.value == true ) {
+                if (viewModel._continuar3Enabled.value == true) {
                     Spacer(modifier = Modifier.padding(12.dp))
                     Row {
-                        Card( colors = CardDefaults.cardColors(
-                            containerColor = Color.LightGray, )
+                        Card(
+                            colors = CardDefaults.cardColors(
+                                containerColor = Color.LightGray,
+                            )
                         ) {
                             Text(
                                 text = lugarAPI?.displayName.toString(),
                                 textAlign = TextAlign.Center,
-                                modifier = Modifier.padding(vertical = 10.dp, horizontal = 10.dp))
+                                modifier = Modifier.padding(
+                                    vertical = 10.dp,
+                                    horizontal = 10.dp
+                                )
+                            )
                             Divider()
                         }
                     }
                     Spacer(modifier = Modifier.padding(12.dp))
-                }
-                else{
+                } else {
                     Spacer(modifier = Modifier.padding(48.dp))
                 }
 
                 Button(
                     onClick = {
-                        val lugarAuxiliar =  lugarAPI?.lon?.let {
+                        val lugarAuxiliar = lugarAPI?.lon?.let {
                             lugarAPI?.displayName?.let { it1 ->
                                 lugarAPI?.category?.let { it2 ->
                                     lugarAPI?.lat?.let { it3 ->
