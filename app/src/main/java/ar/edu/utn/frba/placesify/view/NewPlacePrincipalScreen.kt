@@ -81,6 +81,7 @@ import org.osmdroid.util.GeoPoint
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.internal.enableLiveLiterals
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.constraintlayout.motion.utils.MonotonicCurveFit
 import ar.edu.utn.frba.placesify.model.Listas
 import ar.edu.utn.frba.placesify.model.Lugares
 import ar.edu.utn.frba.placesify.model.PreferencesManager
@@ -700,6 +701,8 @@ fun NewPlace2(
                                 .copy(zoomButtonVisibility = ZoomButtonVisibility.NEVER)
                         }
 
+                        viewModel._continuar2Enabled.value = true
+
                         OpenStreetMap(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -716,24 +719,67 @@ fun NewPlace2(
                             }
                         ) {
                             Marker(
-                                state = markerState
-                            )
+                                state = markerState,
+                                title= "Direccion actual"
+                            ){
+                                Column(
+                                    modifier = Modifier
+                                        .size(250.dp)
+                                        .background(color = Color.Gray, shape = RoundedCornerShape(10.dp)),
+                                    verticalArrangement = Arrangement.Center,
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ){
+                                    Text(text = it.title,
+                                        modifier = Modifier
+                                            .padding(
+                                            vertical = 10.dp,
+                                            horizontal = 10.dp),
+                                        color = Color.Black
+
+                                    )
+
+                                    if (lugaresAPI != null) {
+                                        viewModel._continuar2Enabled.value = true
+                                        Spacer(modifier = Modifier.padding(8.dp))
+                                        Text(
+                                            text = lugaresAPI?.displayName.toString(),
+                                            textAlign = TextAlign.Center,
+                                            modifier = Modifier.padding(
+                                                vertical = 10.dp,
+                                                horizontal = 10.dp),
+                                            color = Color.Black
+                                        )
+                                    } else {
+
+                                        Text(text = "El lugar seleccionado no puede ser identificado",
+                                            modifier = Modifier
+                                                .padding(
+                                                    vertical = 10.dp,
+                                                    horizontal = 10.dp),
+                                            color = Color.Black
+
+                                        )
+                                    }
+                                }
+
+                            }
                         }
                     }
 
                 }
 
+                /*
                 if (lugaresAPI != null) {
                     viewModel._continuar2Enabled.value = true
                     Spacer(modifier = Modifier.padding(8.dp))
                     Row {
                         Card(
                             colors = CardDefaults.cardColors(
-                                containerColor = Color.LightGray,
+                                containerColor = Color.Gray,
                             )
                         ) {
                             Text(
-                                text = lugaresAPI?.displayName.toString(),
+                                text = "La direccion seleccionada es: " + lugaresAPI?.displayName.toString(),
                                 textAlign = TextAlign.Center,
                                 modifier = Modifier.padding(
                                     vertical = 10.dp,
@@ -747,6 +793,11 @@ fun NewPlace2(
                 } else {
                     Spacer(modifier = Modifier.padding(24.dp))
                 }
+                */
+
+
+
+                Spacer(modifier = Modifier.padding(24.dp))
 
                 Button(
                     onClick = {
