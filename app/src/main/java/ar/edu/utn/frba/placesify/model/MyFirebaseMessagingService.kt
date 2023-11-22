@@ -9,26 +9,34 @@ import android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP
 import android.media.RingtoneManager
 import android.os.Build
 import android.util.Log
+import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import ar.edu.utn.frba.placesify.MainActivity
 import ar.edu.utn.frba.placesify.R
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import com.google.firebase.messaging.ktx.messaging
+import kotlinx.coroutines.tasks.await
 import java.lang.Math.random
 import kotlin.random.Random
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
-        Log.d("FIREBASE", "Mensaje recibido: $remoteMessage")
+        Log.d("FIREBASE", "Mensaje recibido: ${remoteMessage.notification?.body}")
+
+        remoteMessage.notification?.let { showNotification(it) }
 
         if (remoteMessage.data.isNotEmpty()) {
             //Todo
+            Log.d("FIREBASE", "Message data payload: ${remoteMessage.data}")
             showNotification(remoteMessage.notification!!)
         }
 
-        if (remoteMessage.notification != null) {
-            showNotification(remoteMessage.notification!!)
+        // Check if message contains a notification payload.
+        remoteMessage.notification?.let {
+            Log.d("FIREBASE", "Message Notification Body: ${it.body}")
         }
 
         super.onMessageReceived(remoteMessage)
