@@ -21,7 +21,7 @@ class StorageHandler (
 
     private val requestPermissionLauncher =
         activityResultRegistry.register(
-            "requestLocationPermission",
+            "requestStoragePermission",
             ActivityResultContracts.RequestPermission()
         ) { isGranted ->
             if (isGranted) {
@@ -34,13 +34,13 @@ class StorageHandler (
 
 
     fun requestStoragePermission() {
-
+        /*
         Toast.makeText(
             context,
             "Accediendo al almacenamiento",
             Toast.LENGTH_LONG
         ).show()
-
+        */
 
         // Verificar si el permiso ya está otorgado
         if (ContextCompat.checkSelfPermission(
