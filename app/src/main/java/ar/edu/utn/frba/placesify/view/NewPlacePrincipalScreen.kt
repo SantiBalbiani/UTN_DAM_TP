@@ -701,8 +701,6 @@ fun NewPlace2(
                                 .copy(zoomButtonVisibility = ZoomButtonVisibility.NEVER)
                         }
 
-                        viewModel._continuar2Enabled.value = true
-
                         OpenStreetMap(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -761,7 +759,6 @@ fun NewPlace2(
                                         )
                                     }
                                 }
-
                             }
                         }
                     }

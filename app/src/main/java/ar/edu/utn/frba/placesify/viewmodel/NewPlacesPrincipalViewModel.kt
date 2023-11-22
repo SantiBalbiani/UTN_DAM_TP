@@ -212,6 +212,7 @@ class NewPlacesPrincipalViewModel(
                     lon) //_longitud.value.toString())
 
                 _lugarAPI.value = response
+                _continuar2Enabled.value = true
 
             } catch (e: Exception) {
                 e.message?.let { Log.d("OpenStreetmapService API_CALL 2", it) }
