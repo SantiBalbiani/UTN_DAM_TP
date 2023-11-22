@@ -86,6 +86,7 @@ dependencies {
 
     // Push notification
     implementation("com.google.firebase:firebase-messaging-ktx")
+    implementation("com.google.firebase:firebase-messaging-directboot")
 
     // Also add the dependency for the Google Play services library and specify its version
     implementation("com.google.android.gms:play-services-auth:20.7.0")
