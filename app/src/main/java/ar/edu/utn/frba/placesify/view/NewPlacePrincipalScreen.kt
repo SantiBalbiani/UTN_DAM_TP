@@ -86,6 +86,7 @@ import ar.edu.utn.frba.placesify.model.Lugares
 import ar.edu.utn.frba.placesify.model.PreferencesManager
 import ar.edu.utn.frba.placesify.view.componentes.ShowLoading
 import coil.compose.AsyncImage
+import java.sql.Types.NULL
 
 
 @Composable
@@ -136,6 +137,10 @@ fun NewPlaces(
         // Seleccionar lugar a partir de una foto
         NewPlace3(modifier, navController, viewModel)
     }
+    else if (pantalla == 4) {
+        // Pantalla final
+        NewPlacesFinal(modifier, navController, viewModel)
+    }
 
 }
 
@@ -170,7 +175,8 @@ fun NewPlacesPrincipal(
                     Toast.LENGTH_LONG
                 ).show()
 
-                navController?.navigate("home")
+                viewModel.resetScreen3()
+                viewModel.setPantalla(4)
 
 
             },
@@ -295,6 +301,51 @@ fun NewPlacesPrincipal(
         }
     }
 }
+
+
+
+
+@Composable
+fun NewPlacesFinal(
+    modifier: Modifier,
+    navController: NavController?,
+    viewModel: NewPlacesPrincipalViewModel
+) {
+    val context = LocalContext.current
+    val showSaveDialog = true
+
+    if (showSaveDialog) {
+        listaAValidar(onConfirmation = {
+            navController?.navigate("home")
+        },
+            icon =Icons.Default.Info)
+    }
+
+    Scaffold(
+        topBar = {
+            BarraNavegacionSuperior(
+                "Agregar Lugar nuevo",
+                navController,
+                viewModel2 = viewModel
+            )
+        },
+    ) { innerPadding ->
+
+        LazyColumn(
+            modifier = modifier.padding(innerPadding),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {}
+    }
+}
+
+
+
+
+
+
+
+
+
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -952,6 +1003,7 @@ fun Confirmacion(
             TextButton(
                 onClick = {
                     onConfirmation()
+
                 }
             ) {
                 Text("Confirmar")
@@ -967,4 +1019,39 @@ fun Confirmacion(
             }
         }
     )
+}
+
+@Composable
+fun listaAValidar(
+    onConfirmation: () -> Unit,
+    icon: ImageVector,
+) {
+
+
+    AlertDialog(
+        icon = {
+            Icon(icon, contentDescription = "")
+        },
+        title = {
+            Text(text = "Lista confirmada")
+        },
+        text = {
+            Text(text = "La lista ha sido creada, ahora debe ser revisada por los probadores de la aplicacion para que se pueda encontrar disponible entre las listas validadas")
+        },
+        onDismissRequest = {
+            NULL
+        },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    onConfirmation()
+                }
+            ) {
+                Text("Volver al Menu Principal")
+            }
+        },
+        dismissButton = {
+        }
+    )
+
 }
