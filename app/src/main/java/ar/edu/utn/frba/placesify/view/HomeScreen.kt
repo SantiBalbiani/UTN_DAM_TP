@@ -1,6 +1,12 @@
 package ar.edu.utn.frba.placesify.view
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
+import android.net.NetworkRequest
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -33,10 +39,19 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -44,9 +59,86 @@ import androidx.navigation.NavController
 import ar.edu.utn.frba.placesify.R
 import ar.edu.utn.frba.placesify.model.Categorias
 import ar.edu.utn.frba.placesify.model.Listas
+import ar.edu.utn.frba.placesify.view.ConnectionState.Available.currentConnectivityState
 import ar.edu.utn.frba.placesify.view.componentes.ShowLoading
 import ar.edu.utn.frba.placesify.viewmodel.HomeViewModel
 import coil.compose.AsyncImage
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.withContext
+
+private fun getCurrentConnectivityState(
+    connectivityManager: ConnectivityManager
+): ConnectionState {
+    val connected = connectivityManager.allNetworks.any { network ->
+        connectivityManager.getNetworkCapabilities(network)
+            ?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+            ?: false
+    }
+
+    return if (connected) ConnectionState.Available else ConnectionState.Unavailable
+}
+
+@ExperimentalCoroutinesApi
+@Composable
+fun connectivityState(): State<ConnectionState> {
+    val context = LocalContext.current
+
+    // Creates a State<ConnectionState> with current connectivity state as initial value
+    return produceState(initialValue = context.currentConnectivityState) {
+        // In a coroutine, can make suspend calls
+        context.observeConnectivityAsFlow().collect { value = it }
+    }
+}
+sealed class ConnectionState {
+    object Available : ConnectionState()
+    object Unavailable : ConnectionState()
+
+    val Context.currentConnectivityState: ConnectionState
+        get() {
+            val connectivityManager =
+                getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            return getCurrentConnectivityState(connectivityManager)
+        }
+
+}
+
+@ExperimentalCoroutinesApi
+fun Context.observeConnectivityAsFlow() = callbackFlow {
+    val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+    val callback = NetworkCallback { connectionState -> trySend(connectionState) }
+
+    val networkRequest = NetworkRequest.Builder()
+        .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+        .build()
+
+    connectivityManager.registerNetworkCallback(networkRequest, callback)
+
+    // Set current state
+    val currentState = getCurrentConnectivityState(connectivityManager)
+    trySend(currentState)
+
+    // Remove callback when not used
+    awaitClose {
+        // Remove listeners
+        connectivityManager.unregisterNetworkCallback(callback)
+    }
+}
+
+fun NetworkCallback(callback: (ConnectionState) -> Unit): ConnectivityManager.NetworkCallback {
+    return object : ConnectivityManager.NetworkCallback() {
+        override fun onAvailable(network: Network) {
+            callback(ConnectionState.Available)
+        }
+
+        override fun onLost(network: Network) {
+            callback(ConnectionState.Unavailable)
+        }
+    }
+}
 
 @Composable
 fun HomeScreen(viewModel: HomeViewModel, navController: NavController? = null) {
@@ -68,6 +160,8 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController? = null) {
 @Composable
 fun Home(modifier: Modifier, viewModel: HomeViewModel, navController: NavController?) {
 
+    val context = LocalContext.current
+
     // Declaro los viewData
     val listasDestacadas: List<Listas>? by viewModel.listasDestacadas.observeAsState(initial = null)
     val listasDestacadasActualizada: Boolean by viewModel.listasDestacadasActualizada.observeAsState(
@@ -82,7 +176,9 @@ fun Home(modifier: Modifier, viewModel: HomeViewModel, navController: NavControl
         initial = false
     )
     val pullRefreshState = rememberPullRefreshState(isRefreshing, { viewModel.refresh() })
+    val connection by connectivityState()
 
+    val isConnected = connection === ConnectionState.Available
     Scaffold(
         topBar = { BarraNavegacionSuperior("Placesify", navController, isHome = true) },
         floatingActionButton = {
@@ -93,28 +189,30 @@ fun Home(modifier: Modifier, viewModel: HomeViewModel, navController: NavControl
     ) { innerPadding ->
 
         // Muestreo Loading
-        if (!listasDestacadasActualizada || !categoriasActualizada) {
-            ShowLoading("Actualizando...")
-        } else {
+        //Chequear Internet con un if. imagen cables rotos
+        if (isConnected){
 
-            LazyColumn(
-                modifier = modifier
-                    .padding(innerPadding)
-                    .pullRefresh(pullRefreshState),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                item {
-                    Button(
-                        onClick = { navController?.navigate("discover_places") },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(40.dp)
-                    ) {
-                        Text(text = "Descubrir Lugares")
-                    }
-                    Spacer(modifier = Modifier.padding(8.dp))
+            if (!listasDestacadasActualizada || !categoriasActualizada) {
+                ShowLoading("Actualizando...")
+            } else {
 
-                    /*Button(
+                LazyColumn(
+                    modifier = modifier
+                        .padding(innerPadding)
+                        .pullRefresh(pullRefreshState),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    item {
+                        Button(
+                            onClick = { navController?.navigate("discover_places") },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(40.dp)
+                        ) {
+                            Text(text = "Descubrir Lugares")
+                        }
+                        Spacer(modifier = Modifier.padding(8.dp))
+                        /*Button(
                         onClick = { navController?.navigate("new_list") },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -125,23 +223,34 @@ fun Home(modifier: Modifier, viewModel: HomeViewModel, navController: NavControl
                     Spacer(modifier = Modifier.padding(8.dp))
                     */
 
-                    Text(
-                        text = "Listas destacadas",
-                        fontSize = dimensionResource(id = R.dimen.font_size_titulo).value.sp,
-                        fontWeight = FontWeight.Bold
-                    )
+                        Text(
+                            text = "Listas destacadas",
+                            fontSize = dimensionResource(id = R.dimen.font_size_titulo).value.sp,
+                            fontWeight = FontWeight.Bold
+                        )
 
-                    // Muestro las Listas Destacadas
-                    MostrarListasDestacadas(navController, listasDestacadas, categorias)
+                        // Muestro las Listas Destacadas
+                        MostrarListasDestacadas(navController, listasDestacadas, categorias)
+                    }
+
                 }
 
+                PullRefreshIndicator(
+                    refreshing = isRefreshing,
+                    state = pullRefreshState,
+                )
             }
+    }else{
 
-            PullRefreshIndicator(
-                refreshing = isRefreshing,
-                state = pullRefreshState,
+            Image(
+                painter = painterResource(id = R.drawable.nointernet),
+                contentDescription = "",
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 50.dp)
             )
-        }
+
+    }
     }
 }
 

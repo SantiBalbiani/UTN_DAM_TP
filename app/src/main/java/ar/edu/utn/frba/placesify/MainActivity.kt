@@ -90,7 +90,7 @@ class MainActivity : ComponentActivity() {
                         }
 
                         composable("login") {
-                            InternetStatusComponent()
+
                             val viewModel = viewModel<LoginViewModel>()
                             val state by viewModel.state.collectAsStateWithLifecycle()
 

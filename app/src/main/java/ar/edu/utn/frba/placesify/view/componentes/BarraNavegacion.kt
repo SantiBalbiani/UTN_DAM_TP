@@ -106,6 +106,7 @@ fun BarraNavegacionSuperior(
                 } else {
                     Text(title, color = Color.Black)
                 }
+
             }
         },
         navigationIcon = {
@@ -185,7 +186,10 @@ fun BarraNavegacionSuperior(
             }
 
 
-        },
+
+        }
+
+
     )
 
     if (logout) {

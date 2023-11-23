@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -33,13 +34,15 @@ fun InternetStatusComponent() {
         isInternetAvailable = isConnected
     }
 
-    Column(
+    Row(
         modifier = Modifier.fillMaxSize().padding(horizontal = 50.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.End
+        //verticalAlignment = Alignment.Center
+
     ) {
         if (!isInternetAvailable) {
             Text("No hay conexión a Internet", fontWeight = FontWeight.Bold)
+        }else{
+            Text("TEST: hay conexión a Internet", fontWeight = FontWeight.Bold)
         }
     }
 }
