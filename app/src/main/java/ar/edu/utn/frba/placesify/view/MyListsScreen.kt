@@ -33,6 +33,7 @@ import com.google.firebase.ktx.Firebase
 
 @Composable
 fun MyListsScreen(viewModel: MyListsViewModel, navController: NavController? = null) {
+
     Box(
         Modifier
             .fillMaxSize()
@@ -51,6 +52,8 @@ fun MyListsScreen(viewModel: MyListsViewModel, navController: NavController? = n
 @Composable
 fun MyLists(modifier: Modifier, viewModel: MyListsViewModel, navController: NavController?) {
 
+    val connection by connectivityState()
+    val isConnected = connection === ConnectionState.Available
     // Declaro los viewData
     val misListas: List<Listas>? by viewModel.misListas.observeAsState(initial = null)
     val misListasActualizada: Boolean by viewModel.misListasActualizada.observeAsState(
@@ -60,6 +63,7 @@ fun MyLists(modifier: Modifier, viewModel: MyListsViewModel, navController: NavC
     val categoriasActualizada: Boolean by viewModel.categoriasActualizada.observeAsState(
         initial = false
     )
+
     Scaffold(
         topBar = { BarraNavegacionSuperior("Mis Listas", navController) },
         floatingActionButton = {
@@ -69,6 +73,7 @@ fun MyLists(modifier: Modifier, viewModel: MyListsViewModel, navController: NavC
         }
     ) { innerPadding ->
         // Muestreo Loading
+        if(isConnected){
         if (!misListasActualizada) {
             ShowLoading("Actualizando...")
         } else {
@@ -88,6 +93,9 @@ fun MyLists(modifier: Modifier, viewModel: MyListsViewModel, navController: NavC
                     MostrarMisListas(navController, categorias, misListas)
                 }
             }
+        }
+    }else{
+            noInternet()
         }
     }
 }

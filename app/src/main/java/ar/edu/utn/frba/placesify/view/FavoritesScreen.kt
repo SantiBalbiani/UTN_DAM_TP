@@ -51,7 +51,8 @@ fun FavoritesScreen(
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun Favorities(modifier: Modifier, viewModel: FavoritesViewModel, navController: NavController?) {
-
+    val connection by connectivityState()
+    val isConnected = connection === ConnectionState.Available
     // Declaro los viewData
     val listasAll: List<Listas>? by viewModel.listasAll.observeAsState(initial = null)
     val listaFavoritasUsuario: List<Usuarios>? by viewModel.listaFavoritasUsuario.observeAsState(
@@ -74,25 +75,29 @@ fun Favorities(modifier: Modifier, viewModel: FavoritesViewModel, navController:
         }
     ) { innerPadding ->
         // Muestreo Loading
-        if (!listasAllActualizada || !listaFavoritasUsuarioActualizada) {
-            ShowLoading("Actualizando...")
-        } else {
-            LazyColumn(
-                modifier = modifier.padding(innerPadding),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                item {
-                    Text(
-                        text = "Listas Favoritas",
-                        fontSize = dimensionResource(id = R.dimen.font_size_titulo).value.sp,
-                        fontWeight = FontWeight.Bold
-                    )
+        if (isConnected){
+            if (!listasAllActualizada || !listaFavoritasUsuarioActualizada) {
+                ShowLoading("Actualizando...")
+            } else {
+                LazyColumn(
+                    modifier = modifier.padding(innerPadding),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    item {
+                        Text(
+                            text = "Listas Favoritas",
+                            fontSize = dimensionResource(id = R.dimen.font_size_titulo).value.sp,
+                            fontWeight = FontWeight.Bold
+                        )
 
-                    // Muestro las Listas Destacadas
-                    MostrarListasFavoritas(navController, listasAll, listaFavoritasUsuario)
+                        // Muestro las Listas Destacadas
+                        MostrarListasFavoritas(navController, listasAll, listaFavoritasUsuario)
+                    }
                 }
             }
-        }
+    }else{
+        noInternet()
+    }
     }
 }
 

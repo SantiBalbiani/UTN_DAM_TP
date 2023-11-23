@@ -69,76 +69,6 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.withContext
 
-private fun getCurrentConnectivityState(
-    connectivityManager: ConnectivityManager
-): ConnectionState {
-    val connected = connectivityManager.allNetworks.any { network ->
-        connectivityManager.getNetworkCapabilities(network)
-            ?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-            ?: false
-    }
-
-    return if (connected) ConnectionState.Available else ConnectionState.Unavailable
-}
-
-@ExperimentalCoroutinesApi
-@Composable
-fun connectivityState(): State<ConnectionState> {
-    val context = LocalContext.current
-
-    // Creates a State<ConnectionState> with current connectivity state as initial value
-    return produceState(initialValue = context.currentConnectivityState) {
-        // In a coroutine, can make suspend calls
-        context.observeConnectivityAsFlow().collect { value = it }
-    }
-}
-sealed class ConnectionState {
-    object Available : ConnectionState()
-    object Unavailable : ConnectionState()
-
-    val Context.currentConnectivityState: ConnectionState
-        get() {
-            val connectivityManager =
-                getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-            return getCurrentConnectivityState(connectivityManager)
-        }
-
-}
-
-@ExperimentalCoroutinesApi
-fun Context.observeConnectivityAsFlow() = callbackFlow {
-    val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-
-    val callback = NetworkCallback { connectionState -> trySend(connectionState) }
-
-    val networkRequest = NetworkRequest.Builder()
-        .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-        .build()
-
-    connectivityManager.registerNetworkCallback(networkRequest, callback)
-
-    // Set current state
-    val currentState = getCurrentConnectivityState(connectivityManager)
-    trySend(currentState)
-
-    // Remove callback when not used
-    awaitClose {
-        // Remove listeners
-        connectivityManager.unregisterNetworkCallback(callback)
-    }
-}
-
-fun NetworkCallback(callback: (ConnectionState) -> Unit): ConnectivityManager.NetworkCallback {
-    return object : ConnectivityManager.NetworkCallback() {
-        override fun onAvailable(network: Network) {
-            callback(ConnectionState.Available)
-        }
-
-        override fun onLost(network: Network) {
-            callback(ConnectionState.Unavailable)
-        }
-    }
-}
 
 @Composable
 fun HomeScreen(viewModel: HomeViewModel, navController: NavController? = null) {
@@ -160,8 +90,6 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController? = null) {
 @Composable
 fun Home(modifier: Modifier, viewModel: HomeViewModel, navController: NavController?) {
 
-    val context = LocalContext.current
-
     // Declaro los viewData
     val listasDestacadas: List<Listas>? by viewModel.listasDestacadas.observeAsState(initial = null)
     val listasDestacadasActualizada: Boolean by viewModel.listasDestacadasActualizada.observeAsState(
@@ -177,7 +105,6 @@ fun Home(modifier: Modifier, viewModel: HomeViewModel, navController: NavControl
     )
     val pullRefreshState = rememberPullRefreshState(isRefreshing, { viewModel.refresh() })
     val connection by connectivityState()
-
     val isConnected = connection === ConnectionState.Available
     Scaffold(
         topBar = { BarraNavegacionSuperior("Placesify", navController, isHome = true) },
@@ -189,7 +116,6 @@ fun Home(modifier: Modifier, viewModel: HomeViewModel, navController: NavControl
     ) { innerPadding ->
 
         // Muestreo Loading
-        //Chequear Internet con un if. imagen cables rotos
         if (isConnected){
 
             if (!listasDestacadasActualizada || !categoriasActualizada) {
@@ -242,13 +168,7 @@ fun Home(modifier: Modifier, viewModel: HomeViewModel, navController: NavControl
             }
     }else{
 
-            Image(
-                painter = painterResource(id = R.drawable.nointernet),
-                contentDescription = "",
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 50.dp)
-            )
+            noInternet()
 
     }
     }
