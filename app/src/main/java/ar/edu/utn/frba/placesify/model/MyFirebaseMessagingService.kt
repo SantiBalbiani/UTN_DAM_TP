@@ -37,9 +37,8 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         // Check if message contains a notification payload.
         remoteMessage.notification?.let {
             Log.d("FIREBASE", "Message Notification Body: ${it.body}")
+            showNotification(remoteMessage.notification!!)
         }
-
-        super.onMessageReceived(remoteMessage)
     }
 
     override fun onNewToken(newToken: String) {
