@@ -137,8 +137,7 @@ fun NewPlaces(
     } else if (pantalla == 3) {
         // Seleccionar lugar a partir de una foto
         NewPlace3(modifier, navController, viewModel)
-    }
-    else if (pantalla == 4) {
+    } else if (pantalla == 4) {
         // Pantalla final
         NewPlacesFinal(modifier, navController, viewModel)
     }
@@ -200,110 +199,177 @@ fun NewPlacesPrincipal(
             )
         },
     ) { innerPadding ->
-
         LazyColumn(
             modifier = modifier.padding(innerPadding),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             item {
-
                 Text(
-                    text = "Agregar Lugar nuevo",
-                    fontSize = dimensionResource(id = R.dimen.font_size_titulo).value.sp,
+                    text = "Agregá tus lugares",
+                    fontSize = dimensionResource(id = R.dimen.font_size_titulo_card).value.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Right
                 )
 
-                Spacer(modifier = Modifier.padding(8.dp))
+                Spacer(modifier = Modifier.padding(20.dp))
 
-                Button(
-                    onClick = {
-                        viewModel.setPantalla(1)
-                    },
+                Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(40.dp)
+                        .height(100.dp)
+                        .clickable {
+                            viewModel.setPantalla(1)
+                        }
                 ) {
-                    Text(text = "Buscar por direccion")
-                }
+                    Column(
+                        modifier = Modifier.padding(horizontal = 16.dp)
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Image(
+                                painter = painterResource(id = R.drawable.baseline_search_60),
+                                contentDescription = "Buscar por dirección",
+                                modifier = Modifier
+                                    .padding(8.dp)
+                                    .size(80.dp)
+                            )
+                            Spacer(modifier = Modifier.padding(8.dp))
+                            Text(
+                                text = "Buscá por dirección",
+                                fontSize = dimensionResource(id = R.dimen.font_size_titulo_card).value.sp,
+                                fontWeight = FontWeight.Bold,
+                                textAlign = TextAlign.Center
+                            )
+                        }
 
-                Spacer(modifier = Modifier.padding(8.dp))
-
-                Button(
-                    onClick = {
-                        viewModel.resetScreen2()
-                        viewModel.setPantalla(2)
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(40.dp)
-                ) {
-                    Text(text = "Seleccionar en el mapa")
-                }
-
-                Spacer(modifier = Modifier.padding(8.dp))
-
-                Button(
-                    onClick = {
-                        viewModel.resetScreen3()
-                        viewModel.setPantalla(3)
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(40.dp)
-                ) {
-                    Text(text = "Seleccionar una imagen")
-                }
-
-
-                Spacer(modifier = Modifier.padding(24.dp))
-
-
-                Row {
-                    Image(
-                        painter = painterResource(id = R.drawable.ico_placesify2),
-                        contentDescription = "Imagen"
-                    )
-                    Column(modifier = Modifier.padding(horizontal = 10.dp)) {
-
-                        Text(
-                            text = "${viewModel._nuevaLista.value?.lstPlaces?.count()} lugar/es agregado/s",
-                            fontSize = dimensionResource(id = R.dimen.font_size_normal).value.sp,
-                            fontWeight = FontWeight.Bold
-                        )
                     }
                 }
 
+                Spacer(modifier = Modifier.padding(8.dp))
 
-                Spacer(modifier = Modifier.padding(16.dp))
-
-                Button(
-                    onClick = {
-                        viewModel.setShowSaveDialog(true)
-                    },
+                Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(40.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Green
-                    )
-
+                        .height(100.dp)
+                        .clickable {
+                            viewModel.resetScreen2()
+                            viewModel.setPantalla(2)
+                        },
                 ) {
-                    Text(text = "Crear Lista")
+                    Column(
+                        modifier = Modifier.padding(horizontal = 16.dp)
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Image(
+                                painter = painterResource(id = R.drawable.baseline_add_location_60),
+                                contentDescription = "Seleccionar en el mapa",
+                                modifier = Modifier
+                                    .padding(8.dp)
+                                    .size(80.dp)
+                            )
+                            Spacer(modifier = Modifier.padding(8.dp))
+                            Text(
+                                text = "Seleccioná en el mapa",
+                                fontSize = dimensionResource(id = R.dimen.font_size_titulo_card).value.sp,
+                                fontWeight = FontWeight.Bold,
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                    }
                 }
 
-                // Para debug muestro por pantalla la lista en todo momento
-                /*Text(
-                    text = nuevaLista.toString(),
-                    modifier = Modifier.padding(5.dp)
-                )*/
+                Spacer(modifier = Modifier.padding(8.dp))
+
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(100.dp)
+                        .clickable {
+                            viewModel.resetScreen3()
+                            viewModel.setPantalla(3)
+                        }
+                ) {
+                    Column(
+                        modifier = Modifier.padding(horizontal = 16.dp)
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Image(
+                                painter = painterResource(id = R.drawable.baseline_add_a_photo_60),
+                                contentDescription = "Capturar por imagen",
+                                modifier = Modifier
+                                    .padding(8.dp)
+                                    .size(80.dp)
+                            )
+                            Spacer(modifier = Modifier.padding(8.dp))
+                            Text(
+                                text = "Capturar por imagen",
+                                fontSize = dimensionResource(id = R.dimen.font_size_titulo_card).value.sp,
+                                fontWeight = FontWeight.Bold,
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.padding(8.dp))
+
+                // Detalle de lugares agregados
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(100.dp)
+                ) {
+                    Column(
+                        modifier = Modifier.padding(horizontal = 16.dp)
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Image(
+                                painter = painterResource(id = R.drawable.ico_placesify2),
+                                contentDescription = "Imagen",
+                                modifier = Modifier
+                                    .padding(8.dp)
+                                    .size(80.dp)
+                            )
+                            Spacer(modifier = Modifier.padding(8.dp))
+                            Column(modifier = Modifier.padding(horizontal = 10.dp)) {
+                                Text(
+                                    text = "${viewModel._nuevaLista.value?.lstPlaces?.count()} lugar/es agregado/s",
+                                    fontSize = dimensionResource(id = R.dimen.font_size_subtitulo).value.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                                Text(
+                                    text = "Tus lugares favoritos",
+                                    fontSize = dimensionResource(id = R.dimen.font_size_subtitulo).value.sp,
+                                )
+                            }
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.padding(12.dp))
+
+                // Botón para guardar lista
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(100.dp)
+                        .background(color = Color.Green, shape = RoundedCornerShape(8.dp))
+                        .clickable {
+                            viewModel.setShowSaveDialog(true)
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "¡Guardar!",
+                        fontSize = dimensionResource(id = R.dimen.font_size_titulo_card).value.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
+                }
             }
         }
     }
 }
-
-
 
 
 @Composable
@@ -316,10 +382,12 @@ fun NewPlacesFinal(
     val showSaveDialog = true
 
     if (showSaveDialog) {
-        listaAValidar(onConfirmation = {
-            navController?.navigate("home")
-        },
-            icon =Icons.Default.Info)
+        listaAValidar(
+            onConfirmation = {
+                navController?.navigate("home")
+            },
+            icon = Icons.Default.Info
+        )
     }
 
     Scaffold(
@@ -338,14 +406,6 @@ fun NewPlacesFinal(
         ) {}
     }
 }
-
-
-
-
-
-
-
-
 
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
@@ -718,20 +778,25 @@ fun NewPlace2(
                         ) {
                             Marker(
                                 state = markerState,
-                                title= "Direccion actual"
-                            ){
+                                title = "Direccion actual"
+                            ) {
                                 Column(
                                     modifier = Modifier
                                         .size(250.dp)
-                                        .background(color = Color.Gray, shape = RoundedCornerShape(10.dp)),
+                                        .background(
+                                            color = Color.Gray,
+                                            shape = RoundedCornerShape(10.dp)
+                                        ),
                                     verticalArrangement = Arrangement.Center,
                                     horizontalAlignment = Alignment.CenterHorizontally
-                                ){
-                                    Text(text = it.title,
+                                ) {
+                                    Text(
+                                        text = it.title,
                                         modifier = Modifier
                                             .padding(
-                                            vertical = 10.dp,
-                                            horizontal = 10.dp),
+                                                vertical = 10.dp,
+                                                horizontal = 10.dp
+                                            ),
                                         color = Color.Black
 
                                     )
@@ -744,16 +809,19 @@ fun NewPlace2(
                                             textAlign = TextAlign.Center,
                                             modifier = Modifier.padding(
                                                 vertical = 10.dp,
-                                                horizontal = 10.dp),
+                                                horizontal = 10.dp
+                                            ),
                                             color = Color.Black
                                         )
                                     } else {
 
-                                        Text(text = "El lugar seleccionado no puede ser identificado",
+                                        Text(
+                                            text = "El lugar seleccionado no puede ser identificado",
                                             modifier = Modifier
                                                 .padding(
                                                     vertical = 10.dp,
-                                                    horizontal = 10.dp),
+                                                    horizontal = 10.dp
+                                                ),
                                             color = Color.Black
 
                                         )
