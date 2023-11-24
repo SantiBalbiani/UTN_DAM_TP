@@ -9,6 +9,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ar.edu.utn.frba.placesify.api.BackendService
 import ar.edu.utn.frba.placesify.model.Listas
+import ar.edu.utn.frba.placesify.model.Lugares
+import ar.edu.utn.frba.placesify.model.OpenStreetmapResponse
+import ar.edu.utn.frba.placesify.model.PreferencesManager
 import ar.edu.utn.frba.placesify.model.Usuarios
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -21,6 +24,13 @@ class DetailListViewModel(
 
     private val _detalleLista = MutableLiveData<Listas>()
     val detalleLista: LiveData<Listas> = _detalleLista
+    private val _listaEditada = MutableLiveData<Listas>()
+    val listaEditada: LiveData<Listas> = _listaEditada
+    private val _listaPantalla = MutableLiveData<Listas>()
+    val listaPantalla: LiveData<Listas> = _listaPantalla
+
+    private val _lugares = MutableLiveData<List<Lugares>>()
+    val lugares: LiveData<List<Lugares>> = _lugares
 
     private val _detalleListaActualizada = MutableLiveData<Boolean>()
     val detalleListaActualizada: LiveData<Boolean> = _detalleListaActualizada
@@ -34,11 +44,23 @@ class DetailListViewModel(
     private val _isFavorite = MutableLiveData<Boolean>()
     val isFavorite: LiveData<Boolean> = _isFavorite
 
-    private val _borrarVisible = mutableStateOf(false)
-    val borrarVisible: State<Boolean> = _borrarVisible
+    private val _borrarVisible = MutableLiveData<Boolean>()
+    val borrarVisible: LiveData<Boolean> = _borrarVisible
+
+    private val _editarVisible = MutableLiveData<Boolean>()
+    val editarVisible: LiveData<Boolean> = _editarVisible
+
+    private val _editando = MutableLiveData<Boolean>()
+    val editando: LiveData<Boolean> = _editando
+
+    private val _guardarVisible = MutableLiveData<Boolean>()
+    val guardarVisible: LiveData<Boolean> = _guardarVisible
 
     private val _showConfirmationDeleteDialog = mutableStateOf(false)
     val showConfirmationDeleteDialog: State<Boolean> = _showConfirmationDeleteDialog
+
+    private val _showConfirmationSaveDialog = mutableStateOf(false)
+    val showConfirmationSaveDialog: State<Boolean> = _showConfirmationSaveDialog
 
     init {
         // Obtengo las Listas Destacadas
@@ -59,11 +81,14 @@ class DetailListViewModel(
 
                 val response = listService.getLista(idLista)
                 _detalleLista.value = response
+                _listaPantalla.value = _detalleLista.value
+                _lugares.value = _detalleLista.value?.lstPlaces
                 _detalleListaActualizada.value = true
 
                 // Inicializo la visualización del boton de borrado
                 if (_detalleLista.value?.email_owner == Firebase.auth.currentUser?.email){
                     _borrarVisible.value = true
+                    _editarVisible.value = true
                 }
 
             } catch (e: Exception) {
@@ -143,6 +168,14 @@ class DetailListViewModel(
     fun setShowConfirmationDeleteDialog(show: Boolean) {
         _showConfirmationDeleteDialog.value = show
     }
+
+    fun setShowConfirmationSaveDialog(show: Boolean) {
+        _showConfirmationSaveDialog.value = show
+    }
+
+    fun setEditando(edit: Boolean){
+        _editando.value = edit
+    }
     fun borrarListaActual(){
 
         viewModelScope.launch() {
@@ -156,6 +189,60 @@ class DetailListViewModel(
         }
 
     }
+
+    fun onClickEditar(){
+        _editando.value = true
+        _guardarVisible.value = true
+        _editarVisible.value = false
+
+        // Copio la lista original para editarla
+        _listaEditada.value = _detalleLista.value
+    }
+
+    fun onClickGuardar(){
+
+        // Si las listas de lugares estan iguales, no guardo
+        if(_lugares.value == _detalleLista.value?.lstPlaces){
+            _editando.value = false
+            _guardarVisible.value = false
+            _editarVisible.value = true
+        }
+        else{
+            // Si hubo cambios en la lista de lugares pido confirmación
+            _showConfirmationSaveDialog.value = true
+        }
+    }
+
+    fun onClickEliminarLugar(lugar: Lugares){
+        val lstPlaces: MutableList<Lugares>? = _lugares.value?.toMutableList()
+        if (lstPlaces != null) {
+            lstPlaces.remove(lugar)
+            //_listaPantalla.value = _listaPantalla.value?.copy(lstPlaces = lstPlaces)
+            _lugares.value = lstPlaces
+        }
+    }
+
+    fun confirmSaveList(){
+        _editando.value = false
+        _guardarVisible.value = false
+        _editarVisible.value = true
+
+        _detalleLista.value!!.lstPlaces = _lugares.value
+
+        viewModelScope.launch() {
+            try {
+                val resp = listService.putLista(
+                    _detalleLista.value!!.id.toString(),
+                    _detalleLista.value!!
+                )
+
+            } catch (e: Exception) {
+                Log.d("API_CALL putLista", "CATCH  ${e.toString()}")
+            }
+        }
+
+    }
+
 }
 
 
