@@ -119,7 +119,7 @@ dependencies {
     implementation("androidx.activity:activity-compose:1.3.0-alpha01")
 
     // Accompanist permission library
-    implementation("com.google.accompanist:accompanist-permissions:0.30.1")
+    implementation("com.google.accompanist:accompanist-permissions:0.32.0")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
