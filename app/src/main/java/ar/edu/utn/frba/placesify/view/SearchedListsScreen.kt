@@ -1,6 +1,7 @@
 package ar.edu.utn.frba.placesify.view
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -115,19 +116,23 @@ fun ShowMySearchedLists(
     misListas: List<Listas>?,
     search_value: String? = null
 ) {
-    print("*********************Imprimo Valor de busqueda en la screen**********************")
-    println(search_value)
-    print("*********************Imprimo La lista**********************")
-    println(misListas)
+
     // Filtro las Listas que pertenecen al usuario logueado
-    val listaFiltrada = misListas?.sortedBy { it.name }
+    var listaFiltrada = misListas?.sortedBy { it.name }
         //?.filter { search_value == null || it.name.contains(search_value, ignoreCase = true) }
-    print("*********************Lista después del filtro**********************")
-    println(listaFiltrada)
+
+    listaFiltrada = listaFiltrada?.filter {
+        search_value == null ||  it.description?.contains(search_value, ignoreCase = true) == true
+                || it.name?.contains(search_value, ignoreCase = true) == true
+    }
+    Log.d("BUSCAR ", "misListas: ${misListas.toString()}")
+    Log.d("BUSCAR ", "listaFiltrada: ${listaFiltrada.toString()}")
     if (listaFiltrada != null) {
         if (listaFiltrada.isNotEmpty()) {
             listaFiltrada.forEach { lista ->
                 if (categorias != null) {
+                    Log.d("BUSCAR ", "${lista.toString()}")
+
                     ItemLista(lista = lista,  categorias = categorias,navController = navController)
                 }
             }

@@ -26,20 +26,36 @@ class SearchListsViewModel(private val listService: BackendService) : ViewModel(
     init {
         // Obtengo las Listas Buscadas
         getListasBuscadas()
-
+        getCategorias()
 
     }
     fun searchLists(searchValue: String? = null) {
         // Llama a la función con el valor de búsqueda
         getListasBuscadas(searchValue)
     }
+
+    private fun getCategorias() {
+        // Lanzo la Coroutine en el thread de MAIN
+        viewModelScope.launch() {
+            try {
+                val response = listService.getCategorias()
+
+                if (response.items.isNotEmpty()) {
+                    // Cargo las categorias
+                    _categorias.value = response.items
+                    _categoriasActualizada.value = true
+                }
+
+            } catch (e: Exception) {
+                Log.d("CATCH API ${e.toString()}", "API_CALL 2")
+            }
+        }
+    }
     private fun getListasBuscadas(search_value: String? = null) {
         // Lanzo la Coroutine en el thread de MAIN
         viewModelScope.launch() {
             try {
                 val response = listService.getListas()
-                print("*********************Imprimo Lista ENTERA**********************")
-                println(response.items)
                 val filteredList = response.items.filter {
                     search_value == null ||  it.description?.contains(search_value, ignoreCase = true) == true
                             || it.name?.contains(search_value, ignoreCase = true) == true
