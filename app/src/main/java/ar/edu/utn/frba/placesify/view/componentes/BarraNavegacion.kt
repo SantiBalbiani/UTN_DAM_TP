@@ -14,6 +14,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.Clear
@@ -39,6 +40,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.BlendMode.Companion.Screen
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -49,6 +51,7 @@ import ar.edu.utn.frba.placesify.R
 import ar.edu.utn.frba.placesify.viewmodel.DetailListViewModel
 import ar.edu.utn.frba.placesify.viewmodel.NewListViewModel
 import ar.edu.utn.frba.placesify.viewmodel.NewPlacesPrincipalViewModel
+import ar.edu.utn.frba.placesify.viewmodel.SearchListsViewModel
 import coil.compose.AsyncImage
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -61,7 +64,8 @@ fun BarraNavegacionSuperior(
     isHome: Boolean = false,
     viewModel1: NewListViewModel? = null,
     viewModel2: NewPlacesPrincipalViewModel? = null,
-    viewModel3: DetailListViewModel? = null
+    viewModel3: DetailListViewModel? = null,
+    viewModel4: SearchListsViewModel? = null
 )
 {
 
@@ -69,6 +73,8 @@ fun BarraNavegacionSuperior(
     var logout by remember { mutableStateOf(false) }
     var showSearch by remember { mutableStateOf(false) }
     var searchActiva by remember { mutableStateOf(false) }
+    var inputSearchString by remember { mutableStateOf("") }
+    var nowSearch by remember { mutableStateOf(false) }
     val activity = (LocalContext.current as? Activity)
 
     TopAppBar(
@@ -79,9 +85,12 @@ fun BarraNavegacionSuperior(
         title = {
             Column {
                 if (showSearch) {
+                    nowSearch = true
                     TextField(
-                        value = "",
-                        onValueChange = {},
+                        value = inputSearchString,
+                        onValueChange = {
+                            inputSearchString = it
+                        },
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(50.dp)
@@ -122,10 +131,17 @@ fun BarraNavegacionSuperior(
             }
         },
         actions = {
-            IconButton(onClick = { showSearch = !showSearch }) {
+            IconButton(onClick = { showSearch = !showSearch
+
+            if(nowSearch){
+                nowSearch = true
+                navController?.navigate("searched_lists")
+            /*   nowSearch?. */
+            }
+            }) {
                 Icon(
-                    imageVector = Icons.Filled.Search,
-                    contentDescription = "Buscar"
+                    imageVector = if (showSearch) Icons.Filled.Close else Icons.Filled.Search,
+                    contentDescription = if (showSearch) "Cerrar búsqueda" else "Buscar"
                 )
             }
             IconButton(onClick = { navController?.navigate("home") }) {

@@ -28,11 +28,12 @@ import ar.edu.utn.frba.placesify.model.Categorias
 import ar.edu.utn.frba.placesify.model.Listas
 import ar.edu.utn.frba.placesify.view.componentes.ShowLoading
 import ar.edu.utn.frba.placesify.viewmodel.MyListsViewModel
+import ar.edu.utn.frba.placesify.viewmodel.SearchListsViewModel
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
 @Composable
-fun SearchedListsScreen(viewModel: MyListsViewModel, navController: NavController? = null) {
+fun SearchedListsScreen(viewModel: SearchListsViewModel, navController: NavController? = null) {
 
     Box(
         Modifier
@@ -50,7 +51,7 @@ fun SearchedListsScreen(viewModel: MyListsViewModel, navController: NavControlle
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun MySearchedLists(modifier: Modifier, viewModel: MyListsViewModel, navController: NavController?) {
+fun MySearchedLists(modifier: Modifier, viewModel: SearchListsViewModel, navController: NavController?) {
 
     val connection by connectivityState()
     val isConnected = connection === ConnectionState.Available
@@ -65,7 +66,7 @@ fun MySearchedLists(modifier: Modifier, viewModel: MyListsViewModel, navControll
     )
 
     Scaffold(
-        topBar = { BarraNavegacionSuperior("Mis Listas", navController) },
+        topBar = { BarraNavegacionSuperior("Resultado de búsqueda", navController) },
         floatingActionButton = {
             FloatingActionButton(onClick = { navController?.navigate("new_places") }) {
                 Icon(Icons.Default.Add, contentDescription = "Add")
@@ -90,7 +91,7 @@ fun MySearchedLists(modifier: Modifier, viewModel: MyListsViewModel, navControll
 
 
                     // Muestro las Listas Destacadas
-                    MostrarMisListas(navController, categorias, misListas)
+                    ShowMySearchedLists(navController, categorias, misListas)
                 }
             }
         }
@@ -111,7 +112,7 @@ fun ShowMySearchedLists(
 
     // Filtro las Listas que pertenecen al usuario logueado
     val listaFiltrada = misListas?.sortedBy { it.name }
-        ?.filter { it.email_owner == Firebase.auth.currentUser?.email }
+        ?.filter { search_value == null || it.name.contains(search_value, ignoreCase = true) }
 
     if (listaFiltrada != null) {
         if (listaFiltrada.isNotEmpty()) {

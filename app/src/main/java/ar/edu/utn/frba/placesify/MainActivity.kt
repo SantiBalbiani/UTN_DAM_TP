@@ -40,6 +40,7 @@ import ar.edu.utn.frba.placesify.view.MyListsScreen
 import ar.edu.utn.frba.placesify.view.NewListScreen
 import ar.edu.utn.frba.placesify.view.NewPlacesPrincipalScreen
 import ar.edu.utn.frba.placesify.view.NewPlacesScreen
+import ar.edu.utn.frba.placesify.view.SearchedListsScreen
 import ar.edu.utn.frba.placesify.view.SplashScreen
 import ar.edu.utn.frba.placesify.view.theme.PlacesifyTheme
 import ar.edu.utn.frba.placesify.viewmodel.DetailListViewModel
@@ -53,6 +54,7 @@ import ar.edu.utn.frba.placesify.viewmodel.MyListsViewModel
 import ar.edu.utn.frba.placesify.viewmodel.NewListViewModel
 import ar.edu.utn.frba.placesify.viewmodel.NewPlacesPrincipalViewModel
 import ar.edu.utn.frba.placesify.viewmodel.NewPlacesViewModel
+import ar.edu.utn.frba.placesify.viewmodel.SearchListsViewModel
 import com.google.android.gms.auth.api.identity.Identity
 import kotlinx.coroutines.launch
 
@@ -141,6 +143,12 @@ class MainActivity : ComponentActivity() {
                         composable("home") {
                             HomeScreen(
                                 HomeViewModel(BackendService.instance),
+                                navController = navController
+                            )
+                        }
+                        composable("searched_lists") {
+                            SearchedListsScreen(
+                                SearchListsViewModel(BackendService.instance),
                                 navController = navController
                             )
                         }

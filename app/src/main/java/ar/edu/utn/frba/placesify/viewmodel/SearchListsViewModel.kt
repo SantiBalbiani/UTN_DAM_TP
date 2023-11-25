@@ -10,7 +10,7 @@ import ar.edu.utn.frba.placesify.model.Categorias
 import ar.edu.utn.frba.placesify.model.Listas
 import kotlinx.coroutines.launch
 
-class MyListsViewModel(private val listService: BackendService) : ViewModel(){
+class SearchListsViewModel(private val listService: BackendService) : ViewModel(){
 
     // Declaro las Suscripciones a los LiveData
     private val _misListas = MutableLiveData<List<Listas>>()
@@ -24,21 +24,24 @@ class MyListsViewModel(private val listService: BackendService) : ViewModel(){
     val categorias: LiveData<List<Categorias>> = _categorias
     val categoriasActualizada: LiveData<Boolean> = _categoriasActualizada
     init {
-        // Obtengo las Listas Destacadas
-        getMisListas()
+        // Obtengo las Listas Buscadas
+        getListasBuscadas()
 
-        // Obtengo las Categorias
-        getCategorias()
+
     }
 
-    private fun getMisListas() {
+    private fun getListasBuscadas(search_value: String? = null) {
         // Lanzo la Coroutine en el thread de MAIN
         viewModelScope.launch() {
             try {
                 val response = listService.getListas()
 
                 if (response.items.isNotEmpty()) {
-                    _misListas.value = response.items
+                    val listasFiltradas = search_value?.let { filter ->
+                        response.items.filter { it.name.contains(search_value, ignoreCase = true) }
+                    } ?: response.items
+
+                    _misListas.value = listasFiltradas
                     _misListasActualizada.value = true
                 }
 
@@ -48,21 +51,5 @@ class MyListsViewModel(private val listService: BackendService) : ViewModel(){
         }
     }
 
-    private fun getCategorias() {
-        // Lanzo la Coroutine en el thread de MAIN
-        viewModelScope.launch() {
-            try {
-                val response = listService.getCategorias()
 
-                if (response.items.isNotEmpty()) {
-                    // Cargo las categorias
-                    _categorias.value = response.items
-                    _categoriasActualizada.value = true
-                }
-
-            } catch (e: Exception) {
-                Log.d("CATCH API ${e.toString()}", "API_CALL 2")
-            }
-        }
-    }
 }
