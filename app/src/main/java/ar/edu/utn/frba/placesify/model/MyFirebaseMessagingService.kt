@@ -25,7 +25,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         Log.d("FIREBASE", "Mensaje recibido: ${remoteMessage.notification?.body}")
-
         remoteMessage.notification?.let { showNotification(it) }
 /*
         if (remoteMessage.data.isNotEmpty()) {
