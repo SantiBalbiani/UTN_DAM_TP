@@ -664,9 +664,9 @@ fun NewPlace2(
 ) {
 
     val context = LocalContext.current
-    val lat: Double by viewModel.gpsLat.observeAsState(initial = 0.0)
-    val lon: Double by viewModel.gpsLon.observeAsState(initial = 0.0)
-    val lugaresAPI: OpenStreetmapResponse? by viewModel.lugarAPI.observeAsState(initial = null)
+    val lat: Double by viewModel.locationHandler.gpsLat.observeAsState(initial = 0.0)
+    val lon: Double by viewModel.locationHandler.gpsLon.observeAsState(initial = 0.0)
+    val lugarAPI: OpenStreetmapResponse? by viewModel.locationHandler.lugarAPI.observeAsState(initial = null)
 
     val continuar2Enabled: Boolean by viewModel.continar2Enabled.observeAsState(initial = false)
 
@@ -801,11 +801,11 @@ fun NewPlace2(
 
                                     )
 
-                                    if (lugaresAPI != null) {
+                                    if (lugarAPI != null) {
                                         viewModel._continuar2Enabled.value = true
                                         Spacer(modifier = Modifier.padding(8.dp))
                                         Text(
-                                            text = lugaresAPI?.displayName.toString(),
+                                            text = lugarAPI?.displayName.toString(),
                                             textAlign = TextAlign.Center,
                                             modifier = Modifier.padding(
                                                 vertical = 10.dp,
@@ -833,45 +833,17 @@ fun NewPlace2(
 
                 }
 
-                /*
-                if (lugaresAPI != null) {
-                    viewModel._continuar2Enabled.value = true
-                    Spacer(modifier = Modifier.padding(8.dp))
-                    Row {
-                        Card(
-                            colors = CardDefaults.cardColors(
-                                containerColor = Color.Gray,
-                            )
-                        ) {
-                            Text(
-                                text = "La direccion seleccionada es: " + lugaresAPI?.displayName.toString(),
-                                textAlign = TextAlign.Center,
-                                modifier = Modifier.padding(
-                                    vertical = 10.dp,
-                                    horizontal = 10.dp
-                                )
-                            )
-                            Divider()
-                        }
-                    }
-                    Spacer(modifier = Modifier.padding(8.dp))
-                } else {
-                    Spacer(modifier = Modifier.padding(24.dp))
-                }
-                */
-
-
 
                 Spacer(modifier = Modifier.padding(24.dp))
 
                 Button(
                     onClick = {
-                        val lugarAuxiliar = lugaresAPI?.lon?.let {
-                            lugaresAPI?.displayName?.let { it1 ->
-                                lugaresAPI?.category?.let { it2 ->
-                                    lugaresAPI?.lat?.let { it3 ->
+                        val lugarAuxiliar = lugarAPI?.lon?.let {
+                            lugarAPI?.displayName?.let { it1 ->
+                                lugarAPI?.category?.let { it2 ->
+                                    lugarAPI?.lat?.let { it3 ->
                                         Lugares(
-                                            id = lugaresAPI?.placeId,
+                                            id = lugarAPI?.placeId,
                                             name = it1,
                                             description = it2,
                                             latitud = it3.toDouble(),
@@ -920,10 +892,10 @@ fun NewPlace3(
     val context = LocalContext.current
     val uriState = remember { mutableStateOf<Uri?>(null) }
 
-    val lugarAPI: OpenStreetmapResponse? by viewModel.lugarAPI.observeAsState(initial = null)
+    val lugarAPI: OpenStreetmapResponse? by viewModel.storageHandler.lugarAPI.observeAsState(initial = null)
     val continuar3Enabled: Boolean by viewModel.continar3Enabled.observeAsState(initial = false)
 
-    viewModel.setImagePickerCallback { uri -> uriState.value = uri }
+    viewModel.storageHandler.setImagePickerCallback { uri -> uriState.value = uri }
 
     val showConfirmationDialog = viewModel.showConfirmationDialog.value
 
@@ -1021,7 +993,6 @@ fun NewPlace3(
                 Row {
                     Button(
                         onClick = { viewModel.requestStoragePermission() },
-                        //viewModel.pickImage(imageLauncher)
                         modifier = Modifier.padding(16.dp)
                     ) {
                         Text("Seleccionar imagen")

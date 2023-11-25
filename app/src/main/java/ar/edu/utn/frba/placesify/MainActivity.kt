@@ -208,8 +208,12 @@ class MainActivity : ComponentActivity() {
                         ) {
                             DetailListScreen(
                                 DetailListViewModel(
+                                    application,
+                                    activityResultRegistry,
                                     BackendService.instance,
-                                    it.arguments?.getString("id_list")
+                                    it.arguments?.getString("id_list"),
+                                    OpenStreetmapService.instance,
+                                    LocalContext.current
                                 ),
                                 navController = navController
                             )

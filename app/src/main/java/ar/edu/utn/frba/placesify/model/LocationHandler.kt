@@ -12,13 +12,21 @@ import android.app.Application
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 
 
 class LocationHandler(
-    private val viewModel: NewPlacesPrincipalViewModel,
     private val application: Application,
     private val activityResultRegistry: ActivityResultRegistry
 ) {
+
+    val _gpsLat = MutableLiveData<Double>()
+    val gpsLat: LiveData<Double> = _gpsLat
+    val _gpsLon = MutableLiveData<Double>()
+    val gpsLon: LiveData<Double> = _gpsLon
+    val _lugarAPI = MutableLiveData<OpenStreetmapResponse>()
+    val lugarAPI: LiveData<OpenStreetmapResponse> = _lugarAPI
 
     private var fusedLocationClient: FusedLocationProviderClient =
         LocationServices.getFusedLocationProviderClient(application)
@@ -34,13 +42,7 @@ class LocationHandler(
         }
 
     fun requestLocationPermission(context: Context) {
-        /*
-        Toast.makeText(
-            context,
-            "Accediendo a GPS",
-            Toast.LENGTH_LONG
-        ).show()
-        */
+
         when {
             ContextCompat.checkSelfPermission(
                 application,
@@ -60,11 +62,9 @@ class LocationHandler(
                 location?.let {
 
                     // Manejar la ubicación obtenida
-                    val latitude = location.latitude
-                    val longitude = location.longitude
+                    _gpsLat.value = location.latitude
+                    _gpsLon.value = location.longitude
 
-                    // Actualizar el ViewModel con las coordenadas
-                    viewModel.onLocationReceived(latitude, longitude)
                 }
             }
         } catch (e: SecurityException) {

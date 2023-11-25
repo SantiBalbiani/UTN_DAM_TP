@@ -46,6 +46,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import ar.edu.utn.frba.placesify.R
+import ar.edu.utn.frba.placesify.viewmodel.DetailListViewModel
 import ar.edu.utn.frba.placesify.viewmodel.NewListViewModel
 import ar.edu.utn.frba.placesify.viewmodel.NewPlacesPrincipalViewModel
 import coil.compose.AsyncImage
@@ -59,7 +60,8 @@ fun BarraNavegacionSuperior(
     navController: NavController?,
     isHome: Boolean = false,
     viewModel1: NewListViewModel? = null,
-    viewModel2: NewPlacesPrincipalViewModel? = null
+    viewModel2: NewPlacesPrincipalViewModel? = null,
+    viewModel3: DetailListViewModel? = null
 )
 {
 
@@ -111,7 +113,7 @@ fun BarraNavegacionSuperior(
         },
         navigationIcon = {
             if (!isHome) {
-                IconButton(onClick = { onNavigationButtonClicked(navController, viewModel1, viewModel2) }) {
+                IconButton(onClick = { onNavigationButtonClicked(navController, viewModel1, viewModel2, viewModel3) }) {
                     Icon(
                         imageVector = Icons.Filled.ArrowBack,
                         contentDescription = "Localized description"
@@ -224,38 +226,14 @@ fun BarraNavegacionSuperior(
             }
         )
     }
-    /*
-        if (showSearch) {
-            ModalBottomSheet(
-                onDismissRequest = { showSearch = false },
-                modifier = Modifier.height(height = 200.dp)
-            ) {
-                TextField(
-                    value = "",
-                    onValueChange = {},
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    label = { Text(text = "Buscar") },
-                    trailingIcon = {
-                        Image(
-                            imageVector = Icons.Outlined.Search,
-                            contentDescription = "",
-                            modifier = Modifier.padding(horizontal = 5.dp)
-                        )
-                    },
-                    singleLine = true,
-                    maxLines = 1,
-                )
-            }
-        }
-    */
+
 }
 
 private fun onNavigationButtonClicked(
     navController: NavController?,
     viewModel1: NewListViewModel?,
-    viewModel2: NewPlacesPrincipalViewModel?
+    viewModel2: NewPlacesPrincipalViewModel?,
+    viewModel3: DetailListViewModel?
 ) {
     if (navController?.currentDestination?.id != null) {
         val currentRoute = navController?.currentBackStackEntry?.destination?.route
@@ -266,7 +244,9 @@ private fun onNavigationButtonClicked(
         else if (currentRoute == "new_list") {
             viewModel1?.setShowConfirmationDialog(true)
         }
-
+        else if (currentRoute == "detail_list/{id_list}"){
+            viewModel3?.handleBackButton()
+        }
         else {
             navController.navigateUp()
         }
