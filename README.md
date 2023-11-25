@@ -29,7 +29,14 @@ Placesify es una App desarrollada para dispositivos Android que permite buscar *
 
 ## Screenshots
 
-[Próximamente]
+<p align="center">
+	<picture>
+	  <img alt="hyperdx logo" src="https://github.com/UTN-FRBA-Mobile/Placesify/blob/main/app/src/main/res/drawable/Screen1.png?raw=true">
+	  <img alt="hyperdx logo" src="https://github.com/UTN-FRBA-Mobile/Placesify/blob/main/app/src/main/res/drawable/Screen2.png?raw=true">
+	  <img alt="hyperdx logo" src="https://github.com/UTN-FRBA-Mobile/Placesify/blob/main/app/src/main/res/drawable/Screen3.png?raw=true">
+	  <img alt="hyperdx logo" src="https://github.com/UTN-FRBA-Mobile/Placesify/blob/main/app/src/main/res/drawable/Screen4.png?raw=true">
+	</picture>
+</p>
 
 ## License
 
