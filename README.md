@@ -29,7 +29,44 @@ Placesify es una App desarrollada para dispositivos Android que permite buscar *
 
 ## Screenshots
 
-[Próximamente]
+<p align="center">
+	<picture>
+	  <img width="200" src="https://github.com/UTN-FRBA-Mobile/Placesify/blob/main/app/src/main/res/drawable/screen1.png?raw=true">
+	</picture>
+	<picture>
+	  <img width="200" src="https://github.com/UTN-FRBA-Mobile/Placesify/blob/main/app/src/main/res/drawable/screen2.png?raw=true">
+	</picture>
+	<picture>
+	  <img width="200" src="https://github.com/UTN-FRBA-Mobile/Placesify/blob/main/app/src/main/res/drawable/screen3.png?raw=true">
+	</picture>
+	<picture>
+	  <img width="200" src="https://github.com/UTN-FRBA-Mobile/Placesify/blob/main/app/src/main/res/drawable/screen4.png?raw=true">
+	</picture>
+	<picture>
+	  <img width="200" src="https://github.com/UTN-FRBA-Mobile/Placesify/blob/main/app/src/main/res/drawable/screen5.png?raw=true">
+	</picture>
+	<picture>
+	  <img width="200" src="https://github.com/UTN-FRBA-Mobile/Placesify/blob/main/app/src/main/res/drawable/screen6.png?raw=true">
+	</picture>
+	<picture>
+	  <img width="200" src="https://github.com/UTN-FRBA-Mobile/Placesify/blob/main/app/src/main/res/drawable/screen7.png?raw=true">
+	</picture>
+	<picture>
+	  <img width="200" src="https://github.com/UTN-FRBA-Mobile/Placesify/blob/main/app/src/main/res/drawable/screen8.png?raw=true">
+	</picture>
+	<picture>
+	  <img width="200" src="https://github.com/UTN-FRBA-Mobile/Placesify/blob/main/app/src/main/res/drawable/screen9.png?raw=true">
+	</picture>
+	<picture>
+	  <img width="200" src="https://github.com/UTN-FRBA-Mobile/Placesify/blob/main/app/src/main/res/drawable/screen10.png?raw=true">
+	</picture>
+	<picture>
+	  <img width="200" src="https://github.com/UTN-FRBA-Mobile/Placesify/blob/main/app/src/main/res/drawable/screen11.png?raw=true">
+	</picture>
+	<picture>
+	  <img width="200" src="https://github.com/UTN-FRBA-Mobile/Placesify/blob/main/app/src/main/res/drawable/screen12.png?raw=true">
+	</picture>
+</p>
 
 ## License
 
