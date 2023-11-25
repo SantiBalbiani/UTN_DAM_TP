@@ -42,7 +42,7 @@ fun InternetStatusComponent() {
         if (!isInternetAvailable) {
             Text("No hay conexión a Internet", fontWeight = FontWeight.Bold)
         }else{
-            Text("TEST: hay conexión a Internet", fontWeight = FontWeight.Bold)
+            Text("", fontWeight = FontWeight.Bold)
         }
     }
 }
