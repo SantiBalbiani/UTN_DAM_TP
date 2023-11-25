@@ -143,7 +143,7 @@ fun NewPlaces(
     }
 
 }
-
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewPlacesPrincipal(
     modifier: Modifier,
@@ -193,7 +193,7 @@ fun NewPlacesPrincipal(
     Scaffold(
         topBar = {
             BarraNavegacionSuperior(
-                "Agregar Lugar nuevo",
+                "Agregar Lugares",
                 navController,
                 viewModel2 = viewModel
             )
@@ -204,14 +204,15 @@ fun NewPlacesPrincipal(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             item {
+/*
                 Text(
                     text = "Agregá tus lugares",
                     fontSize = dimensionResource(id = R.dimen.font_size_titulo_card).value.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.Right
+                    textAlign = TextAlign.Center
                 )
-
+*/
                 Spacer(modifier = Modifier.padding(20.dp))
 
                 Card(
@@ -233,9 +234,9 @@ fun NewPlacesPrincipal(
                                     .padding(8.dp)
                                     .size(80.dp)
                             )
-                            Spacer(modifier = Modifier.padding(8.dp))
+                            Spacer(modifier = Modifier.padding(2.dp))
                             Text(
-                                text = "Buscá por dirección",
+                                text = "Buscar por dirección",
                                 fontSize = dimensionResource(id = R.dimen.font_size_titulo_card).value.sp,
                                 fontWeight = FontWeight.Bold,
                                 textAlign = TextAlign.Center
@@ -267,9 +268,9 @@ fun NewPlacesPrincipal(
                                     .padding(8.dp)
                                     .size(80.dp)
                             )
-                            Spacer(modifier = Modifier.padding(8.dp))
+                            Spacer(modifier = Modifier.padding(2.dp))
                             Text(
-                                text = "Seleccioná en el mapa",
+                                text = "Seleccionar en el mapa",
                                 fontSize = dimensionResource(id = R.dimen.font_size_titulo_card).value.sp,
                                 fontWeight = FontWeight.Bold,
                                 textAlign = TextAlign.Center
@@ -300,7 +301,7 @@ fun NewPlacesPrincipal(
                                     .padding(8.dp)
                                     .size(80.dp)
                             )
-                            Spacer(modifier = Modifier.padding(8.dp))
+                            Spacer(modifier = Modifier.padding(2.dp))
                             Text(
                                 text = "Capturar por imagen",
                                 fontSize = dimensionResource(id = R.dimen.font_size_titulo_card).value.sp,
@@ -337,10 +338,12 @@ fun NewPlacesPrincipal(
                                     fontSize = dimensionResource(id = R.dimen.font_size_subtitulo).value.sp,
                                     fontWeight = FontWeight.Bold
                                 )
+                                /*
                                 Text(
                                     text = "Tus lugares favoritos",
                                     fontSize = dimensionResource(id = R.dimen.font_size_subtitulo).value.sp,
                                 )
+                                 */
                             }
                         }
                     }
@@ -353,7 +356,7 @@ fun NewPlacesPrincipal(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(100.dp)
-                        .background(color = Color.Green, shape = RoundedCornerShape(8.dp))
+                        .background(color = MaterialTheme.colors.primary, shape = RoundedCornerShape(8.dp))
                         .clickable {
                             viewModel.setShowSaveDialog(true)
                         },

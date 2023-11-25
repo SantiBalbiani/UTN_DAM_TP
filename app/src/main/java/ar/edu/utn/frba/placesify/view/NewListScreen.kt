@@ -181,7 +181,7 @@ fun NewList(
     })
 
     Scaffold(
-        topBar = { BarraNavegacionSuperior("Crear Nueva Lista", navController, viewModel1 = viewModel) },
+        topBar = { BarraNavegacionSuperior("Crear Lista", navController, viewModel1 = viewModel) },
     ) { innerPadding ->
 
         if (categoriasSeleccionadas == null || !categoriasActualizada) {

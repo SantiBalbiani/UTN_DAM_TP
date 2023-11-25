@@ -3,5 +3,5 @@
     <dimen name="font_size_normal">14.dp</dimen>
     <dimen name="font_size_titulo">24.dp</dimen>
     <dimen name="font_size_subtitulo">20.dp</dimen>
-    <dimen name="font_size_titulo_card">28.dp</dimen>
+    <dimen name="font_size_titulo_card">25.dp</dimen>
 </resources>
