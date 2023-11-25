@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.media.ExifInterface
 import android.net.Uri
+import android.os.Build
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.ActivityResultRegistry
@@ -53,16 +54,21 @@ class StorageHandler (
     fun requestStoragePermission() {
 
         // Verificar si el permiso ya está otorgado
+        val readImagePermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+            Manifest.permission.READ_MEDIA_IMAGES
+        else
+            Manifest.permission.READ_EXTERNAL_STORAGE
+
         if (ContextCompat.checkSelfPermission(
                 context,
-                Manifest.permission.READ_EXTERNAL_STORAGE
+                readImagePermission
             ) == PackageManager.PERMISSION_GRANTED
         ) {
             // Permiso ya otorgado, abre el selector de imágenes
             pickImage()
         } else {
             // Permiso no otorgado, solicítalo al usuario
-            requestPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+            requestPermissionLauncher.launch(readImagePermission)
         }
     }
 
