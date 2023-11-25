@@ -392,39 +392,42 @@ fun DetailList(
                             ItemLugares(lugar, viewModel, editando, navController)
                         }
 
-                        if (editando) {
+                    } else {
+                        if(!editando){
+                            Text(
+                                text = "No se encontraron datos.",
+                                fontSize = dimensionResource(id = R.dimen.font_size_normal).value.sp,
+                                modifier = Modifier.padding(8.dp)
+                            )
+                        }
+                    }
 
-                            Column(
-                                modifier = Modifier
-                                    .padding(horizontal = 16.dp, vertical = 8.dp)
-                                    .clickable {
-                                        viewModel.setPantalla(1)
-                                    }
-                            ) {
+                    if (editando) {
 
-                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Image(
-                                        imageVector = Icons.Outlined.Add,
-                                        contentDescription = "Lugar",
-                                        modifier = Modifier.padding(horizontal = 5.dp)
-                                    )
-                                    Spacer(modifier = Modifier.padding(8.dp))
-                                    Text(
-                                        text = "Agregar lugares",
-                                        modifier = Modifier.weight(1f)
-                                    )
+                        Column(
+                            modifier = Modifier
+                                .padding(horizontal = 16.dp, vertical = 8.dp)
+                                .clickable {
+                                    viewModel.setPantalla(1)
                                 }
-                                Spacer(modifier = Modifier.padding(8.dp))
-                                Divider()
-                            }
+                        ) {
 
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Image(
+                                    imageVector = Icons.Outlined.Add,
+                                    contentDescription = "Lugar",
+                                    modifier = Modifier.padding(horizontal = 5.dp)
+                                )
+                                Spacer(modifier = Modifier.padding(8.dp))
+                                Text(
+                                    text = "Agregar lugares",
+                                    modifier = Modifier.weight(1f)
+                                )
+                            }
+                            Spacer(modifier = Modifier.padding(8.dp))
+                            Divider()
                         }
 
-                    } else {
-                        Text(
-                            text = "No se encontraron datos.",
-                            fontSize = dimensionResource(id = R.dimen.font_size_normal).value.sp,
-                        )
                     }
                 }
             }
