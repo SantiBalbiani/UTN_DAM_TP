@@ -1093,7 +1093,7 @@ fun AddFromMap(
                         }!!
 
                         viewModel.onClickAgregarLugar(lugarAuxiliar)
-                        viewModel.setPantalla(1)
+                        viewModel.setPantalla(0)
 
                     },
                     modifier = Modifier
@@ -1248,7 +1248,7 @@ fun AddFromPhoto(
                         }!!
 
                         viewModel.onClickAgregarLugar(lugarAuxiliar)
-                        viewModel.setPantalla(1)
+                        viewModel.setPantalla(0)
 
                     },
                     modifier = Modifier
