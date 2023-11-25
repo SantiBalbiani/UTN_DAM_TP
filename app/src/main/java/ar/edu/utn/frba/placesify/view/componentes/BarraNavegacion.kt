@@ -44,7 +44,9 @@ import androidx.compose.ui.graphics.BlendMode.Companion.Screen
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import ar.edu.utn.frba.placesify.R
@@ -99,6 +101,7 @@ fun BarraNavegacionSuperior(
                         placeholder = { Text(text = "Buscar") },
                         singleLine = true,
                         maxLines = 1,
+                        textStyle = TextStyle(fontSize = 12.sp), // Ajusta el tamaño de la fuente aquí
                         trailingIcon = {
                             Row {
                                 IconButton(
