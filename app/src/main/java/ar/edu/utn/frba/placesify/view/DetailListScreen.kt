@@ -113,22 +113,18 @@ fun SelectorPantalla(
     modifier: Modifier,
     viewModel: DetailListViewModel,
     navController: NavController?
-){
+) {
     val pantalla = viewModel.pantalla.value
 
-    if(pantalla == 0){
+    if (pantalla == 0) {
         DetailList(modifier, viewModel, navController)
-    }
-    else if(pantalla == 1){
+    } else if (pantalla == 1) {
         AddPlaces(modifier, viewModel, navController)
-    }
-    else if(pantalla == 2){
+    } else if (pantalla == 2) {
         AddFromText(modifier, viewModel, navController)
-    }
-    else if(pantalla == 3){
+    } else if (pantalla == 3) {
         AddFromMap(modifier, viewModel, navController)
-    }
-    else if(pantalla == 4){
+    } else if (pantalla == 4) {
         AddFromPhoto(modifier, viewModel, navController)
     }
 }
@@ -172,7 +168,7 @@ fun DetailList(
             )
         }
 
-    if(backScreen0){
+    if (backScreen0) {
         viewModel._backScreen0.value = false
         navController?.navigateUp()
     }
@@ -228,10 +224,9 @@ fun DetailList(
     }
 
     BackHandler(onBack = {
-        if(editando){
+        if (editando) {
             viewModel.onClickBackWithoutSave()
-        }
-        else{
+        } else {
             navController?.navigateUp()
         }
     })
@@ -256,7 +251,7 @@ fun DetailList(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 item {
-                    val imageNames = detalleLista!!.lstCategories?.random().toString()
+                    val imageNames = detalleLista!!.lstCategories?.first().toString()
                     val imageRes = imageNames.mapToMyImageResource()
                     Image(
                         painter = painterResource(imageRes),
@@ -313,7 +308,7 @@ fun DetailList(
                                         Modifier.size(AssistChipDefaults.IconSize)
                                     )
                                 },
-                                modifier = Modifier.padding(horizontal = 2.dp)
+                                modifier = Modifier.padding(horizontal = 1.dp)
                             )
 
                             if (borrarVisible) {
@@ -329,7 +324,7 @@ fun DetailList(
                                             Modifier.size(AssistChipDefaults.IconSize)
                                         )
                                     },
-                                    modifier = Modifier.padding(horizontal = 2.dp)
+                                    modifier = Modifier.padding(horizontal = 1.dp)
                                 )
                             }
 
@@ -337,7 +332,7 @@ fun DetailList(
                                 AssistChip(
                                     onClick = { viewModel.onClickEditar() },
                                     border = null,
-                                    label = { Text("Editar Lugares") },
+                                    label = { Text("Editar") },
                                     leadingIcon = {
                                         Icon(
                                             Icons.Outlined.Edit,
@@ -345,7 +340,7 @@ fun DetailList(
                                             Modifier.size(AssistChipDefaults.IconSize)
                                         )
                                     },
-                                    modifier = Modifier.padding(horizontal = 2.dp)
+                                    modifier = Modifier.padding(horizontal = 0.dp)
                                 )
 
                             }
@@ -354,7 +349,7 @@ fun DetailList(
                                 AssistChip(
                                     onClick = { viewModel.onClickGuardar() },
                                     border = null,
-                                    label = { Text("Guardar") },
+                                    label = { },
                                     leadingIcon = {
                                         AsyncImage(
                                             model = R.drawable.baseline_save_24,
@@ -363,7 +358,7 @@ fun DetailList(
                                                 .size(AssistChipDefaults.IconSize)
                                         )
                                     },
-                                    modifier = Modifier.padding(horizontal = 5.dp)
+                                    modifier = Modifier.padding(horizontal = 0.dp)
                                 )
                             }
                         }
@@ -427,7 +422,13 @@ fun DetailList(
                             Spacer(modifier = Modifier.padding(8.dp))
                             Divider()
                         }
-
+                    } else {
+                        Text(
+                            text = "No se encontraron datos.",
+                            fontSize = dimensionResource(id = R.dimen.font_size_normal).value.sp,
+                            modifier = Modifier
+                                .padding(10.dp)
+                        )
                     }
                 }
             }
@@ -929,7 +930,9 @@ fun AddFromMap(
 
     val lat: Double by viewModel.locationHandler.gpsLat.observeAsState(initial = 0.0)
     val lon: Double by viewModel.locationHandler.gpsLon.observeAsState(initial = 0.0)
-    val lugarAPI: OpenStreetmapResponse? by viewModel.locationHandler.lugarAPI.observeAsState(initial = null)
+    val lugarAPI: OpenStreetmapResponse? by viewModel.locationHandler.lugarAPI.observeAsState(
+        initial = null
+    )
 
     val continuar2Enabled: Boolean by viewModel.continar2Enabled.observeAsState(initial = false)
 

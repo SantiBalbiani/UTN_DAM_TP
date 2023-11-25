@@ -25,9 +25,8 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         Log.d("FIREBASE", "Mensaje recibido: ${remoteMessage.notification?.body}")
-
         remoteMessage.notification?.let { showNotification(it) }
-
+/*
         if (remoteMessage.data.isNotEmpty()) {
             //Todo
             Log.d("FIREBASE", "Message data payload: ${remoteMessage.data}")
@@ -39,6 +38,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             Log.d("FIREBASE", "Message Notification Body: ${it.body}")
             showNotification(remoteMessage.notification!!)
         }
+ */
     }
 
     override fun onNewToken(newToken: String) {
