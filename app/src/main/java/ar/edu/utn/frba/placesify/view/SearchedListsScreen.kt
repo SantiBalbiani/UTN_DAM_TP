@@ -14,6 +14,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -33,7 +34,12 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
 @Composable
-fun SearchedListsScreen(viewModel: SearchListsViewModel, navController: NavController? = null) {
+fun SearchedListsScreen(viewModel: SearchListsViewModel, navController: NavController? = null, inputSearchString: String?) {
+
+    LaunchedEffect(key1 = inputSearchString) {
+        // Llama a la función de búsqueda en el ViewModel cuando inputSearchString cambia
+        viewModel.searchLists(inputSearchString)
+    }
 
     Box(
         Modifier
@@ -43,15 +49,16 @@ fun SearchedListsScreen(viewModel: SearchListsViewModel, navController: NavContr
         MySearchedLists(
             Modifier
                 .align(Alignment.TopStart)
-                .padding(16.dp), viewModel, navController
+                .padding(16.dp), viewModel, navController, inputSearchString
         )
     }
 }
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun MySearchedLists(modifier: Modifier, viewModel: SearchListsViewModel, navController: NavController?) {
+fun MySearchedLists(modifier: Modifier, viewModel: SearchListsViewModel, navController: NavController?, search_value: String?) {
 
     val connection by connectivityState()
     val isConnected = connection === ConnectionState.Available
@@ -66,7 +73,7 @@ fun MySearchedLists(modifier: Modifier, viewModel: SearchListsViewModel, navCont
     )
 
     Scaffold(
-        topBar = { BarraNavegacionSuperior("Resultado de búsqueda", navController) },
+        topBar = { BarraNavegacionSuperior("", navController) },
         floatingActionButton = {
             FloatingActionButton(onClick = { navController?.navigate("new_places") }) {
                 Icon(Icons.Default.Add, contentDescription = "Add")
@@ -84,14 +91,14 @@ fun MySearchedLists(modifier: Modifier, viewModel: SearchListsViewModel, navCont
             ) {
                 item {
                     Text(
-                        text = "Mis Listas",
+                        text = "Resultado de la Búsqueda:",
                         fontSize = dimensionResource(id = R.dimen.font_size_titulo).value.sp,
                         fontWeight = FontWeight.Bold
                     )
 
 
                     // Muestro las Listas Destacadas
-                    ShowMySearchedLists(navController, categorias, misListas)
+                    ShowMySearchedLists(navController, categorias, misListas, search_value)
                 }
             }
         }
@@ -108,12 +115,15 @@ fun ShowMySearchedLists(
     misListas: List<Listas>?,
     search_value: String? = null
 ) {
-
-
+    print("*********************Imprimo Valor de busqueda en la screen**********************")
+    println(search_value)
+    print("*********************Imprimo La lista**********************")
+    println(misListas)
     // Filtro las Listas que pertenecen al usuario logueado
     val listaFiltrada = misListas?.sortedBy { it.name }
-        ?.filter { search_value == null || it.name.contains(search_value, ignoreCase = true) }
-
+        //?.filter { search_value == null || it.name.contains(search_value, ignoreCase = true) }
+    print("*********************Lista después del filtro**********************")
+    println(listaFiltrada)
     if (listaFiltrada != null) {
         if (listaFiltrada.isNotEmpty()) {
             listaFiltrada.forEach { lista ->

@@ -146,10 +146,12 @@ class MainActivity : ComponentActivity() {
                                 navController = navController
                             )
                         }
-                        composable("searched_lists") {
+                        composable("searched_lists/{inputSearchString}") {
+                            //arguments = listOf(navArgument("inputSearchString") { type = NavType.StringType })
                             SearchedListsScreen(
                                 SearchListsViewModel(BackendService.instance),
-                                navController = navController
+                                navController = navController,
+                                inputSearchString = it.arguments?.getString("inputSearchString")
                             )
                         }
                         composable("detail_places/{id_place}",

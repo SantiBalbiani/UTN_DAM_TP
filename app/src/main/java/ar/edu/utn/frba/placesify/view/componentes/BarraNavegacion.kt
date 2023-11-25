@@ -102,11 +102,14 @@ fun BarraNavegacionSuperior(
                         trailingIcon = {
                             Row {
                                 IconButton(
-                                    onClick = {},
+                                    onClick = {
+                                        inputSearchString = ""
+                                        showSearch = false
+                                        nowSearch = false},
                                     content = {
                                         Image(
                                             imageVector = Icons.Outlined.Clear,
-                                            contentDescription = "",
+                                            contentDescription = "Cancel Search",
                                             modifier = Modifier.padding(horizontal = 5.dp)
                                         )
                                     }
@@ -133,14 +136,14 @@ fun BarraNavegacionSuperior(
         actions = {
             IconButton(onClick = { showSearch = !showSearch
 
-            if(nowSearch){
+            if(nowSearch and inputSearchString.isNotEmpty()){
                 nowSearch = true
-                navController?.navigate("searched_lists")
-            /*   nowSearch?. */
+                navController?.navigate("searched_lists/$inputSearchString")
+
             }
             }) {
                 Icon(
-                    imageVector = if (showSearch) Icons.Filled.Close else Icons.Filled.Search,
+                    imageVector = /* if (showSearch) Icons.Filled.Close else */ Icons.Filled.Search,
                     contentDescription = if (showSearch) "Cerrar búsqueda" else "Buscar"
                 )
             }

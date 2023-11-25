@@ -59,6 +59,8 @@ interface BackendService {
             .build().create(BackendService::class.java)
     }
 
+   // @GET("searched_lists")
+   // suspend fun getListas(): ApiListResponse
     @GET("listas")
     suspend fun getListas(): ApiListResponse
 
