@@ -422,13 +422,6 @@ fun DetailList(
                             Spacer(modifier = Modifier.padding(8.dp))
                             Divider()
                         }
-                    } else {
-                        Text(
-                            text = "No se encontraron datos.",
-                            fontSize = dimensionResource(id = R.dimen.font_size_normal).value.sp,
-                            modifier = Modifier
-                                .padding(10.dp)
-                        )
                     }
                 }
             }

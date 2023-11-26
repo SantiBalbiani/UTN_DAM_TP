@@ -100,8 +100,10 @@ fun Home(modifier: Modifier, viewModel: HomeViewModel, navController: NavControl
     Scaffold(
         topBar = { BarraNavegacionSuperior("Placesify", navController, isHome = true) },
         floatingActionButton = {
-            FloatingActionButton(onClick = { navController?.navigate("new_list") }) {
-                Icon(Icons.Default.Add, contentDescription = "Add")
+            if (isConnected) {
+                FloatingActionButton(onClick = { navController?.navigate("new_list") }) {
+                    Icon(Icons.Default.Add, contentDescription = "Add")
+                }
             }
         }
     ) { innerPadding ->
