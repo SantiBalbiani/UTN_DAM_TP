@@ -223,7 +223,7 @@ fun MostrarListasDestacadas(
     listasDestacadas: List<Listas>?,
     categorias: List<Categorias>?
 ) {
-    listasDestacadas?.sortedBy { it.name }?.forEach { lista ->
+    listasDestacadas?.sortedByDescending { it.likes }?.forEach { lista ->
         if (categorias != null) {
             ItemLista(lista, categorias, navController)
         }
