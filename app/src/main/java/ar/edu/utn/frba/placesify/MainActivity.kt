@@ -34,7 +34,7 @@ import ar.edu.utn.frba.placesify.view.DiscoverPlacesScreen
 import ar.edu.utn.frba.placesify.view.DiscoverCategoryScreen
 import ar.edu.utn.frba.placesify.view.FavoritesScreen
 import ar.edu.utn.frba.placesify.view.HomeScreen
-import ar.edu.utn.frba.placesify.view.InternetStatusComponent
+import ar.edu.utn.frba.placesify.view.componentes.InternetStatusComponent
 import ar.edu.utn.frba.placesify.view.LoginScreen
 import ar.edu.utn.frba.placesify.view.MyListsScreen
 import ar.edu.utn.frba.placesify.view.NewListScreen

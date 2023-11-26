@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,6 +22,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import ar.edu.utn.frba.placesify.R
+import ar.edu.utn.frba.placesify.view.componentes.ConnectionState
+import ar.edu.utn.frba.placesify.view.componentes.connectivityState
+import ar.edu.utn.frba.placesify.view.componentes.noInternet
 import kotlinx.coroutines.delay
 
 @Composable
@@ -29,7 +33,8 @@ fun SplashScreen(navController: NavController? = null) {
     val alpha = remember {
         Animatable(0f)
     }
-
+    val connection by connectivityState()
+    val isConnected = connection === ConnectionState.Available
     LaunchedEffect(key1 = true) {
         alpha.animateTo(1f, animationSpec = tween(1500))
         delay(2000)
@@ -63,7 +68,7 @@ fun SplashScreen(navController: NavController? = null) {
                 )
             ),
         contentAlignment = Alignment.Center
-    ) {
+    ) {if(isConnected) {
         Image(
             painter = painterResource(id = R.drawable.splash_placesify),
             contentDescription = "",
@@ -72,6 +77,9 @@ fun SplashScreen(navController: NavController? = null) {
                 .padding(horizontal = 50.dp)
                 .alpha(alpha.value)
         )
+    }else{
+        noInternet()
+    }
     }
 }
 

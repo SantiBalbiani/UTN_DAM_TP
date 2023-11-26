@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.placesify.view
+package ar.edu.utn.frba.placesify.view.componentes
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxSize

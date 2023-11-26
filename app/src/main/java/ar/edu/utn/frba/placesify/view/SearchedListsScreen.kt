@@ -28,11 +28,11 @@ import androidx.navigation.NavController
 import ar.edu.utn.frba.placesify.R
 import ar.edu.utn.frba.placesify.model.Categorias
 import ar.edu.utn.frba.placesify.model.Listas
+import ar.edu.utn.frba.placesify.view.componentes.ConnectionState
 import ar.edu.utn.frba.placesify.view.componentes.ShowLoading
-import ar.edu.utn.frba.placesify.viewmodel.MyListsViewModel
+import ar.edu.utn.frba.placesify.view.componentes.connectivityState
+import ar.edu.utn.frba.placesify.view.componentes.noInternet
 import ar.edu.utn.frba.placesify.viewmodel.SearchListsViewModel
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 
 @Composable
 fun SearchedListsScreen(viewModel: SearchListsViewModel, navController: NavController? = null, inputSearchString: String?) {

@@ -14,10 +14,14 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import ar.edu.utn.frba.placesify.view.componentes.ConnectionState
+import ar.edu.utn.frba.placesify.view.componentes.connectivityState
+import ar.edu.utn.frba.placesify.view.componentes.noInternet
 import ar.edu.utn.frba.placesify.viewmodel.ProfileViewModel
 
 @Composable
@@ -25,16 +29,22 @@ fun ProfileScreen(
     viewModel: ProfileViewModel,
     navController: NavController? = null,
 ) {
+    val connection by connectivityState()
+    val isConnected = connection === ConnectionState.Available
     Box(
         Modifier
             .fillMaxSize()
             .padding(0.dp)
     ) {
-        Profile(
-            Modifier
-                .align(Alignment.TopStart)
-                .padding(16.dp), viewModel, navController
-        )
+        if (isConnected) {
+            Profile(
+                Modifier
+                    .align(Alignment.TopStart)
+                    .padding(16.dp), viewModel, navController
+            )
+        }else{
+            noInternet()
+        }
     }
 }
 

@@ -1,12 +1,6 @@
 package ar.edu.utn.frba.placesify.view
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.net.ConnectivityManager
-import android.net.Network
-import android.net.NetworkCapabilities
-import android.net.NetworkRequest
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -39,19 +33,10 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.State
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.produceState
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -59,15 +44,12 @@ import androidx.navigation.NavController
 import ar.edu.utn.frba.placesify.R
 import ar.edu.utn.frba.placesify.model.Categorias
 import ar.edu.utn.frba.placesify.model.Listas
-import ar.edu.utn.frba.placesify.view.ConnectionState.Available.currentConnectivityState
+import ar.edu.utn.frba.placesify.view.componentes.ConnectionState
 import ar.edu.utn.frba.placesify.view.componentes.ShowLoading
+import ar.edu.utn.frba.placesify.view.componentes.connectivityState
+import ar.edu.utn.frba.placesify.view.componentes.noInternet
 import ar.edu.utn.frba.placesify.viewmodel.HomeViewModel
 import coil.compose.AsyncImage
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.withContext
 
 
 @Composable
@@ -158,7 +140,6 @@ fun Home(modifier: Modifier, viewModel: HomeViewModel, navController: NavControl
                         // Muestro las Listas Destacadas
                         MostrarListasDestacadas(navController, listasDestacadas, categorias)
                     }
-
                 }
 
                 PullRefreshIndicator(
