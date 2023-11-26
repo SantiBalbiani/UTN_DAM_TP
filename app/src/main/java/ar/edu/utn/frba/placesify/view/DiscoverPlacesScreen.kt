@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.AssistChip
@@ -142,7 +143,6 @@ fun BoxCategorias(
     navController: NavController?
     //onCategoryClick: (Categorias) -> Unit
 ) {
-
     if (lstCategorias != null) {
         lstCategorias.forEach { categoria ->
             Card(
@@ -171,3 +171,4 @@ fun BoxCategorias(
         }
     }
 }
+

@@ -3,6 +3,9 @@ package ar.edu.utn.frba.placesify.view
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,6 +15,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
@@ -38,6 +44,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -67,7 +74,9 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController? = null) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class,
+    ExperimentalLayoutApi::class
+)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun Home(modifier: Modifier, viewModel: HomeViewModel, navController: NavController?) {
@@ -111,26 +120,18 @@ fun Home(modifier: Modifier, viewModel: HomeViewModel, navController: NavControl
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     item {
-                        Button(
-                            onClick = { navController?.navigate("discover_places") },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(40.dp)
+                        Text(
+                            text = "Categorías",
+                            fontSize = dimensionResource(id = R.dimen.font_size_titulo).value.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(modifier = Modifier.padding(8.dp))
+                        FlowRow(
+                            horizontalArrangement = Arrangement.Center
                         ) {
-                            Text(text = "Descubrir Lugares")
+                            GridCategorias(categorias, navController)
                         }
                         Spacer(modifier = Modifier.padding(8.dp))
-                        /*Button(
-                        onClick = { navController?.navigate("new_list") },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(40.dp)
-                    ) {
-                        Text(text = "Agregar nueva Lista")
-                    }
-                    Spacer(modifier = Modifier.padding(8.dp))
-                    */
-
                         Text(
                             text = "Listas destacadas",
                             fontSize = dimensionResource(id = R.dimen.font_size_titulo).value.sp,
@@ -223,6 +224,40 @@ fun MostrarListasDestacadas(
     listasDestacadas?.sortedBy { it.name }?.forEach { lista ->
         if (categorias != null) {
             ItemLista(lista, categorias, navController)
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun GridCategorias(
+    lstCategorias: List<Categorias>?,
+    navController: NavController?
+) {
+    if (lstCategorias != null) {
+        lstCategorias.forEach { categoria ->
+            Card(
+                onClick = { navController?.navigate("discover_category/${categoria.id}") },
+                modifier = Modifier
+                    .padding(7.dp)
+                    .size(width = 150.dp, height = 100.dp),
+                shape = RoundedCornerShape(7.dp)
+            ) {
+                Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+                    AsyncImage(
+                        model = categoria.icono,
+                        contentDescription = "",
+                        modifier = Modifier
+                            .padding(5.dp)
+                            .size(width = 40.dp, height = 40.dp),
+                    )
+                    Text(
+                        text = categoria.name,
+                        modifier = Modifier.padding(5.dp, 0.dp, 5.dp, 0.dp).weight(1f),
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
         }
     }
 }
