@@ -57,6 +57,10 @@ class NewPlacesPrincipalViewModel(
     val _nuevaLista = MutableLiveData<Listas>()
     val nuevaLista: LiveData<Listas> = _nuevaLista
 
+    private val _isRefreshing = MutableLiveData<Boolean>()
+    val isRefreshing: LiveData<Boolean> = _isRefreshing
+
+
     val _continuar2Enabled = MutableLiveData<Boolean>()
     val continar2Enabled: LiveData<Boolean> = _continuar2Enabled
     val _continuar3Enabled = MutableLiveData<Boolean>()
@@ -78,6 +82,8 @@ class NewPlacesPrincipalViewModel(
 
     private val _buscandoContenidos = MutableLiveData<Boolean>()
     val buscandoContenidos: LiveData<Boolean> = _buscandoContenidos
+
+
 
     // Utilizada para guardar temporalmente el lugar seleccionado
     lateinit var lugarAuxiliar: Lugares
@@ -187,6 +193,18 @@ class NewPlacesPrincipalViewModel(
         }
     }
 
+
+    fun quitarLugar(lugar: Lugares) {
+        val lugaresActuales: MutableList<Lugares>? = _nuevaLista.value?.lstPlaces?.toMutableList()
+        val estaEnLista: Boolean = lugaresActuales?.any { x -> x.id == lugar.id } == true
+        if (estaEnLista) {
+            lugaresActuales?.remove(lugar)
+        }
+        _nuevaLista.value?.lstPlaces = lugaresActuales
+    }
+
+
+
     fun updateSearchText(input: String) {
         searchText = input
     }
@@ -250,5 +268,11 @@ class NewPlacesPrincipalViewModel(
             }
         }
     }
+
+
 }
+
+
+
+
 

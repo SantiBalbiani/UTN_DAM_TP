@@ -82,6 +82,7 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.internal.enableLiveLiterals
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.constraintlayout.motion.utils.MonotonicCurveFit
+import ar.edu.utn.frba.placesify.model.Categorias
 import ar.edu.utn.frba.placesify.model.Listas
 import ar.edu.utn.frba.placesify.model.Lugares
 import ar.edu.utn.frba.placesify.model.PreferencesManager
@@ -140,9 +141,131 @@ fun NewPlaces(
     } else if (pantalla == 4) {
         // Pantalla final
         NewPlacesFinal(modifier, navController, viewModel)
+    } else if (pantalla == 5) {
+        listaTemporalDeLugares(modifier, navController, viewModel)
     }
 
 }
+
+
+@Composable
+fun listaTemporalDeLugares(
+    modifier: Modifier,
+    navController: NavController?,
+    viewModel: NewPlacesPrincipalViewModel
+){
+
+    Scaffold(
+        topBar = {
+            BarraNavegacionSuperior(
+                "Agregar Lugares",
+                navController,
+                viewModel2 = viewModel
+            )
+        },
+    ) { innerPadding ->
+        LazyColumn(
+            modifier = modifier.padding(innerPadding),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            item{
+                Text(text = "Hola")
+
+                /* PRUEBAS
+
+                val Lugar1: Lugares = Lugares(500,"lugar 1","aaa",0.0,0.0)
+                val Lugar2: Lugares = Lugares(501,"lugar 2","bbb",0.0,0.0)
+                val Lugar3: Lugares = Lugares(502,"lugar 3","ccc",0.0,0.0)
+                val Lugar4: Lugares = Lugares(503,"lugar 4","ddd",0.0,0.0)
+
+                val lugares: MutableList<Lugares> =  mutableListOf()
+                lugares.add(Lugar1)
+                lugares.add(Lugar2)
+                lugares.add(Lugar3)
+                lugares.add(Lugar4)
+                */
+
+                if (!viewModel._nuevaLista.value?.lstPlaces?.isNullOrEmpty()!!) {
+
+                    Text(
+                        text = "Lugares agregados",
+                        fontSize = dimensionResource(id = R.dimen.font_size_normal).value.sp,
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center
+                    )
+
+                    viewModel._nuevaLista.value?.lstPlaces?.forEach { lugar ->
+
+                        Card(
+                            modifier = Modifier
+                                .padding(7.dp)
+                                .fillMaxWidth()
+                                .background(color = androidx.compose.material3.MaterialTheme.colorScheme.surfaceVariant)
+                        ) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.weight(1f)
+                                ) {
+                                    AsyncImage(
+                                        model = R.drawable.ico_placesify2,
+                                        contentDescription = "",
+                                        modifier = Modifier
+                                            .padding(5.dp)
+                                            .size(width = 40.dp, height = 40.dp)
+                                    )
+                                    Text(
+                                        text = lugar.name,
+                                        modifier = Modifier.padding(5.dp)
+                                    )
+                                }
+
+                                AsyncImage(
+                                    model = com.google.android.material.R.drawable.mtrl_ic_cancel,
+                                    contentDescription = "Cerrar",
+                                    modifier = Modifier
+                                        .size(width = 40.dp, height = 40.dp)
+                                        .padding(5.dp)
+                                        .clickable { viewModel.quitarLugar(lugar) }
+                                )
+                            }
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.padding(12.dp))
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(100.dp)
+                        .background(color = MaterialTheme.colors.primary, shape = RoundedCornerShape(8.dp))
+                        .clickable {
+                            viewModel.setPantalla(0)
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "¡Volver!",
+                        fontSize = dimensionResource(id = R.dimen.font_size_titulo_card).value.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
+                }
+
+            }
+        }
+    }
+
+
+
+
+
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewPlacesPrincipal(
@@ -312,6 +435,9 @@ fun NewPlacesPrincipal(
                     }
                 }
 
+
+
+
                 Spacer(modifier = Modifier.padding(8.dp))
 
                 // Detalle de lugares agregados
@@ -330,6 +456,9 @@ fun NewPlacesPrincipal(
                                 modifier = Modifier
                                     .padding(8.dp)
                                     .size(80.dp)
+                                    .clickable {
+                                        viewModel.setPantalla(5)
+                                    }
                             )
                             Spacer(modifier = Modifier.padding(8.dp))
                             Column(modifier = Modifier.padding(horizontal = 10.dp)) {
@@ -338,12 +467,6 @@ fun NewPlacesPrincipal(
                                     fontSize = dimensionResource(id = R.dimen.font_size_subtitulo).value.sp,
                                     fontWeight = FontWeight.Bold
                                 )
-                                /*
-                                Text(
-                                    text = "Tus lugares favoritos",
-                                    fontSize = dimensionResource(id = R.dimen.font_size_subtitulo).value.sp,
-                                )
-                                 */
                             }
                         }
                     }
@@ -356,7 +479,10 @@ fun NewPlacesPrincipal(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(100.dp)
-                        .background(color = MaterialTheme.colors.primary, shape = RoundedCornerShape(8.dp))
+                        .background(
+                            color = MaterialTheme.colors.primary,
+                            shape = RoundedCornerShape(8.dp)
+                        )
                         .clickable {
                             viewModel.setShowSaveDialog(true)
                         },
@@ -610,6 +736,7 @@ fun NewPlace1(
 
                     // Persisto el Lugar
                     viewModel.agregarLugar(viewModel.lugarAuxiliar)
+
 
                     // Vacio las variables
                     viewModel.limpiarLugaresBuscados()
