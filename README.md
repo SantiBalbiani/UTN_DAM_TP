@@ -26,6 +26,11 @@ Placesify es una App desarrollada para dispositivos Android que permite buscar *
 - Carga de lugares interactivamente a través del mapa
 - Integración con OpenStreetMap para la búsqueda de lugares y visualización en un mapa.
 - Exploración y descubrimiento de otras listas.
+- Búsqueda de Listas de Lugares desde cualquier screen.
+
+## Fuera del Scope (Nice to Have)
+- Persistencia Local (Operación en modo Offline).
+- Localización del usuario para sugerir lugares.
 
 ## Screenshots
 
