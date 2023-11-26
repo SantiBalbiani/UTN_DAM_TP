@@ -2,7 +2,6 @@ package ar.edu.utn.frba.placesify.model
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.util.Log
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.serialization.encodeToString
@@ -77,7 +76,7 @@ class PreferencesManager(context: Context) {
 
     }
 
-    fun getPlaces(key: String, defaultValue: MutableList<Lugares>): MutableList<Lugares>? {
+    fun getPlaces(key: String, defaultValue: MutableList<Lugares>?): MutableList<Lugares>? {
         var lugares: MutableList<Lugares>
         try {
 
@@ -90,7 +89,7 @@ class PreferencesManager(context: Context) {
             //Log.d("GetList", "${e.toString()}")
         }
 
-        return mutableListOf(Lugares())
+        return null
 
     }
 

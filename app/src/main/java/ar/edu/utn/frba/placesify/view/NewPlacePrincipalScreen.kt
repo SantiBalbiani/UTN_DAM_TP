@@ -240,8 +240,6 @@ fun listaTemporalDeLugares(
                                         .padding(5.dp)
                                         .clickable {
                                             viewModel.quitarLugar(lugar)
-                                            viewModel.lugaresDesactualizados()
-                                            viewModel.refresh()
                                         }
                                 )
                             }

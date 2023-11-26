@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -13,10 +12,10 @@ import ar.edu.utn.frba.placesify.api.BackendService
 import ar.edu.utn.frba.placesify.api.OpenStreetmapService
 import ar.edu.utn.frba.placesify.model.Categorias
 import ar.edu.utn.frba.placesify.model.Listas
+import ar.edu.utn.frba.placesify.model.Lugares
 import ar.edu.utn.frba.placesify.model.PreferencesManager
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 class NewListViewModel(
     private val mapService: OpenStreetmapService,
@@ -39,6 +38,10 @@ class NewListViewModel(
 
     private val _nuevaLista = MutableLiveData<Listas>()
     val nuevaLista: LiveData<Listas> = _nuevaLista
+
+    val _lugaresSeleccionados = MutableLiveData<MutableList<Lugares>>()
+    val lugaresSeleccionados: MutableLiveData<MutableList<Lugares>>
+        get() = _lugaresSeleccionados
 
     val channel = Channel<Unit>()
 
@@ -76,6 +79,10 @@ class NewListViewModel(
                 lstCategories = emptyList()
             )
         )
+        _lugaresSeleccionados.value = preferencesManager.getPlaces(
+            "listaLugares", null
+        )
+
     }
 
     private suspend fun getCategorias() {
@@ -143,6 +150,10 @@ class NewListViewModel(
         _nuevaLista.value = null
         preferencesManager.saveList(
             "nuevaLista", null
+        )
+        _lugaresSeleccionados.value = null
+        preferencesManager.saveListPlaces(
+            "listaLugares", null
         )
     }
 

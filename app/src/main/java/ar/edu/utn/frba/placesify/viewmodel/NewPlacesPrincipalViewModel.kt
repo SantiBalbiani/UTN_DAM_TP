@@ -1,44 +1,30 @@
 package ar.edu.utn.frba.placesify.viewmodel
 
-import android.Manifest
 import android.app.Application
 import android.content.Context
-import android.content.pm.PackageManager
-import android.media.ExifInterface
-import android.net.Uri
-import android.os.Build
 import android.util.Log
-import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.ActivityResultRegistry
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalContext
-import androidx.core.content.ContextCompat
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ar.edu.utn.frba.placesify.api.BackendService
 import ar.edu.utn.frba.placesify.api.OpenStreetmapService
-import ar.edu.utn.frba.placesify.model.Categorias
 import ar.edu.utn.frba.placesify.model.Listas
 import ar.edu.utn.frba.placesify.model.LocationHandler
 import ar.edu.utn.frba.placesify.model.Lugares
 import ar.edu.utn.frba.placesify.model.NuevaLista
-import ar.edu.utn.frba.placesify.model.NuevoUsuario
 import ar.edu.utn.frba.placesify.model.OpenStreetmapResponse
 import ar.edu.utn.frba.placesify.model.PreferencesManager
 import ar.edu.utn.frba.placesify.model.StorageHandler
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
-import java.io.IOException
-
 
 
 class NewPlacesPrincipalViewModel(
@@ -99,7 +85,6 @@ class NewPlacesPrincipalViewModel(
 
     init {
         _pantalla.value = 0
-        refresh()
         resetScreen2()
         resetScreen3()
         getNuevaLista()
@@ -124,19 +109,6 @@ class NewPlacesPrincipalViewModel(
             }
 
         }
-    }
-
-    fun refresh() {
-        _isRefreshing.value = false
-        if (_lugaresSeleccionados.value == null){
-            Log.d("INIT", "refresh")
-            _lugaresSeleccionados.value = mutableListOf<Lugares>()
-        }
-    }
-
-    fun lugaresDesactualizados() {
-
-        _isRefreshing.value = false
     }
 
     fun resetScreen2(){
@@ -185,7 +157,7 @@ class NewPlacesPrincipalViewModel(
             )
         )
         _lugaresSeleccionados.value = preferencesManager.getPlaces(
-            "listaLugares", mutableListOf()
+            "listaLugares", null
         )
 
     }
@@ -307,8 +279,6 @@ class NewPlacesPrincipalViewModel(
                     )
                 )
 
-                _lugaresSeleccionados.value = null
-
                 // Limpio la lista temporal del shared preferences
                 val preferencesManager = PreferencesManager(context)
 
@@ -316,12 +286,10 @@ class NewPlacesPrincipalViewModel(
                 preferencesManager.saveList(
                     "nuevaLista", null
                     )
-                _lugaresSeleccionados.value?.let {
-                    preferencesManager.saveListPlaces(
-                        "listaLugares", null
+                _lugaresSeleccionados.value = null
+                preferencesManager.saveListPlaces(
+                    "listaLugares", null
                     )
-                }
-
 
             }
             catch (e: Exception) {
