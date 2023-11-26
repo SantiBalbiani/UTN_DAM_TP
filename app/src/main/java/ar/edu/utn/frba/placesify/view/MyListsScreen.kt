@@ -70,7 +70,7 @@ fun MyLists(modifier: Modifier, viewModel: MyListsViewModel, navController: NavC
     Scaffold(
         topBar = { BarraNavegacionSuperior("Mis Listas", navController) },
         floatingActionButton = {
-            FloatingActionButton(onClick = { navController?.navigate("new_places") }) {
+            FloatingActionButton(onClick = { navController?.navigate("new_list") }) {
                 Icon(Icons.Default.Add, contentDescription = "Add")
             }
         }

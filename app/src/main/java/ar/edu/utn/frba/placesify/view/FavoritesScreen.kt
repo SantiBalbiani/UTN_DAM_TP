@@ -72,7 +72,7 @@ fun Favorities(modifier: Modifier, viewModel: FavoritesViewModel, navController:
     Scaffold(
         topBar = { BarraNavegacionSuperior("Favoritos", navController) },
         floatingActionButton = {
-            FloatingActionButton(onClick = { navController?.navigate("new_places") }) {
+            FloatingActionButton(onClick = { navController?.navigate("new_list") }) {
                 Icon(Icons.Default.Add, contentDescription = "Add")
             }
         }

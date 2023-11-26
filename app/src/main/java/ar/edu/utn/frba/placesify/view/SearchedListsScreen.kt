@@ -76,7 +76,7 @@ fun MySearchedLists(modifier: Modifier, viewModel: SearchListsViewModel, navCont
     Scaffold(
         topBar = { BarraNavegacionSuperior("", navController) },
         floatingActionButton = {
-            FloatingActionButton(onClick = { navController?.navigate("new_places") }) {
+            FloatingActionButton(onClick = { navController?.navigate("new_list") }) {
                 Icon(Icons.Default.Add, contentDescription = "Add")
             }
         }
