@@ -88,6 +88,10 @@ import ar.edu.utn.frba.placesify.model.Lugares
 import ar.edu.utn.frba.placesify.model.PreferencesManager
 import ar.edu.utn.frba.placesify.view.componentes.ShowLoading
 import coil.compose.AsyncImage
+import com.utsman.osmandcompose.CameraProperty
+import com.utsman.osmandcompose.CameraState
+import com.utsman.osmandcompose.MapProperties
+import org.osmdroid.util.TileSystem
 import java.sql.Types.NULL
 
 
@@ -153,7 +157,7 @@ fun listaTemporalDeLugares(
     modifier: Modifier,
     navController: NavController?,
     viewModel: NewPlacesPrincipalViewModel
-){
+) {
 
     val listaLugaresSeleccionados by viewModel.lugaresSeleccionados.observeAsState()
     val showConfirmationDialog = viewModel.showConfirmationDialog.value
@@ -177,7 +181,7 @@ fun listaTemporalDeLugares(
             modifier = modifier.padding(innerPadding),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            item{
+            item {
 
                 /* PRUEBAS
 
@@ -245,7 +249,7 @@ fun listaTemporalDeLugares(
                             }
                         }
                     }
-                }else{
+                } else {
                     Text(
                         text = "No hay lugares agregados",
                         fontSize = dimensionResource(id = R.dimen.font_size_titulo).value.sp,
@@ -262,7 +266,10 @@ fun listaTemporalDeLugares(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(100.dp)
-                        .background(color = MaterialTheme.colors.primary, shape = RoundedCornerShape(8.dp))
+                        .background(
+                            color = MaterialTheme.colors.primary,
+                            shape = RoundedCornerShape(8.dp)
+                        )
                         .clickable {
                             viewModel.setPantalla(0)
                         },
@@ -279,9 +286,6 @@ fun listaTemporalDeLugares(
             }
         }
     }
-
-
-
 
 
 }
@@ -858,7 +862,9 @@ fun NewPlace2(
     val context = LocalContext.current
     val lat: Double by viewModel.locationHandler.gpsLat.observeAsState(initial = 0.0)
     val lon: Double by viewModel.locationHandler.gpsLon.observeAsState(initial = 0.0)
-    val lugarAPI: OpenStreetmapResponse? by viewModel.locationHandler.lugarAPI.observeAsState(initial = null)
+    val lugarAPI: OpenStreetmapResponse? by viewModel.locationHandler.lugarAPI.observeAsState(
+        initial = null
+    )
 
     val continuar2Enabled: Boolean by viewModel.continar2Enabled.observeAsState(initial = false)
 
@@ -923,7 +929,7 @@ fun NewPlace2(
 
                 Spacer(modifier = Modifier.padding(10.dp))
 
-                viewModel.requestLocationPermission(LocalContext.current)
+                /* viewModel.requestLocationPermission(LocalContext.current)*/
 
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -938,7 +944,7 @@ fun NewPlace2(
 
                         val cameraState = rememberCameraState {
                             geoPoint = markerState.geoPoint //GeoPoint(lat, lon)
-                            zoom = 15.0 // optional, default is 5.0
+                            zoom = 15.0 // this.zoom // optional, default is 5.0
                         }
 
                         var mapProperties by remember {
@@ -950,7 +956,7 @@ fun NewPlace2(
                                 .copy(isTilesScaledToDpi = true)
                                 .copy(tileSources = TileSourceFactory.MAPNIK)
                                 .copy(isEnableRotationGesture = false)
-                                .copy(zoomButtonVisibility = ZoomButtonVisibility.NEVER)
+                                .copy(zoomButtonVisibility = ZoomButtonVisibility.SHOW_AND_FADEOUT)
                         }
 
                         OpenStreetMap(
@@ -961,6 +967,9 @@ fun NewPlace2(
                             properties = mapProperties,
                             onMapClick = {
                                 markerState.geoPoint = it
+
+                                cameraState.geoPoint = it
+
                                 // Carga la variable lugaresAPI con las coordenadas obtenidas
                                 viewModel.getLugarEnOpenStreetMapApi(
                                     it.latitude.toString(),

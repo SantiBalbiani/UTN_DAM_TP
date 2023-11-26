@@ -84,6 +84,7 @@ class NewPlacesPrincipalViewModel(
     lateinit var lugarAuxiliar: Lugares
 
     init {
+        requestLocationPermission(context)
         _pantalla.value = 0
         resetScreen2()
         resetScreen3()
