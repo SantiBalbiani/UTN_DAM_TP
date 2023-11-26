@@ -47,6 +47,14 @@ class PreferencesManager(context: Context) {
         editor.apply()
     }
 
+    fun saveListPlaces(key: String, lugares: MutableList<Lugares>?) {
+        val editor = sharedPreferences.edit()
+        println(lugares.toString())
+        editor.putString(key, Json.encodeToString(lugares))
+        editor.apply()
+    }
+
+
     fun getList(key: String, defaultValue: Listas): Listas? {
         var lista: Listas
         try {
@@ -68,4 +76,22 @@ class PreferencesManager(context: Context) {
         )
 
     }
+
+    fun getPlaces(key: String, defaultValue: MutableList<Lugares>): MutableList<Lugares>? {
+        var lugares: MutableList<Lugares>
+        try {
+
+            lugares = sharedPreferences.getString(key, defaultValue.toString())
+                ?.let { Json.decodeFromString(it) }!!
+
+            //Log.d("getList ", "${lista.toString()}")
+            return lugares
+        } catch (e: Exception) {
+            //Log.d("GetList", "${e.toString()}")
+        }
+
+        return mutableListOf(Lugares())
+
+    }
+
 }

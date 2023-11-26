@@ -155,10 +155,19 @@ fun listaTemporalDeLugares(
     viewModel: NewPlacesPrincipalViewModel
 ){
 
+    val listaLugaresSeleccionados by viewModel.lugaresSeleccionados.observeAsState()
+    val showConfirmationDialog = viewModel.showConfirmationDialog.value
+
+    if (showConfirmationDialog) {
+        viewModel.setShowConfirmationDialog(false)
+        viewModel.setPantalla(0)
+    }
+
+
     Scaffold(
         topBar = {
             BarraNavegacionSuperior(
-                "Agregar Lugares",
+                "Lugares actuales agregados en la lista",
                 navController,
                 viewModel2 = viewModel
             )
@@ -169,7 +178,6 @@ fun listaTemporalDeLugares(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             item{
-                Text(text = "Hola")
 
                 /* PRUEBAS
 
@@ -185,16 +193,17 @@ fun listaTemporalDeLugares(
                 lugares.add(Lugar4)
                 */
 
-                if (!viewModel._nuevaLista.value?.lstPlaces?.isNullOrEmpty()!!) {
+                if (!listaLugaresSeleccionados.isNullOrEmpty()) {
 
                     Text(
                         text = "Lugares agregados",
-                        fontSize = dimensionResource(id = R.dimen.font_size_normal).value.sp,
+                        fontSize = dimensionResource(id = R.dimen.font_size_titulo).value.sp,
                         modifier = Modifier.fillMaxWidth(),
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
+                        fontWeight = FontWeight.Bold
                     )
 
-                    viewModel._nuevaLista.value?.lstPlaces?.forEach { lugar ->
+                    listaLugaresSeleccionados!!.forEach { lugar ->
 
                         Card(
                             modifier = Modifier
@@ -229,11 +238,24 @@ fun listaTemporalDeLugares(
                                     modifier = Modifier
                                         .size(width = 40.dp, height = 40.dp)
                                         .padding(5.dp)
-                                        .clickable { viewModel.quitarLugar(lugar) }
+                                        .clickable {
+                                            viewModel.quitarLugar(lugar)
+                                            viewModel.lugaresDesactualizados()
+                                            viewModel.refresh()
+                                        }
                                 )
                             }
                         }
                     }
+                }else{
+                    Text(
+                        text = "No hay lugares agregados",
+                        fontSize = dimensionResource(id = R.dimen.font_size_titulo).value.sp,
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center,
+                        fontWeight = FontWeight.Bold
+                    )
+
                 }
 
                 Spacer(modifier = Modifier.padding(12.dp))
@@ -249,7 +271,7 @@ fun listaTemporalDeLugares(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "¡Volver!",
+                        text = "Seguir editando Lista",
                         fontSize = dimensionResource(id = R.dimen.font_size_titulo_card).value.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.White
@@ -436,10 +458,39 @@ fun NewPlacesPrincipal(
                 }
 
 
+                Spacer(modifier = Modifier.padding(20.dp))
+
+                Column(
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Image(
+                            painter = painterResource(id = R.drawable.ico_placesify2),
+                            contentDescription = "Imagen",
+                            modifier = Modifier
+                                .padding(8.dp)
+                                .size(80.dp)
+                                .clickable {
+                                    viewModel.setPantalla(5)
+                                }
+                        )
+                        Spacer(modifier = Modifier.padding(8.dp))
+                        Column(modifier = Modifier.padding(horizontal = 10.dp)) {
+                            Text(
+                                text = "${viewModel._nuevaLista.value?.lstPlaces?.count()} lugar/es agregado/s",
+                                fontSize = dimensionResource(id = R.dimen.font_size_subtitulo).value.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
+                }
 
 
-                Spacer(modifier = Modifier.padding(8.dp))
+                Spacer(modifier = Modifier.padding(12.dp))
 
+
+                //////////////////////////////////////////////////////////////////////
+                /*
                 // Detalle de lugares agregados
                 Card(
                     modifier = Modifier
@@ -471,6 +522,9 @@ fun NewPlacesPrincipal(
                         }
                     }
                 }
+
+                */
+                //////////////////////////////////////////////////
 
                 Spacer(modifier = Modifier.padding(12.dp))
 
@@ -561,10 +615,20 @@ fun NewPlace1(
     val showConfirmationDialog = viewModel.showConfirmationDialog.value
 
     if (showConfirmationDialog) {
-        viewModel.setShowConfirmationDialog(false)
-        viewModel.limpiarLugaresBuscados()
-        viewModel.searchText = ""
-        viewModel.setPantalla(0)
+        Confirmacion(
+            onDismissRequest = {
+                viewModel.setShowConfirmationDialog(false)
+            },
+            onConfirmation = {
+                viewModel.searchText = ""
+                viewModel.limpiarLugaresBuscados()
+                viewModel.setShowConfirmationDialog(false)
+                viewModel.setPantalla(0)
+            },
+            dialogTitle = "Confirmación",
+            dialogText = "¿Estás seguro de querer retroceder? Se perderá la información del lugar seleccionado",
+            icon = Icons.Default.Info
+        )
     }
 
     BackHandler(onBack = {

@@ -57,7 +57,15 @@ class NewPlacesPrincipalViewModel(
     val _nuevaLista = MutableLiveData<Listas>()
     val nuevaLista: LiveData<Listas> = _nuevaLista
 
-    private val _isRefreshing = MutableLiveData<Boolean>()
+
+    val _lugaresSeleccionados = MutableLiveData<MutableList<Lugares>>()
+    val lugaresSeleccionados: MutableLiveData<MutableList<Lugares>>
+        get() = _lugaresSeleccionados
+
+
+
+
+    val _isRefreshing = MutableLiveData<Boolean>()
     val isRefreshing: LiveData<Boolean> = _isRefreshing
 
 
@@ -77,6 +85,7 @@ class NewPlacesPrincipalViewModel(
     private val _lugaresAPI = MutableLiveData<List<OpenStreetmapResponse>>()
     val lugaresAPI: LiveData<List<OpenStreetmapResponse>> = _lugaresAPI
 
+
     private val _lugaresActualizados = MutableLiveData<Boolean>()
     val lugaresActualizados: LiveData<Boolean> = _lugaresActualizados
 
@@ -90,9 +99,11 @@ class NewPlacesPrincipalViewModel(
 
     init {
         _pantalla.value = 0
+        refresh()
         resetScreen2()
         resetScreen3()
         getNuevaLista()
+
 
         storageHandler.setfunGetLugar { lat, lon ->
             storageHandler.setfunGetLugar { lat, lon ->
@@ -113,6 +124,19 @@ class NewPlacesPrincipalViewModel(
             }
 
         }
+    }
+
+    fun refresh() {
+        _isRefreshing.value = false
+        if (_lugaresSeleccionados.value == null){
+            Log.d("INIT", "refresh")
+            _lugaresSeleccionados.value = mutableListOf<Lugares>()
+        }
+    }
+
+    fun lugaresDesactualizados() {
+
+        _isRefreshing.value = false
     }
 
     fun resetScreen2(){
@@ -160,6 +184,10 @@ class NewPlacesPrincipalViewModel(
                 lstCategories = emptyList()
             )
         )
+        _lugaresSeleccionados.value = preferencesManager.getPlaces(
+            "listaLugares", mutableListOf()
+        )
+
     }
 
     fun setShowConfirmationDialog(show: Boolean) {
@@ -181,6 +209,7 @@ class NewPlacesPrincipalViewModel(
         if(lstPlaces != null){
             lstPlaces?.add(lugar)
             _nuevaLista.value?.lstPlaces = lstPlaces
+            _lugaresSeleccionados.value = lstPlaces
         }
 
         // Actualiza la lista nueva en shared preferences
@@ -191,6 +220,13 @@ class NewPlacesPrincipalViewModel(
                 "nuevaLista", it
             )
         }
+
+        _lugaresSeleccionados.value?.let {
+            preferencesManager.saveListPlaces(
+                "listaLugares", it
+            )
+        }
+
     }
 
 
@@ -201,6 +237,23 @@ class NewPlacesPrincipalViewModel(
             lugaresActuales?.remove(lugar)
         }
         _nuevaLista.value?.lstPlaces = lugaresActuales
+        _lugaresSeleccionados.value = lugaresActuales
+
+        // Actualiza la lista nueva en shared preferences
+        val preferencesManager = PreferencesManager(context)
+
+        _nuevaLista.value?.let {
+            preferencesManager.saveList(
+                "nuevaLista", it
+            )
+        }
+
+        _lugaresSeleccionados.value?.let {
+            preferencesManager.saveListPlaces(
+                "listaLugares", it
+            )
+        }
+
     }
 
 
@@ -254,6 +307,8 @@ class NewPlacesPrincipalViewModel(
                     )
                 )
 
+                _lugaresSeleccionados.value = null
+
                 // Limpio la lista temporal del shared preferences
                 val preferencesManager = PreferencesManager(context)
 
@@ -261,6 +316,12 @@ class NewPlacesPrincipalViewModel(
                 preferencesManager.saveList(
                     "nuevaLista", null
                     )
+                _lugaresSeleccionados.value?.let {
+                    preferencesManager.saveListPlaces(
+                        "listaLugares", null
+                    )
+                }
+
 
             }
             catch (e: Exception) {
