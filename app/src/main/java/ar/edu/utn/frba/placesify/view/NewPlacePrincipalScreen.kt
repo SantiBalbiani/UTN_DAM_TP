@@ -146,6 +146,7 @@ fun NewPlaces(
         // Pantalla final
         NewPlacesFinal(modifier, navController, viewModel)
     } else if (pantalla == 5) {
+        // Pantalla para modificar los lugares cargados
         listaTemporalDeLugares(modifier, navController, viewModel)
     }
 
@@ -167,6 +168,11 @@ fun listaTemporalDeLugares(
         viewModel.setPantalla(0)
     }
 
+    BackHandler(onBack = {
+        viewModel.setShowConfirmationDialog(false)
+        viewModel.setPantalla(0)
+    })
+
 
     Scaffold(
         topBar = {
@@ -183,19 +189,6 @@ fun listaTemporalDeLugares(
         ) {
             item {
 
-                /* PRUEBAS
-
-                val Lugar1: Lugares = Lugares(500,"lugar 1","aaa",0.0,0.0)
-                val Lugar2: Lugares = Lugares(501,"lugar 2","bbb",0.0,0.0)
-                val Lugar3: Lugares = Lugares(502,"lugar 3","ccc",0.0,0.0)
-                val Lugar4: Lugares = Lugares(503,"lugar 4","ddd",0.0,0.0)
-
-                val lugares: MutableList<Lugares> =  mutableListOf()
-                lugares.add(Lugar1)
-                lugares.add(Lugar2)
-                lugares.add(Lugar3)
-                lugares.add(Lugar4)
-                */
 
                 if (!listaLugaresSeleccionados.isNullOrEmpty()) {
 

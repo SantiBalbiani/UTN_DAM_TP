@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ArrowBack
@@ -102,6 +103,16 @@ fun BarraNavegacionSuperior(
                         singleLine = true,
                         maxLines = 1,
                         textStyle = TextStyle(fontSize = 12.sp), // Ajusta el tamaño de la fuente aquí
+                        keyboardActions = KeyboardActions(
+                            onDone = {
+                                showSearch = !showSearch
+
+                                if(nowSearch and inputSearchString.isNotEmpty()){
+                                    nowSearch = true
+                                    navController?.navigate("searched_lists/$inputSearchString")
+
+                                }
+                            }),
                         trailingIcon = {
                             Row {
                                 IconButton(
